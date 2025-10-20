@@ -80,6 +80,27 @@ namespace ifb {
         return(file_node);
     };
 
+    IFB_ENG_INTERNAL_INLINE eng_asset_config_file_node_t*
+    asset_config_arena_alloc_and_init_file_node(
+        eng_mem_arena_t* arena,
+        const cchar*     asset_name,
+        const cchar*     asset_path) {
+
+        const bool can_init = (
+            arena      != NULL &&
+            asset_name != NULL &&
+            asset_path != NULL
+        );
+
+        assert(can_init);
+
+        eng_asset_config_file_node_t* node = asset_config_arena_alloc_file_node(arena);
+        asset_config_file_node_update_name (node, asset_name);
+        asset_config_file_node_update_path (node, asset_path);
+
+        return(node);
+    }
+
     IFB_ENG_INTERNAL_INLINE void
     asset_config_file_node_update_name(
         eng_asset_config_file_node_t* file_node,

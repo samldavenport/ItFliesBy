@@ -23,19 +23,17 @@ namespace ifb {
         const cchar*                       asset_name,
         const cchar*                       asset_path) {
 
-        const bool can_add = (
-            editor_context != NULL &&
-            arena          != NULL &&
-            asset_name     != NULL &&
-            asset_path     != NULL 
+        assert(editor_context);
+
+        eng_asset_config_file_node_t* node = asset_config_arena_alloc_and_init_file_node(
+            arena,
+            asset_name,
+            asset_path
         );
-        assert(can_add);
 
-        eng_asset_config_file_node_t* text_node = asset_config_arena_alloc_file_node(arena);
-        asset_config_file_node_update_name (text_node, asset_name);
-        asset_config_file_node_update_path (text_node, asset_path);
-        asset_config_file_list_add_node    (&editor_context->file_list.text, text_node);
-
+        asset_config_file_list_add_node(
+            &editor_context->file_list.text,
+            text_node);
     }
 
     IFB_ENG_INTERNAL eng_asset_config_file_node_t*
@@ -45,6 +43,17 @@ namespace ifb {
         const cchar*                       asset_name,
         const cchar*                       asset_path) {
 
+        assert(editor_context);
+
+        eng_asset_config_file_node_t* node = asset_config_arena_alloc_and_init_file_node(
+            arena,
+            asset_name,
+            asset_path
+        );
+
+        asset_config_file_list_add_node(
+            &editor_context->file_list.image,
+            text_node);
     }
 
     IFB_ENG_INTERNAL eng_asset_config_file_node_t*
@@ -54,6 +63,15 @@ namespace ifb {
         const cchar*                       asset_name,
         const cchar*                       asset_path) {
 
+        assert(editor_context);
+
+        eng_asset_config_file_node_t* node = asset_config_arena_alloc_and_init_file_node(
+            arena,
+            asset_name,
+            asset_path
+        );
+        
+        asset_config_file_list_add_node(&editor_context->file_list.sound, text_node);
     }
 
     IFB_ENG_INTERNAL eng_asset_config_file_node_t*
@@ -63,6 +81,15 @@ namespace ifb {
         const cchar*                       asset_name,
         const cchar*                       asset_path) {
 
+        assert(editor_context);
+
+        eng_asset_config_file_node_t* node = asset_config_arena_alloc_and_init_file_node(
+            arena,
+            asset_name,
+            asset_path
+        );
+        
+        asset_config_file_list_add_node(&editor_context->file_list.font, text_node);
     }
 
     IFB_ENG_INTERNAL void
