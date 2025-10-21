@@ -3,6 +3,9 @@
 
 #include "ifb-engine.hpp"
 
+#include <sld-memory.hpp>
+#include <sld-arena-allocator.hpp>
+
 #ifndef    IFB_ENG_MEM_SIZE_KB_PLATFORM_RES  
 #   define IFB_ENG_MEM_SIZE_KB_PLATFORM_RES   64000   // 64 MB
 #endif
@@ -33,6 +36,9 @@
 
 namespace ifb {
 
+    using arena_allocator_t = sld::arena_allocator_t;
+
+
     // primitive types
     struct eng_mem_h32_arena_t;
     struct eng_mem_h32_alctr_block_t;
@@ -49,7 +55,7 @@ namespace ifb {
 
     IFB_ENG_API const eng_error_s32_t           eng_mem_last_error             (void);
     
-    IFB_ENG_API bool                        eng_mem_res_get_info           (const eng_mem_u32_res_type_t in_res, eng_mem_res_info_t& out_info);
+    IFB_ENG_API bool                            eng_mem_res_get_info           (const eng_mem_u32_res_type_t in_res, eng_mem_res_info_t& out_info);
 
     IFB_ENG_API const eng_mem_h32_arena_t       eng_mem_arena_commit           (const eng_mem_u32_res_type_t res);
     IFB_ENG_API bool                            eng_mem_arena_decommit         (const eng_mem_h32_arena_t arena_hnd);

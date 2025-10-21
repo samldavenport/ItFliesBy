@@ -8,11 +8,13 @@
 #include <sld-xml.hpp>
 #include <sld-geometry.hpp>
 
-#define IFB_ENG_API      __declspec(dllexport)
+#define IFB_ENG_API             __declspec(dllexport)
+#define IFB_ENG_API_INLINE      inline
 #define IFB_ENG_FUNC            static
 #define IFB_ENG_INTERNAL        static
 #define IFB_ENG_INTERNAL_INLINE static inline
 #define IFB_ENG_INLINE          inline
+
 
 namespace ifb {
 

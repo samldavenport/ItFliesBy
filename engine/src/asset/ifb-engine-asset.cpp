@@ -6,11 +6,11 @@ namespace ifb {
 
     IFB_ENG_FUNC void
     eng_asset_generate_id(
-        const u32           in_count,
-        const eng_asset_cstr_t* in_name,
-        eng_asset_u32_id_t*     out_id) {
+        const u32                 in_count,
+        const eng_asset_string_t* in_name,
+        eng_asset_u32_id_t*       out_id) {
 
-        static const u32 stride = sizeof(eng_asset_cstr_t); 
+        static const u32 stride = sizeof(eng_asset_string_t); 
         assert(false);
 
         // eng_id_generate(
@@ -23,10 +23,10 @@ namespace ifb {
 
     IFB_ENG_API void
     eng_asset_name_sanitize(
-        const u32          i_count,
-        eng_asset_cstr_t* io_name) {
+        const u32           i_count,
+        eng_asset_string_t* io_name) {
 
-        static const u32 name_size              = sizeof(eng_asset_cstr_t);
+        static const u32 name_size              = sizeof(eng_asset_string_t);
         static const u32 ascii_lowercase_offset = 32; 
 
         for (
@@ -34,7 +34,7 @@ namespace ifb {
             name_index < i_count;
             ++name_index) {
 
-            eng_asset_cstr_t& name          = io_name[name_index];
+            eng_asset_string_t& name          = io_name[name_index];
             bool               is_terminated = false;
 
             for (

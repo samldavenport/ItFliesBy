@@ -32,12 +32,12 @@ namespace ifb {
     struct eng_asset_h32_font_t  : h32_t       { };
 
     struct eng_asset_buffer_t : sld::buffer_t { };
-    struct eng_asset_cstr_t;
+    struct eng_asset_string_t;
 
     typedef u64 eng_asset_u64_size_t;
 
-    IFB_ENG_API void                             eng_asset_generate_id         (const u32 i_count, const eng_asset_cstr_t* i_name, eng_asset_u32_id_t* o_id);
-    IFB_ENG_API void                             eng_asset_name_sanitize       (const u32 i_count, eng_asset_cstr_t* io_name);
+    IFB_ENG_API void                             eng_asset_generate_id         (const u32 i_count, const eng_asset_string_t* i_name, eng_asset_u32_id_t* o_id);
+    IFB_ENG_API void                             eng_asset_name_sanitize       (const u32 i_count, eng_asset_string_t* io_name);
 
     IFB_ENG_API const eng_asset_h32_text_t       eng_asset_mngr_load_text      (const eng_asset_u32_id_t id);
     IFB_ENG_API const eng_asset_h32_image_t      eng_asset_mngr_load_image     (const eng_asset_u32_id_t id);
@@ -60,13 +60,8 @@ namespace ifb {
         eng_asset_u64_size_t size;
     };
 
-    struct eng_asset_cstr_t {
+    struct eng_asset_string_t {
         cchar chars[IFB_ENG_ASSET_CSTR_SIZE];
-    };
-
-    struct eng_asset_config_cstr_t {
-        eng_asset_cstr_t name;
-        eng_asset_cstr_t path;
     };
 };
 

@@ -2,6 +2,7 @@
 
 #include "ifb-engine-core-internal.hpp"
 #include "ifb-engine-gui-internal.hpp"
+#include "ifb-engine-asset-config.hpp"
 namespace ifb {
 
     IFB_ENG_API bool
@@ -13,9 +14,15 @@ namespace ifb {
         eng_file_mngr_startup  ();
         eng_asset_mngr_startup ();
 
+
         // initialize xml
         sld::xml_init();
-        
+
+        auto config = eng::asset_config_context_create();
+        eng::asset_config_context_destroy(config);
+        auto node = eng::asset_config_context_add_text_node(config, "name", "path");
+
+
         // initialize platform
         eng_core_monitor_table_init               ();
         eng_core_window_init                      ();
