@@ -4,7 +4,7 @@
 
 namespace ifb {
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_asset_generate_id(
         const u32                 in_count,
         const eng_asset_string_t* in_name,

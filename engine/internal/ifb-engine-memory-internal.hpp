@@ -40,15 +40,15 @@ namespace ifb {
         eng_mem_error_s32_t    last_error;
     };
 
-    IFB_ENG_FUNC void              eng_mem_mngr_startup          (void);
+    IFB_ENG_INTERNAL void              eng_mem_mngr_startup          (void);
     
-    IFB_ENG_FUNC eng_mem_arena_t*  eng_mem_arena_commit_core     (void);   
-    IFB_ENG_FUNC eng_mem_arena_t*  eng_mem_arena_commit_file     (void);   
-    IFB_ENG_FUNC eng_mem_arena_t*  eng_mem_arena_commit_asset    (void);
+    IFB_ENG_INTERNAL eng_mem_arena_t*  eng_mem_arena_commit_core     (void);   
+    IFB_ENG_INTERNAL eng_mem_arena_t*  eng_mem_arena_commit_file     (void);   
+    IFB_ENG_INTERNAL eng_mem_arena_t*  eng_mem_arena_commit_asset    (void);
     
-    IFB_ENG_FUNC void              eng_mem_arena_decommit_core   (eng_mem_arena_t* arena);   
-    IFB_ENG_FUNC void              eng_mem_arena_decommit_file   (eng_mem_arena_t* arena);   
-    IFB_ENG_FUNC void              eng_mem_arena_decommit_asset  (eng_mem_arena_t* arena);
+    IFB_ENG_INTERNAL void              eng_mem_arena_decommit_core   (eng_mem_arena_t* arena);   
+    IFB_ENG_INTERNAL void              eng_mem_arena_decommit_file   (eng_mem_arena_t* arena);   
+    IFB_ENG_INTERNAL void              eng_mem_arena_decommit_asset  (eng_mem_arena_t* arena);
 };
 
 

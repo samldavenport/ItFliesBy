@@ -4,7 +4,7 @@
 
 namespace ifb {
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_asset_db_create(
         void) {
 
@@ -12,13 +12,13 @@ namespace ifb {
         
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_asset_db_destroy(
         void) {
 
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_asset_db_validate(
         void) {
 
@@ -32,28 +32,28 @@ namespace ifb {
         assert(is_valid);
     }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_asset_db_load_text(
         eng_asset_db_t* const  db,
         eng_asset_db_record_t& record) {
 
     }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_asset_db_load_image(
         eng_asset_db_t* const  db,
         eng_asset_db_record_t& record) {
 
     }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_asset_db_load_sound(
         eng_asset_db_t* const  db,
         eng_asset_db_record_t& record) {
 
     }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_asset_db_load_font(
         eng_asset_db_t* const  db,
         eng_asset_db_record_t& record) {

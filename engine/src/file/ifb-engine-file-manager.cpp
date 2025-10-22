@@ -31,7 +31,7 @@ namespace ifb {
     // API
     //-------------------------------------------------------------------
 
-    IFB_ENG_FUNC const eng_file_h32_t
+    IFB_ENG_INTERNAL const eng_file_h32_t
     eng_file_mngr_open_ro(
         const cchar* file_path) {
 
@@ -93,7 +93,7 @@ namespace ifb {
         return(handle);
     }
 
-    IFB_ENG_FUNC const eng_file_h32_t
+    IFB_ENG_INTERNAL const eng_file_h32_t
     eng_file_mngr_open_rw(
         const cchar* file_path) {
 
@@ -155,14 +155,14 @@ namespace ifb {
         return(handle);
     }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_file_mngr_close(
         const eng_file_h32_t file_handle) {
 
         return(false);
     }
 
-    IFB_ENG_FUNC const u64
+    IFB_ENG_INTERNAL const u64
     eng_file_mngr_get_size(
         const eng_file_h32_t file_handle) {
 
@@ -183,7 +183,7 @@ namespace ifb {
         return(size);
     }
 
-    IFB_ENG_FUNC const eng_file_flags_u32_t
+    IFB_ENG_INTERNAL const eng_file_flags_u32_t
     eng_file_mngr_get_flags(
         const eng_file_h32_t file_handle) {
 
@@ -197,7 +197,7 @@ namespace ifb {
         return(flags);
     }
 
-    IFB_ENG_FUNC const cchar*
+    IFB_ENG_INTERNAL const cchar*
     eng_file_mngr_get_path(
         const eng_file_h32_t file_handle) {
 
@@ -246,7 +246,7 @@ namespace ifb {
         return(last_error);
     }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_file_mngr_read(
         const eng_file_h32_t file_handle,
         eng_file_buffer_t&   read_buffer) {
@@ -298,7 +298,7 @@ namespace ifb {
         return(is_success);
     }
 
-    // IFB_ENG_FUNC bool
+    // IFB_ENG_INTERNAL bool
     // eng_file_mngr_read_async(
     //     const eng_file_h32_t file_handle) {
 
@@ -338,7 +338,7 @@ namespace ifb {
     //     return(is_success);
     // }
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_file_mngr_write(
         const eng_file_h32_t file_handle,
         eng_file_buffer_t&   write_buffer) {
@@ -386,7 +386,7 @@ namespace ifb {
         return(is_success);
     }
 
-    // IFB_ENG_FUNC bool
+    // IFB_ENG_INTERNAL bool
     // eng_file_mngr_write_async(
     //     const eng_file_h32_t file_handle) {
 

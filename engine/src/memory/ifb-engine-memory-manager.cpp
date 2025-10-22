@@ -47,21 +47,21 @@ namespace ifb {
         return(arena);
     }
   
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_mem_arena_decommit_core(
         eng_mem_arena_t* arena) {
 
         arena_allocator_decommit(_mem_mngr.arena_allocators.core, arena);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_mem_arena_decommit_file(
         eng_mem_arena_t* arena) {
 
         arena_allocator_decommit(_mem_mngr.arena_allocators.file, arena);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_mem_arena_decommit_asset(
         eng_mem_arena_t* arena) {
 

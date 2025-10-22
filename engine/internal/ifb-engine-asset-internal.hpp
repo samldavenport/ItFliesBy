@@ -68,20 +68,20 @@ namespace ifb {
 
     static eng_asset_mngr_t _eng_asset_mngr;
 
-    IFB_ENG_FUNC void eng_asset_mngr_startup  (void);
-    IFB_ENG_FUNC void eng_asset_mngr_shutdown (void);
+    IFB_ENG_INTERNAL void eng_asset_mngr_startup  (void);
+    IFB_ENG_INTERNAL void eng_asset_mngr_shutdown (void);
 
     //-------------------------------------------------------------------
     // DATABASE
     //-------------------------------------------------------------------
 
-    IFB_ENG_FUNC void eng_asset_db_create     (void);
-    IFB_ENG_FUNC void eng_asset_db_destroy    (void);
-    IFB_ENG_FUNC void eng_asset_db_validate   (void);
-    IFB_ENG_FUNC bool eng_asset_db_load_text  (eng_asset_db_record_t& record);
-    IFB_ENG_FUNC bool eng_asset_db_load_image (eng_asset_db_record_t& record);
-    IFB_ENG_FUNC bool eng_asset_db_load_sound (eng_asset_db_record_t& record);
-    IFB_ENG_FUNC bool eng_asset_db_load_font  (eng_asset_db_record_t& record);
+    IFB_ENG_INTERNAL void eng_asset_db_create     (void);
+    IFB_ENG_INTERNAL void eng_asset_db_destroy    (void);
+    IFB_ENG_INTERNAL void eng_asset_db_validate   (void);
+    IFB_ENG_INTERNAL bool eng_asset_db_load_text  (eng_asset_db_record_t& record);
+    IFB_ENG_INTERNAL bool eng_asset_db_load_image (eng_asset_db_record_t& record);
+    IFB_ENG_INTERNAL bool eng_asset_db_load_sound (eng_asset_db_record_t& record);
+    IFB_ENG_INTERNAL bool eng_asset_db_load_font  (eng_asset_db_record_t& record);
 
     struct eng_asset_db_table_t {
         u32   row_count;

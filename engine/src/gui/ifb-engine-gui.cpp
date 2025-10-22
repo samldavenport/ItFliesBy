@@ -15,7 +15,6 @@ namespace ifb::eng {
         io.Fonts->AddFontFromMemoryCompressedBase85TTF(
             ENG_OPENSANS_COMPRESSED_BASE85, 16.0f
         );
-
     }
 
     IFB_ENG_INTERNAL void
@@ -32,6 +31,7 @@ namespace ifb::eng {
 
         if (begin_main_window) {
             gui_menu_bar_render();
+            gui_imgui_render();
         }
         
         ImGui::End();

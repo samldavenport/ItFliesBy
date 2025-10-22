@@ -12,7 +12,7 @@
 
 namespace ifb {
  
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_window_init(
         void) {
 
@@ -24,7 +24,7 @@ namespace ifb {
 
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_window_open_and_show(
         void) {
 
@@ -50,7 +50,7 @@ namespace ifb {
         sld::os_window_show(_eng_core_window.handle);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_window_process_events(
         void) {
 
@@ -63,14 +63,14 @@ namespace ifb {
 
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_window_swap_buffers(
         void) {
 
         _eng_core_window.last_error = sld::os_window_swap_buffers(_eng_core_window.handle);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_window_center_to_monitor(
         const eng_core_monitor_handle_t monitor) {
 
@@ -88,7 +88,7 @@ namespace ifb {
         sld::dims_u32_center_a_inside_b(_eng_core_window.size, monitor_size, _eng_core_window.position);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_window_center_to_primary_monitor(
         void) {
 

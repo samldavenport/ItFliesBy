@@ -2,7 +2,7 @@
 
 namespace ifb {
 
-    IFB_ENG_FUNC bool
+    IFB_ENG_INTERNAL bool
     eng_core_monitor_table_validate(
         void) {
 
@@ -18,7 +18,7 @@ namespace ifb {
         return(is_valid);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_monitor_table_init(
         void) {
 
@@ -46,7 +46,7 @@ namespace ifb {
         is_init = true;
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_monitor_table_refresh(
         void) {
 
@@ -106,7 +106,7 @@ namespace ifb {
         }
     }
 
-    IFB_ENG_FUNC u32
+    IFB_ENG_INTERNAL u32
     eng_core_monitor_table_search(
         const eng_core_monitor_handle_t monitor) {
 
@@ -130,7 +130,7 @@ namespace ifb {
         return(index);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_monitor_get_size(
         const eng_core_monitor_handle_t monitor,
         eng_core_monitor_size_t&        size) {
@@ -144,7 +144,7 @@ namespace ifb {
         size            = _eng_core_monitor_table.array.size[index];
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_monitor_get_position(
         const eng_core_monitor_handle_t monitor,
         eng_core_monitor_pos_t&         pos) {
@@ -158,7 +158,7 @@ namespace ifb {
         pos             = _eng_core_monitor_table.array.position [index];
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_monitor_get_name(
         const eng_core_monitor_handle_t monitor,
         eng_core_monitor_name_t&           name) {
@@ -181,7 +181,7 @@ namespace ifb {
         (void)sld::cstr_copy_from(&dst, src.chars, src.size);
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     eng_core_monitor_get_info(
         const eng_core_monitor_handle_t monitor,
         eng_core_monitor_info_t&           info) {

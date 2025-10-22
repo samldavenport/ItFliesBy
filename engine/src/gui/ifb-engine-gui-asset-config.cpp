@@ -19,7 +19,7 @@ namespace ifb {
         gui_input_cstr_t asset_config;
     };
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     gui_asset_config(
         void) {
 
@@ -43,7 +43,7 @@ namespace ifb {
         }
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     gui_asset_config_path_input(
         void) {
 
@@ -102,7 +102,7 @@ namespace ifb {
         }
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     gui_asset_config_text(
         void) {
 
@@ -112,7 +112,7 @@ namespace ifb {
         }
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     gui_asset_config_image(
         void) {
 
@@ -122,7 +122,7 @@ namespace ifb {
         }
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     gui_asset_config_sound(
         void) {
 
@@ -132,7 +132,7 @@ namespace ifb {
         }
     }
 
-    IFB_ENG_FUNC void
+    IFB_ENG_INTERNAL void
     gui_asset_config_font(
         void) {
 

@@ -2,23 +2,23 @@
 
 #include "ifb-engine-gui.hpp"
 
-namespace ifb {
+namespace ifb::eng {
 
-    IFB_ENG_FUNC void
-    gui_imgui(
+    IFB_ENG_INTERNAL void
+    gui_imgui_render(
         void) {
 
-        bool is_open_base_demo = gui_imgui_window_is_open(gui_e32_flag_imgui_base_demo);
-        bool is_open_plot_demo = gui_imgui_window_is_open(gui_e32_flag_imgui_plot_demo);
+        static bool window_open = false;
 
-        if (is_open_base_demo) {
-            ImGui::ShowDemoWindow(&is_open_base_demo);
+        if (gui_imgui_flag_state(gui_imgui_flag_e_base_demo)) {
+            window_open = true;
+            ImGui::ShowDemoWindow(&window_open);
+            if (!window_open) gui_imgui_flag_clear(gui_imgui_flag_e_base_demo);
         }
-        if (is_open_plot_demo) {
+
+        if (gui_imgui_flag_state(gui_imgui_flag_e_plot_demo)) {
             //TODO
         }
 
-        if (!is_open_base_demo) gui_imgui_window_close(gui_e32_flag_imgui_base_demo);
-        if (!is_open_plot_demo) gui_imgui_window_close(gui_e32_flag_imgui_plot_demo);
     }
 };
