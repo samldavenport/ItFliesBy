@@ -25,5 +25,4 @@
 #include "ifb-engine-core.cpp"
 
 #include "ifb-engine-gui.cpp"
-#include "ifb-engine-gui-imgui.cpp"
-#include "ifb-engine-gui-asset-config.cpp"
+#include "ifb-engine-gui-menu-bar.cpp"

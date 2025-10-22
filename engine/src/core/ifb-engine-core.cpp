@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ifb-engine-core-internal.hpp"
-#include "ifb-engine-gui-internal.hpp"
+#include "ifb-engine-gui.hpp"
 #include "ifb-engine-asset-config.hpp"
 namespace ifb {
 
@@ -14,13 +14,9 @@ namespace ifb {
         eng_file_mngr_startup  ();
         eng_asset_mngr_startup ();
 
-
-        // initialize xml
-        sld::xml_init();
-
         auto config = eng::asset_config_context_create();
+        auto node   = eng::asset_config_context_add_text_node(config, "name", "path");
         eng::asset_config_context_destroy(config);
-        auto node = eng::asset_config_context_add_text_node(config, "name", "path");
 
 
         // initialize platform
@@ -30,7 +26,7 @@ namespace ifb {
         eng_core_window_open_and_show             ();
 
         // initialize gui
-        eng_gui_init();
+        eng::gui_init();
 
         return(true); 
     }
@@ -63,7 +59,7 @@ namespace ifb {
     eng_core_render(
         void) {
 
-        eng_gui_render();
+        eng::gui_render();
         eng_core_window_swap_buffers();
 
         return(true);

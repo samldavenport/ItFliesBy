@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ifb-engine-gui-internal.hpp"
+#include "ifb-engine-gui.hpp"
 #include "ifb-engine-asset-internal.hpp"
 
 namespace ifb {
@@ -15,48 +15,48 @@ namespace ifb {
     constexpr cchar CSTR_INPUT_BUTTON_SUBMIT_DIR               [] = "Submit Dir";
 
     struct gui_asset_config_t {
-        eng_gui_input_cstr_t asset_folder;
-        eng_gui_input_cstr_t asset_config;
+        gui_input_cstr_t asset_folder;
+        gui_input_cstr_t asset_config;
     };
 
     IFB_ENG_FUNC void
-    eng_gui_asset_config(
+    gui_asset_config(
         void) {
 
         constexpr cchar window_name_cstr[] = "Asset Config";
-        bool is_open = eng_gui_assets_window_is_open(eng_gui_e32_flag_assets_config);
+        bool is_open = gui_assets_window_is_open(gui_e32_flag_assets_config);
 
         if (is_open) {
             if (ImGui::Begin(window_name_cstr, &is_open)) {
 
-                eng_gui_asset_config_path_input ();
-                eng_gui_asset_config_text       ();
-                eng_gui_asset_config_image      ();
-                eng_gui_asset_config_sound      ();
-                eng_gui_asset_config_font       ();
+                gui_asset_config_path_input ();
+                gui_asset_config_text       ();
+                gui_asset_config_image      ();
+                gui_asset_config_sound      ();
+                gui_asset_config_font       ();
             }
             ImGui::End();
         }
 
         if (!is_open) {
-            eng_gui_assets_window_close(eng_gui_e32_flag_assets_config);
+            gui_assets_window_close(gui_e32_flag_assets_config);
         }
     }
 
     IFB_ENG_FUNC void
-    eng_gui_asset_config_path_input(
+    gui_asset_config_path_input(
         void) {
 
-        constexpr u32 input_size       = sizeof(eng_gui_input_cstr_t); 
+        constexpr u32 input_size       = sizeof(gui_input_cstr_t); 
         constexpr u32 path_input_file  = 0; 
         constexpr u32 path_input_dir   = 1; 
         constexpr u32 path_input_count = 2; 
 
-        static eng_gui_text_input_t path_text_input_array [path_input_count] = {
-            eng_gui_text_input_init(CSTR_INPUT_BUTTON_SUBMIT_FILE, CSTR_PATH_INPUT_CONFIG_FILE_LABEL_TEXT),    // path_input_file
-            eng_gui_text_input_init(CSTR_INPUT_BUTTON_SUBMIT_DIR,  CSTR_PATH_INPUT_ASSET_DIR_INPUT_LABEL_TEXT) // path_input_asset_directory
+        static gui_text_input_t path_text_input_array [path_input_count] = {
+            gui_text_input_init(CSTR_INPUT_BUTTON_SUBMIT_FILE, CSTR_PATH_INPUT_CONFIG_FILE_LABEL_TEXT),    // path_input_file
+            gui_text_input_init(CSTR_INPUT_BUTTON_SUBMIT_DIR,  CSTR_PATH_INPUT_ASSET_DIR_INPUT_LABEL_TEXT) // path_input_asset_directory
         };
-        eng_gui_text_input(path_text_input_array, path_input_count);
+        gui_text_input(path_text_input_array, path_input_count);
 
         static bool      is_dialog_open_file     = false;
         static bool      is_dialog_open_dir      = false;
@@ -103,7 +103,7 @@ namespace ifb {
     }
 
     IFB_ENG_FUNC void
-    eng_gui_asset_config_text(
+    gui_asset_config_text(
         void) {
 
         const ImGuiTreeNodeFlags header_flags = ImGuiTreeNodeFlags_None;
@@ -113,7 +113,7 @@ namespace ifb {
     }
 
     IFB_ENG_FUNC void
-    eng_gui_asset_config_image(
+    gui_asset_config_image(
         void) {
 
         const ImGuiTreeNodeFlags header_flags = ImGuiTreeNodeFlags_None;
@@ -123,7 +123,7 @@ namespace ifb {
     }
 
     IFB_ENG_FUNC void
-    eng_gui_asset_config_sound(
+    gui_asset_config_sound(
         void) {
 
         const ImGuiTreeNodeFlags header_flags = ImGuiTreeNodeFlags_None;
@@ -133,7 +133,7 @@ namespace ifb {
     }
 
     IFB_ENG_FUNC void
-    eng_gui_asset_config_font(
+    gui_asset_config_font(
         void) {
 
         const ImGuiTreeNodeFlags header_flags = ImGuiTreeNodeFlags_None;

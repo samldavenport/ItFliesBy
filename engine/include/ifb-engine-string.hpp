@@ -14,7 +14,7 @@ namespace ifb::eng {
     constexpr u32 STRING_SIZE_C64  = sizeof(string_c64_t); 
     constexpr u32 STRING_SIZE_C256 = sizeof(string_c256_t); 
 
-    IFB_ENG_API_INLINE void   cstr_sanitize(const cchar* cstr, const u64 size);
+    IFB_ENG_API_INLINE void          cstr_sanitize(const cchar* cstr, const u64 size);
 
     IFB_ENG_API_INLINE string_c32_t* string_c32_arena_alloc (eng_mem_arena_t*    arena, const u32 count = 1);
     IFB_ENG_API_INLINE cstr_t        string_c32_to_cstr     (const string_c32_t* string);
@@ -22,15 +22,15 @@ namespace ifb::eng {
     IFB_ENG_API_INLINE u64           string_c32_copy_from   (string_c32_t*       string, const cchar* src);
     IFB_ENG_API_INLINE u64           string_c32_copy_to     (const string_c32_t* string, cchar*       dst);
     
-    IFB_ENG_API_INLINE cstr_t string_c64_to_cstr    (string_c64_t* string);
-    IFB_ENG_API_INLINE void   string_c64_sanitize   (string_c64_t* string);
-    IFB_ENG_API_INLINE u64    string_c64_copy_from  (string_c64_t* string, const cchar* src);
-    IFB_ENG_API_INLINE u64    string_c64_copy_to    (const string_c64_t* string, cchar* dst);
+    IFB_ENG_API_INLINE cstr_t        string_c64_to_cstr    (string_c64_t* string);
+    IFB_ENG_API_INLINE void          string_c64_sanitize   (string_c64_t* string);
+    IFB_ENG_API_INLINE u64           string_c64_copy_from  (string_c64_t* string, const cchar* src);
+    IFB_ENG_API_INLINE u64           string_c64_copy_to    (const string_c64_t* string, cchar* dst);
     
-    IFB_ENG_API_INLINE cstr_t string_c256_to_cstr   (string_c256_t* string);
-    IFB_ENG_API_INLINE void   string_c256_sanitize  (string_c256_t* string);
-    IFB_ENG_API_INLINE u64    string_c256_copy_from (string_c256_t* string, const cchar* src);
-    IFB_ENG_API_INLINE u64    string_c256_copy_to   (const string_c256_t* string, cchar* dst);
+    IFB_ENG_API_INLINE cstr_t         string_c256_to_cstr   (string_c256_t* string);
+    IFB_ENG_API_INLINE void          string_c256_sanitize  (string_c256_t* string);
+    IFB_ENG_API_INLINE u64           string_c256_copy_from (string_c256_t* string, const cchar* src);
+    IFB_ENG_API_INLINE u64           string_c256_copy_to   (const string_c256_t* string, cchar* dst);
 
     IFB_ENG_API_INLINE void
     cstr_sanitize(
@@ -107,7 +107,7 @@ namespace ifb::eng {
         const cchar*  src) {
 
         cstr_t    dst          = string_c32_to_cstr(string);
-        const u64 bytes_copied = sld::cstr_copy_from(&dst, src, 32);
+        const u64 bytes_copied = sld::cstr_copy_from(&dst, src, STRING_SIZE_C32);
         return(bytes_copied);
     }
 
@@ -117,7 +117,7 @@ namespace ifb::eng {
         cchar*             dst) {
 
         cstr_t    src          = string_c32_to_cstr (string);
-        const u64 bytes_copied = sld::cstr_copy_to  (&src, dst, 32);
+        const u64 bytes_copied = sld::cstr_copy_to  (&src, dst, STRING_SIZE_C32);
         return(bytes_copied);
     }
 
