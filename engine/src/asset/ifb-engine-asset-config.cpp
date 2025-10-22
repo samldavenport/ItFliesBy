@@ -8,9 +8,30 @@ namespace ifb::eng {
     // CONTEXT
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL asset_config_context_t*
+    IFB_ENG_INTERNAL bool
+    asset_config_context_is_valid(
+        asset_config_context_t* context) {
+
+        bool is_valid = (
+            context                    != NULL &&
+            context->name              != NULL &&
+            context->path              != NULL &&
+            context->node_list.text    != NULL &&
+            context->node_list.image   != NULL &&
+            context->node_list.sound   != NULL &&
+            context->node_list.font    != NULL &&
+            context->node_list.deleted != NULL &&
+            context->active_arena      != NULL
+        );
+        return(is_valid);
+    }
+
+
+    IFB_ENG_INTERNAL void
     asset_config_context_create(
-        void) {
+        asset_config_context_t* context) {
+
+        assert(context != NULL);
 
         constexpr u64 alctr_size_total = sld::size_gigabytes(1);
         constexpr u64 alctr_size_arena = sld::size_megabytes(1);
@@ -24,13 +45,11 @@ namespace ifb::eng {
         arena_t* arena = sld::arena_allocator_commit(&arena_alctr);
         assert(arena);
 
-        auto context = sld::arena_push_struct<asset_config_context_t>(arena);
         auto strings = string_c32_arena_alloc        (arena, 2); 
         auto lists   = asset_config_list_arena_alloc (arena, 5); 
         auto alctr   = sld::arena_push_struct<arena_allocator_t>(arena); 
 
         assert(
-            context != NULL &&
             strings != NULL &&
             lists   != NULL &&            
             alctr   != NULL            
@@ -47,13 +66,14 @@ namespace ifb::eng {
         context->node_list.deleted = &lists[4];
         context->arena_allocator   = alctr;
         context->active_arena      = arena;
-        return(context);
     }
 
     IFB_ENG_INTERNAL void
     asset_config_context_destroy(
         asset_config_context_t* context) {
 
+        sld::arena_allocator_release_os_memory(context->arena_allocator);
+        
         context->name              = NULL;
         context->path              = NULL;
         context->node_list.text    = NULL;
@@ -62,8 +82,6 @@ namespace ifb::eng {
         context->node_list.font    = NULL;
         context->node_list.deleted = NULL;
         context->active_arena      = NULL;
-
-        sld::arena_allocator_release_os_memory(context->arena_allocator);
     }
     
     IFB_ENG_INTERNAL asset_config_node_t*

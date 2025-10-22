@@ -41,24 +41,25 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // context
-    IFB_ENG_INTERNAL asset_config_context_t* asset_config_context_create         (void);
-    IFB_ENG_INTERNAL void                    asset_config_context_destroy        (asset_config_context_t* context);
-    IFB_ENG_INTERNAL asset_config_node_t*    asset_config_context_add_text_node  (asset_config_context_t* context, const cchar* name, const cchar* path); 
-    IFB_ENG_INTERNAL asset_config_node_t*    asset_config_context_add_image_node (asset_config_context_t* context, const cchar* name, const cchar* path);
-    IFB_ENG_INTERNAL asset_config_node_t*    asset_config_context_add_sound_node (asset_config_context_t* context, const cchar* name, const cchar* path);
-    IFB_ENG_INTERNAL asset_config_node_t*    asset_config_context_add_font_node  (asset_config_context_t* context, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL bool                 asset_config_context_is_valid       (asset_config_context_t* context);
+    IFB_ENG_INTERNAL void                 asset_config_context_create         (asset_config_context_t* context);
+    IFB_ENG_INTERNAL void                 asset_config_context_destroy        (asset_config_context_t* context);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_text_node  (asset_config_context_t* context, const cchar* name, const cchar* path); 
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_image_node (asset_config_context_t* context, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_sound_node (asset_config_context_t* context, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_font_node  (asset_config_context_t* context, const cchar* name, const cchar* path);
 
     // config nodes
-    IFB_ENG_INTERNAL asset_config_node_t*    asset_config_node_arena_alloc       (eng_mem_arena_t* arena);
-    IFB_ENG_INTERNAL void                    asset_config_node_init              (asset_config_node_t* node, const cchar* name, const cchar* path);
-    IFB_ENG_INTERNAL void                    asset_config_node_update_name       (asset_config_node_t* node, const cchar* name);
-    IFB_ENG_INTERNAL void                    asset_config_node_update_path       (asset_config_node_t* node, const cchar* path);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_node_arena_alloc       (eng_mem_arena_t* arena);
+    IFB_ENG_INTERNAL void                 asset_config_node_init              (asset_config_node_t* node, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL void                 asset_config_node_update_name       (asset_config_node_t* node, const cchar* name);
+    IFB_ENG_INTERNAL void                 asset_config_node_update_path       (asset_config_node_t* node, const cchar* path);
 
     // config list
-    IFB_ENG_INTERNAL asset_config_list_t*    asset_config_list_arena_alloc       (eng_mem_arena_t* arena, const u32 count = 1);
-    IFB_ENG_INTERNAL void                    asset_config_list_remove_node       (asset_config_list_t* list, asset_config_node_t* node);
-    IFB_ENG_INTERNAL void                    asset_config_list_add_existing_node (asset_config_list_t* list, asset_config_node_t* node);
-    IFB_ENG_INTERNAL asset_config_node_t*    asset_config_list_add_new_node      (asset_config_list_t* list, arena_t* arena, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL asset_config_list_t* asset_config_list_arena_alloc       (eng_mem_arena_t* arena, const u32 count = 1);
+    IFB_ENG_INTERNAL void                 asset_config_list_remove_node       (asset_config_list_t* list, asset_config_node_t* node);
+    IFB_ENG_INTERNAL void                 asset_config_list_add_existing_node (asset_config_list_t* list, asset_config_node_t* node);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_list_add_new_node      (asset_config_list_t* list, arena_t* arena, const cchar* name, const cchar* path);
 
 
     //-------------------------------------------------------------------

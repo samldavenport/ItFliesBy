@@ -29,10 +29,14 @@ namespace ifb::eng {
             NULL,
             main_window_flags);
 
-        if (begin_main_window) {
-            gui_menu_bar_render();
-            gui_imgui_render();
+        if (!begin_main_window) {
+            ImGui::End();
+            return;
         }
+        
+        gui_menu_bar_render();
+        gui_imgui_render();
+        gui_asset_render_config();
         
         ImGui::End();
     }

@@ -14,11 +14,6 @@ namespace ifb {
         eng_file_mngr_startup  ();
         eng_asset_mngr_startup ();
 
-        auto config = eng::asset_config_context_create();
-        auto node   = eng::asset_config_context_add_text_node(config, "name", "path");
-        eng::asset_config_context_destroy(config);
-
-
         // initialize platform
         eng_core_monitor_table_init               ();
         eng_core_window_init                      ();

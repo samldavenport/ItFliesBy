@@ -27,7 +27,7 @@ namespace ifb::eng {
     struct gui_asset_config_editor_t;
     using  gui_asset_flags_t = u32_t;
 
-    IFB_ENG_INTERNAL        void gui_asset_render         (void);
+    IFB_ENG_INTERNAL        void gui_asset_render_config  (void);
     IFB_ENG_INTERNAL_INLINE void gui_asset_flag_set       (const gui_asset_flag_e flag);
     IFB_ENG_INTERNAL_INLINE bool gui_asset_flag_state     (const gui_asset_flag_e flag);
     IFB_ENG_INTERNAL_INLINE void gui_asset_flag_clear     (const gui_asset_flag_e flag);
@@ -37,20 +37,20 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct gui_asset_config_editor_t {
-        asset_config_context_t* config_context;
-    };
-
     struct gui_asset_state_t {
-        gui_asset_flags_t         flags;
-        gui_asset_config_editor_t config_editor;
+        gui_asset_flags_t       flags;
+        asset_config_context_t* config_context;
     }; 
 
     //-------------------------------------------------------------------
     // GLOBALS
     //-------------------------------------------------------------------
 
-    IFB_ENG_GLOBAL gui_asset_state_t _gui_asset_state;
+    IFB_ENG_GLOBAL asset_config_context_t _gui_asset_config_context;
+    IFB_ENG_GLOBAL gui_asset_state_t      _gui_asset_state = {
+        { gui_asset_flag_e_none }, // flags
+        &_gui_asset_config_context // config_context
+    };
 
     //-------------------------------------------------------------------
     // INLINE METHODS
