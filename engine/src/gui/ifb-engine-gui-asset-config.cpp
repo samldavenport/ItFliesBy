@@ -14,7 +14,7 @@ namespace ifb::eng {
     // INTERNAL DECLARATIONS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL void gui_asset_render_config (bool* is_open);
+    IFB_ENG_INTERNAL void gui_asset_config_section_text (void);
 
     //-------------------------------------------------------------------
     // INTERNAL METHODS
@@ -43,6 +43,29 @@ namespace ifb::eng {
             return;
         }
 
+
+        static gui_widget_input_t input_name;
+        static gui_widget_input_t input_path;
+
+        ImGui::SeparatorText("Add new asset");
+
+        ImGui::Text("Name");
+        ImGui::SameLine();
+        ImGui::InputText("###", input_name.string.chars, sizeof(input_name.string),ImGuiInputTextFlags_None, NULL, NULL);
+        ImGui::SameLine();
+        ImGui::Button("Browse##asset-name");
+        ImGui::SameLine();
+        ImGui::Button("Submit##asset-name");
+
+        ImGui::Text("Path");
+        ImGui::SameLine();
+        ImGui::InputText("###", input_name.string.chars, sizeof(input_name.string),ImGuiInputTextFlags_None, NULL, NULL);
+        ImGui::SameLine();
+        ImGui::Button("Browse##asset-path");
+        ImGui::SameLine();
+        ImGui::Button("Submit##asset-path");
+
+
         if (!is_open) {
             gui_asset_flag_clear         (gui_asset_flag_e_config);
             asset_config_context_destroy (_gui_asset_state.config_context);            
@@ -50,4 +73,11 @@ namespace ifb::eng {
 
         ImGui::End();
     }
+
+    IFB_ENG_INTERNAL void
+    gui_asset_config_section_text(
+        void) {
+
+    }
+
 };
