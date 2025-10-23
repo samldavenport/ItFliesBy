@@ -24,6 +24,18 @@ namespace ifb::eng {
         constexpr ImGuiWindowFlags main_window_flags        = ImGuiWindowFlags_MenuBar;
         constexpr cchar            main_window_name_cstr [] = "IFB Dev Console";
 
+        ImGui::EndDisabled();
+
+        cchar buf[256];
+        FileDialog::ShowFileDialog(
+            buf,
+            256, // buffer_size,
+            FileDialog::FileDialogType::OpenFile
+        );
+        if (FileDialog::file_dialog_open) {
+            ImGui::BeginDisabled();
+        }
+
         const bool begin_main_window = ImGui::Begin(
             main_window_name_cstr,
             NULL,
@@ -34,6 +46,8 @@ namespace ifb::eng {
             return;
         }
         
+
+
         gui_menu_bar_render();
         gui_imgui_render();
         gui_asset_render_config();

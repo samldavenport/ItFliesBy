@@ -103,11 +103,11 @@ namespace ifb::eng {
         FileDialog::file_dialog_open = (show_file_dialog_config || show_file_dialog_assets); 
         auto dialog_buffer = (show_file_dialog_config) ? ctrl_config.input.str_text.chars : ctrl_assets.input.str_text.chars;
         auto dialog_type   = (show_file_dialog_config) ? FileDialog::FileDialogType::OpenFile : FileDialog::FileDialogType::SelectFolder;
-        FileDialog::ShowFileDialog(
-            dialog_buffer,         // buffer
-            GUI_WIDGET_SIZE_INPUT, // buffer_size
-            dialog_type            // type
-        );
+        // FileDialog::ShowFileDialog(
+        //     dialog_buffer,         // buffer
+        //     GUI_WIDGET_SIZE_INPUT, // buffer_size
+        //     dialog_type            // type
+        // );
 
         if (!FileDialog::file_dialog_open) {
             show_file_dialog_config = false;
