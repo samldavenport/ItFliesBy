@@ -10,11 +10,19 @@ namespace ifb::eng {
 
     constexpr cchar GUI_ASSET_CONFIG_CSTR_WINDOW[] = "Asset Config";
 
+    struct gui_asset_config_settings_control_t {
+        gui_widget_label_t      label;
+        gui_widget_input_text_t input;
+        gui_widget_button_t     button;
+    };
+
     //-------------------------------------------------------------------
     // INTERNAL DECLARATIONS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL void gui_asset_config_section_text (void);
+    IFB_ENG_INTERNAL void gui_asset_config_settings         (void);
+    IFB_ENG_INTERNAL bool gui_asset_config_settings_control (gui_asset_config_settings_control_t& ctrl);
+    IFB_ENG_INTERNAL void gui_asset_config_section_text     (void);
 
     //-------------------------------------------------------------------
     // INTERNAL METHODS
@@ -43,28 +51,7 @@ namespace ifb::eng {
             return;
         }
 
-
-        static gui_widget_input_t input_name;
-        static gui_widget_input_t input_path;
-
-        ImGui::SeparatorText("Add new asset");
-
-        ImGui::Text("Name");
-        ImGui::SameLine();
-        ImGui::InputText("###", input_name.string.chars, sizeof(input_name.string),ImGuiInputTextFlags_None, NULL, NULL);
-        ImGui::SameLine();
-        ImGui::Button("Browse##asset-name");
-        ImGui::SameLine();
-        ImGui::Button("Submit##asset-name");
-
-        ImGui::Text("Path");
-        ImGui::SameLine();
-        ImGui::InputText("###", input_name.string.chars, sizeof(input_name.string),ImGuiInputTextFlags_None, NULL, NULL);
-        ImGui::SameLine();
-        ImGui::Button("Browse##asset-path");
-        ImGui::SameLine();
-        ImGui::Button("Submit##asset-path");
-
+        gui_asset_config_settings();
 
         if (!is_open) {
             gui_asset_flag_clear         (gui_asset_flag_e_config);
@@ -72,6 +59,62 @@ namespace ifb::eng {
         }
 
         ImGui::End();
+    }
+
+    IFB_ENG_INTERNAL void
+    gui_asset_config_settings(
+        void) {
+        
+        static gui_asset_config_settings_control_t ctrl_config = {
+            gui_widget_label_init      ("Config Path"),       // label
+            gui_widget_input_text_init ("input-path-config"), // input
+            gui_widget_button_init     ("Browse")             // button    
+        };
+        static gui_asset_config_settings_control_t ctrl_assets = {
+            gui_widget_label_init      ("Assets Path"),       // label
+            gui_widget_input_text_init ("input-path-assets"), // input
+            gui_widget_button_init     ("Browse")             // button    
+        };
+
+        ImGui::SeparatorText("Config Settings");
+
+        const bool begin_table = ImGui::BeginTable("config-settings", 3, ImGuiTableFlags_None);
+        if (begin_table) {
+
+            ImGui::TableSetupColumn("config-settings-table-column-label",  ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn("config-settings-table-column-input",  ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn("config-settings-table-column-browse", ImGuiTableColumnFlags_WidthStretch);
+
+            const bool browse_config = gui_asset_config_settings_control(ctrl_config);
+            const bool browse_assets = gui_asset_config_settings_control(ctrl_assets);
+
+            ImGui::EndTable();
+        }
+    }
+
+    IFB_ENG_INTERNAL bool
+    gui_asset_config_settings_control(
+        gui_asset_config_settings_control_t& ctrl) {
+
+        constexpr u32 column_index_label  = 0;
+        constexpr u32 column_index_input  = 1;
+        constexpr u32 column_index_browse = 2;
+
+        ImGui::TableNextRow();
+
+        // label
+        ImGui::TableSetColumnIndex(column_index_label);
+        gui_widget_label_render(ctrl.label);
+        
+        // input
+        ImGui::TableSetColumnIndex(column_index_input);
+        gui_widget_input_text_render(ctrl.input);
+        
+        // button
+        ImGui::TableSetColumnIndex(column_index_browse);
+        const bool button_clicked = gui_widget_button_render(ctrl.button); 
+        
+        return(button_clicked);
     }
 
     IFB_ENG_INTERNAL void
