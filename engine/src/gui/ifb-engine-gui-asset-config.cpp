@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ifb-engine-gui.hpp"
-
+#include <imgui/L2DFileDialog.h>
 namespace ifb::eng {
 
     //-------------------------------------------------------------------
@@ -20,9 +20,11 @@ namespace ifb::eng {
     // INTERNAL DECLARATIONS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL void gui_asset_config_settings         (void);
-    IFB_ENG_INTERNAL bool gui_asset_config_settings_control (gui_asset_config_settings_control_t& ctrl);
-    IFB_ENG_INTERNAL void gui_asset_config_section_text     (void);
+    IFB_ENG_INTERNAL void gui_asset_config_settings           (void);
+    IFB_ENG_INTERNAL bool gui_asset_config_settings_control   (gui_asset_config_settings_control_t& ctrl);
+    IFB_ENG_INTERNAL void gui_asset_config_browse_config_file (string_c256_t& file_path);
+    IFB_ENG_INTERNAL void gui_asset_config_browse_assets_dir  (string_c256_t& dir_path);
+    IFB_ENG_INTERNAL void gui_asset_config_section_text       (void);
 
     //-------------------------------------------------------------------
     // INTERNAL METHODS
@@ -75,6 +77,8 @@ namespace ifb::eng {
             gui_widget_input_text_init ("input-path-assets"), // input
             gui_widget_button_init     ("Browse")             // button    
         };
+        static bool show_file_dialog_config = false;
+        static bool show_file_dialog_assets = false;
 
         ImGui::SeparatorText("Config Settings");
 
@@ -87,8 +91,27 @@ namespace ifb::eng {
 
             const bool browse_config = gui_asset_config_settings_control(ctrl_config);
             const bool browse_assets = gui_asset_config_settings_control(ctrl_assets);
+            if (!show_file_dialog_config) show_file_dialog_config = browse_config; 
+            if (!show_file_dialog_assets) show_file_dialog_assets = browse_assets; 
+            assert(!(show_file_dialog_config && show_file_dialog_assets));
+
+
 
             ImGui::EndTable();
+        }
+        
+        FileDialog::file_dialog_open = (show_file_dialog_config || show_file_dialog_assets); 
+        auto dialog_buffer = (show_file_dialog_config) ? ctrl_config.input.str_text.chars : ctrl_assets.input.str_text.chars;
+        auto dialog_type   = (show_file_dialog_config) ? FileDialog::FileDialogType::OpenFile : FileDialog::FileDialogType::SelectFolder;
+        FileDialog::ShowFileDialog(
+            dialog_buffer,         // buffer
+            GUI_WIDGET_SIZE_INPUT, // buffer_size
+            dialog_type            // type
+        );
+
+        if (!FileDialog::file_dialog_open) {
+            show_file_dialog_config = false;
+            show_file_dialog_assets = false;            
         }
     }
 
@@ -116,6 +139,21 @@ namespace ifb::eng {
         
         return(button_clicked);
     }
+
+    IFB_ENG_INTERNAL void
+    gui_asset_config_browse_config_file(
+        string_c256_t& file_path) {
+
+        
+    }
+
+    IFB_ENG_INTERNAL void
+    gui_asset_config_browse_assets_dir(
+        string_c256_t& dir_path) {
+
+    }
+
+
 
     IFB_ENG_INTERNAL void
     gui_asset_config_section_text(

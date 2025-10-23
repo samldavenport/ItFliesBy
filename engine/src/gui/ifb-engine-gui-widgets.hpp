@@ -16,15 +16,16 @@ namespace ifb::eng {
     struct gui_widget_input_t;
     struct gui_widget_input_text_t;
 
-    IFB_ENG_INTERNAL_INLINE gui_widget_label_t      gui_widget_label_init_unique   (const cchar* label_text);
-    IFB_ENG_INTERNAL_INLINE gui_widget_label_t      gui_widget_label_init          (const cchar* label_text);
-    IFB_ENG_INTERNAL_INLINE void                    gui_widget_label_render        (gui_widget_label_t& label);
+    IFB_ENG_INTERNAL_INLINE gui_widget_label_t      gui_widget_label_init_unique (const cchar* label_text);
+    IFB_ENG_INTERNAL_INLINE gui_widget_label_t      gui_widget_label_init        (const cchar* label_text);
+    IFB_ENG_INTERNAL_INLINE void                    gui_widget_label_render      (gui_widget_label_t& label);
 
-    IFB_ENG_INTERNAL_INLINE gui_widget_button_t     gui_widget_button_init         (const cchar* label);
-    IFB_ENG_INTERNAL_INLINE bool                    gui_widget_button_render       (gui_widget_button_t& button);
+    IFB_ENG_INTERNAL_INLINE gui_widget_button_t     gui_widget_button_init       (const cchar* label);
+    IFB_ENG_INTERNAL_INLINE bool                    gui_widget_button_render     (gui_widget_button_t& button);
 
-    IFB_ENG_INTERNAL_INLINE gui_widget_input_text_t gui_widget_input_text_init     (const cchar* name);
-    IFB_ENG_INTERNAL_INLINE void                    gui_widget_input_text_render   (gui_widget_input_text_t& input_text);
+    IFB_ENG_INTERNAL_INLINE gui_widget_input_text_t gui_widget_input_text_init   (const cchar* name);
+    IFB_ENG_INTERNAL_INLINE void                    gui_widget_input_text_render (gui_widget_input_text_t& input_text);
+    IFB_ENG_INTERNAL_INLINE void                    gui_widget_input_text_clear  (gui_widget_input_text_t& input_text);
 
 
     //-------------------------------------------------------------------
@@ -113,6 +114,14 @@ namespace ifb::eng {
             GUI_WIDGET_SIZE_INPUT
          );
     }
+
+    IFB_ENG_INTERNAL_INLINE void
+    gui_widget_input_text_clear(
+        gui_widget_input_text_t& input_text) {
+        
+        memset(input_text.str_text.chars, 0, GUI_WIDGET_SIZE_INPUT); 
+    }
+
 
 };
 
