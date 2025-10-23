@@ -91,27 +91,8 @@ namespace ifb::eng {
 
             const bool browse_config = gui_asset_config_settings_control(ctrl_config);
             const bool browse_assets = gui_asset_config_settings_control(ctrl_assets);
-            if (!show_file_dialog_config) show_file_dialog_config = browse_config; 
-            if (!show_file_dialog_assets) show_file_dialog_assets = browse_assets; 
-            assert(!(show_file_dialog_config && show_file_dialog_assets));
-
-
 
             ImGui::EndTable();
-        }
-        
-        FileDialog::file_dialog_open = (show_file_dialog_config || show_file_dialog_assets); 
-        auto dialog_buffer = (show_file_dialog_config) ? ctrl_config.input.str_text.chars : ctrl_assets.input.str_text.chars;
-        auto dialog_type   = (show_file_dialog_config) ? FileDialog::FileDialogType::OpenFile : FileDialog::FileDialogType::SelectFolder;
-        // FileDialog::ShowFileDialog(
-        //     dialog_buffer,         // buffer
-        //     GUI_WIDGET_SIZE_INPUT, // buffer_size
-        //     dialog_type            // type
-        // );
-
-        if (!FileDialog::file_dialog_open) {
-            show_file_dialog_config = false;
-            show_file_dialog_assets = false;            
         }
     }
 
