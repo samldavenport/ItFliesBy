@@ -25,7 +25,7 @@ pushd ..
 @set cl_tools_include= 
 @set cl_tools_flags=   /nologo /c /MD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
 
-@set link_eng_in=    ItFliesBy.Engine.obj user32.lib kernel32.lib SLD.Win32.lib Gdi32.lib imgui.lib opengl32.lib pugixml.lib zlib-ng.lib
+@set link_eng_in=    ItFliesBy.Engine.obj user32.lib kernel32.lib SLD.Win32.lib Gdi32.lib imgui.lib opengl32.lib pugixml.lib zlib-ng.lib comdlg32.lib
 @set link_eng_out=   /OUT:build\debug\bin\ItFliesBy.Engine.dll /IMPLIB:build\debug\lib\ItFliesBy.Engine.lib
 @set link_eng_path=  /LIBPATH:build\debug\obj /LIBPATH:build\debug\lib /LIBPATH:sld\build\debug\lib /LIBPATH:sld\vcpkg_installed\x64-windows\lib
 @set link_eng_flags= /nologo /SUBSYSTEM:WINDOWS /DEBUG /DLL

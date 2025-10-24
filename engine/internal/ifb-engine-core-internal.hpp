@@ -5,6 +5,7 @@
 
 #include "ifb-engine.hpp"
 #include "ifb-engine-memory-internal.hpp"
+#include "ifb-engine-string.hpp"
 
 namespace ifb {
 
@@ -18,11 +19,10 @@ namespace ifb {
     constexpr u32   ENG_CORE_WINDOW_DEFAULT_SCREEN_X            = 0;
     constexpr u32   ENG_CORE_WINDOW_DEFAULT_SCREEN_Y            = 0;
     constexpr u32   ENG_CORE_WINDOW_INPUT_QUEUE_COUNT           = 8;
-    constexpr u32   ENG_CORE_WINDOW_INPUT_QUEUE_KEYBOARD_SIZE   = sizeof(sld::os_input_keycode_t) * ENG_CORE_WINDOW_INPUT_QUEUE_COUNT;
-    constexpr u32   ENG_CORE_WINDOW_INPUT_QUEUE_KEYBOARD_STRIDE = sizeof(sld::os_input_keycode_t);
     constexpr u32   ENG_CORE_MONITOR_COUNT_MAX                  = 16;
     constexpr u32   ENG_CORE_MONITOR_NAME_LENGTH                = sld::OS_MONITOR_NAME_WIDTH;
     constexpr u32   ENG_CORE_MONITOR_NAME_BUFFER_SIZE           = (ENG_CORE_MONITOR_COUNT_MAX * sld::OS_MONITOR_NAME_WIDTH); 
+    constexpr u32   ENG_CORE_FILE_DIALOG_SELECTION_BUFFER_SIZE  = sld::size_kilobytes(64);
 
     //-------------------------------------------------------------------
     // TYPES
@@ -86,25 +86,27 @@ namespace ifb {
     static eng_core_window_t         _eng_core_window;
     static eng_core_input_keyboard_t _eng_core_input_keyboard;
     static eng_core_monitor_table_t  _eng_core_monitor_table;
+    static cchar                     _eng_core_file_dialog_selection_buffer[ENG_CORE_FILE_DIALOG_SELECTION_BUFFER_SIZE];
 
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL void eng_core_window_init                      (void);
-    IFB_ENG_INTERNAL void eng_core_window_open_and_show             (void);
-    IFB_ENG_INTERNAL void eng_core_window_process_events            (void);
-    IFB_ENG_INTERNAL void eng_core_window_swap_buffers              (void);
-    IFB_ENG_INTERNAL void eng_core_window_center_to_monitor         (const eng_core_monitor_handle_t monitor);
-    IFB_ENG_INTERNAL void eng_core_window_center_to_primary_monitor (void);
+    IFB_ENG_INTERNAL void         eng_core_window_init                      (void);
+    IFB_ENG_INTERNAL void         eng_core_window_open_and_show             (void);
+    IFB_ENG_INTERNAL void         eng_core_window_process_events            (void);
+    IFB_ENG_INTERNAL void         eng_core_window_swap_buffers              (void);
+    IFB_ENG_INTERNAL void         eng_core_window_center_to_monitor         (const eng_core_monitor_handle_t monitor);
+    IFB_ENG_INTERNAL void         eng_core_window_center_to_primary_monitor (void);
+    IFB_ENG_INTERNAL const cchar* eng_core_window_open_file_dialog          (const cchar* path = NULL);
 
-    IFB_ENG_INTERNAL bool eng_core_monitor_table_validate           (void);
-    IFB_ENG_INTERNAL void eng_core_monitor_table_init               (void);
-    IFB_ENG_INTERNAL void eng_core_monitor_table_refresh            (void);
-    IFB_ENG_INTERNAL u32  eng_core_monitor_table_search             (const eng_core_monitor_handle_t monitor);
-    IFB_ENG_INTERNAL void eng_core_monitor_get_size                 (const eng_core_monitor_handle_t monitor, eng_core_monitor_size_t& size);
-    IFB_ENG_INTERNAL void eng_core_monitor_get_position             (const eng_core_monitor_handle_t monitor, eng_core_monitor_pos_t&  pos);
-    IFB_ENG_INTERNAL void eng_core_monitor_get_name                 (const eng_core_monitor_handle_t monitor, eng_core_monitor_name_t& name);
-    IFB_ENG_INTERNAL void eng_core_monitor_get_info                 (const eng_core_monitor_handle_t monitor, eng_core_monitor_info_t& info);
+    IFB_ENG_INTERNAL bool         eeng_core_monitor_table_validate           (void);
+    IFB_ENG_INTERNAL void         eng_core_monitor_table_init               (void);
+    IFB_ENG_INTERNAL void         eng_core_monitor_table_refresh            (void);
+    IFB_ENG_INTERNAL u32          eng_core_monitor_table_search             (const eng_core_monitor_handle_t monitor);
+    IFB_ENG_INTERNAL void         eng_core_monitor_get_size                 (const eng_core_monitor_handle_t monitor, eng_core_monitor_size_t& size);
+    IFB_ENG_INTERNAL void         eng_core_monitor_get_position             (const eng_core_monitor_handle_t monitor, eng_core_monitor_pos_t&  pos);
+    IFB_ENG_INTERNAL void         eng_core_monitor_get_name                 (const eng_core_monitor_handle_t monitor, eng_core_monitor_name_t& name);
+    IFB_ENG_INTERNAL void         eng_core_monitor_get_info                 (const eng_core_monitor_handle_t monitor, eng_core_monitor_info_t& info);
 
 };

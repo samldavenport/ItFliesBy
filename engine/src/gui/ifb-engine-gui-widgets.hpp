@@ -141,8 +141,10 @@ namespace ifb::eng {
     gui_widget_button_render(
         gui_widget_button_t& button) {
 
-        const bool button_clicked = ImGui::Button(button.label.chars);
-        return(button_clicked);
+        if (ImGui::Button(button.label.chars)) {
+            return(true);
+        }
+        return(false);
     }
 
     IFB_ENG_INTERNAL_INLINE gui_widget_input_text_t

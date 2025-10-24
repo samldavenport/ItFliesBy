@@ -103,4 +103,26 @@ namespace ifb {
         sld::dims_u32_center_a_inside_b (_eng_core_window.size, monitor_size, _eng_core_window.position);
     }
 
+    IFB_ENG_INTERNAL const cchar*
+    eng_core_window_open_file_dialog(
+        const cchar* path) {
+
+        static sld::os_window_dialog_t dialog;
+        dialog.did_select           = false;
+        dialog.path_buffer_start    = NULL;
+        dialog.path_buffer_selected = _eng_core_file_dialog_selection_buffer;
+        dialog.path_size_start      = 0;
+        dialog.path_size_selected   = ENG_CORE_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+
+        sld::os_window_open_file_dialog(
+            _eng_core_window.handle,
+            dialog            
+        );
+
+        const cchar* selection = (dialog.did_select)
+            ? dialog.path_buffer_selected
+            : NULL;
+
+        return(selection);
+    }
 };

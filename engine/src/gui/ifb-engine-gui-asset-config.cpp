@@ -3,6 +3,7 @@
 #include "ifb-engine-gui.hpp"
 #include "ifb-engine-file.hpp"
 #include "ifb-engine-asset-config.hpp"
+#include "ifb-engine-core-internal.hpp"
 
 #define CSTR_WINDOW_TITLE               "Asset Config"
 #define CSTR_SETTINGS_CONFIG_LABEL_PATH "Config Path:"
@@ -13,16 +14,11 @@
 namespace ifb::eng {
 
     //-------------------------------------------------------------------
-    // INTERNAL CONSTANTS
-    //-------------------------------------------------------------------
-
-
-    //-------------------------------------------------------------------
     // INTERNAL TYPES
     //-------------------------------------------------------------------
 
     struct gui_asset_config_settings_control_t {
-        gui_widget_text_c32_t  label;
+        gui_widget_text_c32_t   label;
         gui_widget_input_text_t input;
         gui_widget_button_t     button;
     };
@@ -82,8 +78,6 @@ namespace ifb::eng {
             asset_config_context_destroy(_config_context);
         }
 
-        const cchar* working_dir = eng_file_mngr_get_working_directory(); 
-
         ImGui::End();
     }
 
@@ -115,6 +109,27 @@ namespace ifb::eng {
 
             const bool browse_config = gui_asset_config_settings_control(ctrl_config);
             const bool browse_assets = gui_asset_config_settings_control(ctrl_assets);
+
+            const cchar* config_selection = (browse_config) ? eng_core_window_open_file_dialog() : NULL;
+            if (config_selection) {
+                strncpy_s(
+                    ctrl_config.input.buffer.chars,
+                    GUI_WIDGET_SIZE_INPUT,
+                    config_selection,
+                    GUI_WIDGET_SIZE_INPUT
+                );
+            }
+
+            const cchar* assets_selection = (browse_assets) ? eng_core_window_open_file_dialog() : NULL;
+            if (assets_selection) {
+                strncpy_s(
+                    ctrl_assets.input.buffer.chars,
+                    GUI_WIDGET_SIZE_INPUT,
+                    assets_selection,
+                    GUI_WIDGET_SIZE_INPUT
+                );
+            }
+
 
             ImGui::EndTable();
         }
