@@ -7,6 +7,7 @@
 #include "ifb-engine-asset.hpp"
 #include "ifb-engine-memory-internal.hpp"
 #include "ifb-engine-string.hpp"
+#include "ifb-engine-file.hpp"
 
 using namespace ifb;
 namespace ifb::eng {
@@ -41,13 +42,13 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // context
-    IFB_ENG_INTERNAL bool                 asset_config_context_is_valid       (asset_config_context_t* context);
-    IFB_ENG_INTERNAL void                 asset_config_context_create         (asset_config_context_t* context);
-    IFB_ENG_INTERNAL void                 asset_config_context_destroy        (asset_config_context_t* context);
-    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_text_node  (asset_config_context_t* context, const cchar* name, const cchar* path); 
-    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_image_node (asset_config_context_t* context, const cchar* name, const cchar* path);
-    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_sound_node (asset_config_context_t* context, const cchar* name, const cchar* path);
-    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_font_node  (asset_config_context_t* context, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL bool                 asset_config_context_is_valid       (asset_config_context_t& context);
+    IFB_ENG_INTERNAL void                 asset_config_context_create         (asset_config_context_t& context);
+    IFB_ENG_INTERNAL void                 asset_config_context_destroy        (asset_config_context_t& context);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_text_node  (asset_config_context_t& context, const cchar* name, const cchar* path); 
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_image_node (asset_config_context_t& context, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_sound_node (asset_config_context_t& context, const cchar* name, const cchar* path);
+    IFB_ENG_INTERNAL asset_config_node_t* asset_config_context_add_font_node  (asset_config_context_t& context, const cchar* name, const cchar* path);
 
     // config nodes
     IFB_ENG_INTERNAL asset_config_node_t* asset_config_node_arena_alloc       (eng_mem_arena_t* arena);
@@ -75,6 +76,7 @@ namespace ifb::eng {
     struct asset_config_list_t : sld::dl_list_t<asset_config_node_data_t> { };
 
     struct asset_config_context_t {
+        const cchar*  working_directory;
         string_c32_t* name;
         string_c32_t* path;
         struct {

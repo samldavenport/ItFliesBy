@@ -27,19 +27,19 @@ namespace ifb {
         eng_file_flags_u32_t         flags;
         eng_file_t*                  next;
         eng_file_t*                  prev;
-        eng_file_path_t              path;
+        cchar*                       path;
         eng_mem_arena_t*             arena;
         eng_file_os_handle_t         os_handle;
         eng_file_os_async_context_t  os_async_context;
-        u32                      index;
+        u32                          index;
     };
 
     struct eng_file_mngr_t {
-        eng_file_os_async_callback_f   os_callback_read;
-        eng_file_os_async_callback_f   os_callback_write;
-        u64                        buffer_size;
-        u64                        capacity;
-        u64                        path_size;
+        eng_file_os_async_callback_f os_callback_read;
+        eng_file_os_async_callback_f os_callback_write;
+        u64                          buffer_size;
+        u64                          capacity;
+        u64                          path_size;
         struct {
             eng_file_t* opened;
             eng_file_t* closed;

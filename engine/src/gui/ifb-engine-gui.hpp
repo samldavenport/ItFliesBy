@@ -9,6 +9,7 @@
 #include "ifb-engine-gui-menu-bar.hpp"
 #include "ifb-engine-gui-imgui.hpp"
 #include "ifb-engine-gui-asset.hpp"
+#include "ifb-engine-gui-utils.hpp"
 
 
 namespace ifb::eng {

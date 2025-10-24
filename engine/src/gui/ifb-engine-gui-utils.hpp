@@ -6,6 +6,7 @@
 
 namespace ifb::eng {
 
+
     using gui_text_size_t = dims_u32_size_t;
 
     IFB_ENG_INTERNAL_INLINE u32             gui_util_get_unique_id          (void);
@@ -59,8 +60,9 @@ namespace ifb::eng {
         string_c32_t string;
 
         // ##name-id
-        sprintf(
+        sprintf_s(
             string.chars,
+            STRING_SIZE_C32,
             "##%s-%d",
             label, id
         );

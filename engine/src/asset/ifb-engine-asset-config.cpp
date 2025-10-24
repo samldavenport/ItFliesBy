@@ -10,18 +10,18 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL bool
     asset_config_context_is_valid(
-        asset_config_context_t* context) {
+        asset_config_context_t& context) {
 
         bool is_valid = (
-            context                    != NULL &&
-            context->name              != NULL &&
-            context->path              != NULL &&
-            context->node_list.text    != NULL &&
-            context->node_list.image   != NULL &&
-            context->node_list.sound   != NULL &&
-            context->node_list.font    != NULL &&
-            context->node_list.deleted != NULL &&
-            context->active_arena      != NULL
+            context.working_directory != NULL &&
+            context.name              != NULL &&
+            context.path              != NULL &&
+            context.node_list.text    != NULL &&
+            context.node_list.image   != NULL &&
+            context.node_list.sound   != NULL &&
+            context.node_list.font    != NULL &&
+            context.node_list.deleted != NULL &&
+            context.active_arena      != NULL
         );
         return(is_valid);
     }
@@ -29,9 +29,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     asset_config_context_create(
-        asset_config_context_t* context) {
-
-        assert(context != NULL);
+        asset_config_context_t& context) {
 
         constexpr u64 alctr_size_total = sld::size_gigabytes(1);
         constexpr u64 alctr_size_arena = sld::size_megabytes(1);
@@ -52,47 +50,49 @@ namespace ifb::eng {
         assert(
             strings != NULL &&
             lists   != NULL &&            
-            alctr   != NULL            
+            alctr   != NULL
         );
 
         *alctr = arena_alctr;
 
-        context->name              = &strings[0];
-        context->path              = &strings[1];
-        context->node_list.text    = &lists[0];
-        context->node_list.image   = &lists[1];
-        context->node_list.sound   = &lists[2];
-        context->node_list.font    = &lists[3];
-        context->node_list.deleted = &lists[4];
-        context->arena_allocator   = alctr;
-        context->active_arena      = arena;
+        context.working_directory = eng_file_mngr_get_working_directory(); 
+        context.name              = &strings[0];
+        context.path              = &strings[1];
+        context.node_list.text    = &lists[0];
+        context.node_list.image   = &lists[1];
+        context.node_list.sound   = &lists[2];
+        context.node_list.font    = &lists[3];
+        context.node_list.deleted = &lists[4];
+        context.arena_allocator   = alctr;
+        context.active_arena      = arena;
     }
 
     IFB_ENG_INTERNAL void
     asset_config_context_destroy(
-        asset_config_context_t* context) {
+        asset_config_context_t& context) {
 
-        sld::arena_allocator_release_os_memory(context->arena_allocator);
-        
-        context->name              = NULL;
-        context->path              = NULL;
-        context->node_list.text    = NULL;
-        context->node_list.image   = NULL;
-        context->node_list.sound   = NULL;
-        context->node_list.font    = NULL;
-        context->node_list.deleted = NULL;
-        context->active_arena      = NULL;
+        sld::arena_allocator_release_os_memory(context.arena_allocator);
+
+        context.working_directory = NULL;    
+        context.name              = NULL;
+        context.path              = NULL;
+        context.node_list.text    = NULL;
+        context.node_list.image   = NULL;
+        context.node_list.sound   = NULL;
+        context.node_list.font    = NULL;
+        context.node_list.deleted = NULL;
+        context.active_arena      = NULL;
     }
     
     IFB_ENG_INTERNAL asset_config_node_t*
     asset_config_context_add_text_node (
-        asset_config_context_t* context,
+        asset_config_context_t& context,
         const cchar*            name,
         const cchar*            path) {
 
         asset_config_node_t* node = asset_config_list_add_new_node(
-            context->node_list.text,
-            context->active_arena,
+            context.node_list.text,
+            context.active_arena,
             name,
             path
         );
@@ -102,7 +102,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL asset_config_node_t*
     asset_config_context_add_image_node(
-        asset_config_context_t* context,
+        asset_config_context_t& context,
         const cchar* name,
         const cchar* path) {
 
@@ -110,7 +110,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL asset_config_node_t*
     asset_config_context_add_sound_node(
-        asset_config_context_t* context,
+        asset_config_context_t& context,
         const cchar* name,
         const cchar* path) {
 
@@ -118,7 +118,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL asset_config_node_t*
     asset_config_context_add_font_node (
-        asset_config_context_t* context,
+        asset_config_context_t& context,
         const cchar* name,
         const cchar* path) {
 

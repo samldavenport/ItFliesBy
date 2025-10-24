@@ -18,24 +18,25 @@
 
 namespace ifb {
 
-    typedef eng_error_s32_t       eng_file_error_s32_t;
-    typedef sld::os_file_buffer_t eng_file_buffer_t;
+    using eng_file_error_s32_t = eng_error_s32_t;
+    using eng_file_buffer_t    = sld::os_file_buffer_t;
+    using eng_file_path_t      = sld::os_file_path_cstr_t ;
 
     struct eng_file_h32_t       : h32_t { };
     struct eng_file_flags_u32_t : u32_t { };
-    struct eng_file_path_t;
 
-    IFB_ENG_API const eng_file_h32_t       eng_file_mngr_open_ro        (const cchar*          file_path);
-    IFB_ENG_API const eng_file_h32_t       eng_file_mngr_open_rw        (const cchar*          file_path);
-    IFB_ENG_API bool                       eng_file_mngr_close          (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const u64                  eng_file_mngr_get_size       (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const eng_file_flags_u32_t eng_file_mngr_get_flags      (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const cchar*               eng_file_mngr_get_path       (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const eng_file_error_s32_t eng_file_mngr_get_last_error (const eng_file_h32_t  file_handle = { IFB_ENG_FILE_H32_INVALID} );
-    IFB_ENG_API bool                       eng_file_mngr_read           (const eng_file_h32_t  file_handle, eng_file_buffer_t& read_buffer);
-    IFB_ENG_API bool                       eng_file_mngr_write          (const eng_file_h32_t  file_handle, eng_file_buffer_t& write_buffer);
-    IFB_ENG_API bool                       eng_file_mngr_read_async     (const eng_file_h32_t  file_handle);
-    IFB_ENG_API bool                       eng_file_mngr_write_async    (const eng_file_h32_t  file_handle);
+    IFB_ENG_API const eng_file_h32_t       eng_file_mngr_open_ro               (const cchar*          file_path);
+    IFB_ENG_API const eng_file_h32_t       eng_file_mngr_open_rw               (const cchar*          file_path);
+    IFB_ENG_API bool                       eng_file_mngr_close                 (const eng_file_h32_t  file_handle);
+    IFB_ENG_API const u64                  eng_file_mngr_get_size              (const eng_file_h32_t  file_handle);
+    IFB_ENG_API const eng_file_flags_u32_t eng_file_mngr_get_flags             (const eng_file_h32_t  file_handle);
+    IFB_ENG_API const cchar*               eng_file_mngr_get_path              (const eng_file_h32_t  file_handle);
+    IFB_ENG_API const eng_file_error_s32_t eng_file_mngr_get_last_error        (const eng_file_h32_t  file_handle = { IFB_ENG_FILE_H32_INVALID} );
+    IFB_ENG_API bool                       eng_file_mngr_read                  (const eng_file_h32_t  file_handle, eng_file_buffer_t& read_buffer);
+    IFB_ENG_API bool                       eng_file_mngr_write                 (const eng_file_h32_t  file_handle, eng_file_buffer_t& write_buffer);
+    IFB_ENG_API bool                       eng_file_mngr_read_async            (const eng_file_h32_t  file_handle);
+    IFB_ENG_API bool                       eng_file_mngr_write_async           (const eng_file_h32_t  file_handle);
+    IFB_ENG_API const cchar*               eng_file_mngr_get_working_directory (void);
 
     enum eng_file_flag_e32_ {
         eng_file_flag_e32_none        = 0,
@@ -78,10 +79,6 @@ namespace ifb {
         eng_file_error_e32_device_failure        = 0x80020018,
         eng_file_error_e32_arena_commit_fail     = 0x80020019,
         eng_file_error_e32_buffer_alloc_fail     = 0x8002001A,
-    };
-
-    struct eng_file_path_t {
-        cchar* cstr;
     };
 };
 

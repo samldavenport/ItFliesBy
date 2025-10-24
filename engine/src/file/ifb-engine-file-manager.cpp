@@ -13,7 +13,8 @@ namespace ifb {
     static eng_file_os_context_t       _os_context       [IFB_ENG_FILE_TABLE_CAPACITY];
     static eng_file_callback_context_t _callback_context [IFB_ENG_FILE_TABLE_CAPACITY];
     static eng_file_t                  _file             [IFB_ENG_FILE_TABLE_CAPACITY];
-    static cchar                      _path_buffer      [IFB_ENG_FILE_TABLE_CAPACITY * IFB_ENG_FILE_PATH_SIZE];
+    static cchar                       _path_buffer      [IFB_ENG_FILE_TABLE_CAPACITY * IFB_ENG_FILE_PATH_SIZE];
+    static eng_file_path_t             _working_directory;
 
     //-------------------------------------------------------------------
     // DECLARATIONS
@@ -23,8 +24,8 @@ namespace ifb {
     eng_file_t*           eng_file_mngr_get_next_open        (void);
     void                  eng_file_mngr_add_closed           (eng_file_t* file);
     void                  eng_file_mngr_add_open             (eng_file_t* file);
-    void              eng_file_mngr_async_callback_read  (const void* data, const eng_file_os_error_t error, const u32 bytes_transferred);
-    void              eng_file_mngr_async_callback_write (const void* data, const eng_file_os_error_t error, const u32 bytes_transferred);
+    void                  eng_file_mngr_async_callback_read  (const void* data, const eng_file_os_error_t error, const u32 bytes_transferred);
+    void                  eng_file_mngr_async_callback_write (const void* data, const eng_file_os_error_t error, const u32 bytes_transferred);
     const eng_error_s32_t eng_file_mngr_error_os_to_eng      (const eng_file_os_error_t    os_error);  
 
     //-------------------------------------------------------------------
@@ -83,7 +84,7 @@ namespace ifb {
             ++index) {
 
             const cchar c = file_path[index];
-            file->path.cstr[index] = c;
+            file->path[index] = c;
 
             if (c == 0) break;
         }
@@ -145,7 +146,7 @@ namespace ifb {
             ++index) {
 
             const cchar c = file_path[index];
-            file->path.cstr[index] = c;
+            file->path[index] = c;
 
             if (c == 0) break;
         }
@@ -207,7 +208,7 @@ namespace ifb {
             return(NULL);
         } 
         
-        return(file->path.cstr);
+        return(file->path);
     }
 
     IFB_ENG_API bool
@@ -426,6 +427,14 @@ namespace ifb {
     //     return(is_success);
     // }
 
+    IFB_ENG_API const cchar*
+    eng_file_mngr_get_working_directory(
+        void) {
+
+        static const cchar* dir = _working_directory.buffer; 
+        return(dir);
+    }
+
     //-------------------------------------------------------------------
     // INTERNAL
     //-------------------------------------------------------------------
@@ -436,6 +445,9 @@ namespace ifb {
 
         const bool is_initialized = (_file_mngr.capacity != 0);  
         if (is_initialized) return;
+
+        sld::os_error_t os_error = sld::os_file_get_working_directory(_working_directory);
+        assert(os_error.val == sld::os_file_error_e_success);
 
         _file_mngr.os_callback_read  = eng_file_mngr_async_callback_read;
         _file_mngr.os_callback_write = eng_file_mngr_async_callback_write;
@@ -453,7 +465,7 @@ namespace ifb {
 
             current->next                      = (file_index < (_file_mngr.capacity - 1)) ? &_file[file_index + 1] : NULL;
             current->prev                      = (file_index > 0)                         ? &_file[file_index - 1] : NULL;
-            current->path.cstr                 = &_path_buffer      [file_index * _file_mngr.path_size];
+            current->path                      = &_path_buffer      [file_index * _file_mngr.path_size];
             current->os_async_context.callback = &_callback_context [file_index];
             current->os_async_context.os       = &_os_context       [file_index]; 
             current->index                     = file_index;
