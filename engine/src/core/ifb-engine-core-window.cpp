@@ -1,31 +1,39 @@
-#include "ifb-engine-core-internal.hpp"
-#include <sld.hpp>
-#include <sld-arena.hpp>
+#include "ifb-engine-core-window.hpp"
 
-#define window_has_event_key_down()             (_eng_core_window.update.events.val & sld::os_window_event_e_key_down)
-#define window_has_event_key_up()               (_eng_core_window.update.events.val & sld::os_window_event_e_key_up)
+#define window_has_event_key_down()             (_window.update.events.val & sld::os_window_event_e_key_down)
+#define window_has_event_key_up()               (_window.update.events.val & sld::os_window_event_e_key_up)
 #define window_keyboard_count_keys_down()       _eng_core_input_keyboard.key_count.down
 #define window_keyboard_count_keys_up()         _eng_core_input_keyboard.key_count.up
 #define window_keyboard_get_keycode_down(index) _eng_core_input_keyboard.keycode_array.down[index]; 
 #define window_keyboard_get_keycode_up(index)   _eng_core_input_keyboard.keycode_array.up[index]; 
-#define window_keyboard_reset()                 sld::input_keyboard_reset(_eng_core_window.update.keyboard)
+#define window_keyboard_reset()                 sld::input_keyboard_reset(_window.update.keyboard)
 
-namespace ifb {
+namespace ifb::eng {
  
+    //-------------------------------------------------------------------
+    // GLOBALS
+    //-------------------------------------------------------------------
+
+    IFB_ENG_GLOBAL core_window_t                       _window;
+    IFB_ENG_GLOBAL core_window_file_dialog_selection_t _dialog_selection;
+
+    //-------------------------------------------------------------------
+    // METHODS
+    //-------------------------------------------------------------------
+
     IFB_ENG_INTERNAL void
-    eng_core_window_init(
+    core_window_init(
         void) {
 
         // set the default dimensions
-        _eng_core_window.size.width  = ENG_CORE_WINDOW_DEFAULT_WIDTH;
-        _eng_core_window.size.height = ENG_CORE_WINDOW_DEFAULT_HEIGHT;
-        _eng_core_window.position.x  = ENG_CORE_WINDOW_DEFAULT_SCREEN_X;
-        _eng_core_window.position.y  = ENG_CORE_WINDOW_DEFAULT_SCREEN_Y;
-
+        _window.size.width  = CORE_WINDOW_DEFAULT_WIDTH;
+        _window.size.height = CORE_WINDOW_DEFAULT_HEIGHT;
+        _window.position.x  = CORE_WINDOW_DEFAULT_SCREEN_X;
+        _window.position.y  = CORE_WINDOW_DEFAULT_SCREEN_Y;
     }
 
     IFB_ENG_INTERNAL void
-    eng_core_window_open_and_show(
+    core_window_open_and_show(
         void) {
 
         sld::color_u32_t clear_color;
@@ -35,92 +43,115 @@ namespace ifb {
         clear_color.a = 1.0f;
 
         // open the window
-        _eng_core_window.last_error = sld::os_window_create(
-            _eng_core_window.handle,
-            ENG_CORE_WINDOW_TITLE,
-            _eng_core_window.size,
-            _eng_core_window.position
+        _window.last_error = sld::os_window_create(
+            _window.handle,
+            CORE_WINDOW_TITLE,
+            _window.size,
+            _window.position
         );
 
         // intialize the viewport
-        sld::os_window_set_clear_color (_eng_core_window.handle, clear_color);
-        sld::os_window_set_viewport    (_eng_core_window.handle, _eng_core_window.size, _eng_core_window.position);
+        sld::os_window_set_clear_color (_window.handle, clear_color);
+        sld::os_window_set_viewport    (_window.handle, _window.size, _window.position);
 
         // show the window
-        sld::os_window_show(_eng_core_window.handle);
+        sld::os_window_show(_window.handle);
     }
 
     IFB_ENG_INTERNAL void
-    eng_core_window_process_events(
+    core_window_process_events(
         void) {
 
         // get the window update
-        _eng_core_window.last_error = sld::os_window_update(
-            _eng_core_window.handle,
-            _eng_core_window.update
+        _window.last_error = sld::os_window_update(
+            _window.handle,
+            _window.update
         );
-
-
     }
 
     IFB_ENG_INTERNAL void
-    eng_core_window_swap_buffers(
+    core_window_swap_buffers(
         void) {
 
-        _eng_core_window.last_error = sld::os_window_swap_buffers(_eng_core_window.handle);
+        _window.last_error = sld::os_window_swap_buffers(_window.handle);
     }
 
     IFB_ENG_INTERNAL void
-    eng_core_window_center_to_monitor(
+    core_window_center_to_monitor(
         const eng_core_monitor_handle_t monitor) {
 
         dims_u32_size_t monitor_size;
         dims_u32_pos_t  monitor_center;
         dims_u32_pos_t  window_center;
 
-        const bool should_reset_window = (_eng_core_window.size.width == 0 || _eng_core_window.size.height == 0); 
+        const bool should_reset_window = (_window.size.width == 0 || _window.size.height == 0); 
         if (should_reset_window) {
-            _eng_core_window.size.width  = ENG_CORE_WINDOW_DEFAULT_WIDTH;
-            _eng_core_window.size.height = ENG_CORE_WINDOW_DEFAULT_HEIGHT;
+            _window.size.width  = CORE_WINDOW_DEFAULT_WIDTH;
+            _window.size.height = CORE_WINDOW_DEFAULT_HEIGHT;
         }
 
         eng_core_monitor_get_size      (monitor,               monitor_size);
-        sld::dims_u32_center_a_inside_b(_eng_core_window.size, monitor_size, _eng_core_window.position);
+        sld::dims_u32_center_a_inside_b(_window.size, monitor_size, _window.position);
     }
 
     IFB_ENG_INTERNAL void
-    eng_core_window_center_to_primary_monitor(
+    core_window_center_to_primary_monitor(
         void) {
 
-        const bool should_reset_window = (_eng_core_window.size.width == 0 || _eng_core_window.size.height == 0); 
+        const bool should_reset_window = (_window.size.width == 0 || _window.size.height == 0); 
         if (should_reset_window) {
-            _eng_core_window.size.width  = ENG_CORE_WINDOW_DEFAULT_WIDTH;
-            _eng_core_window.size.height = ENG_CORE_WINDOW_DEFAULT_HEIGHT;
+            _window.size.width  = CORE_WINDOW_DEFAULT_WIDTH;
+            _window.size.height = CORE_WINDOW_DEFAULT_HEIGHT;
         }
 
         dims_u32_size_t monitor_size;
         eng_core_monitor_get_size       (_eng_core_monitor_table.monitor_primary,  monitor_size);
-        sld::dims_u32_center_a_inside_b (_eng_core_window.size, monitor_size, _eng_core_window.position);
+        sld::dims_u32_center_a_inside_b (_window.size, monitor_size, _window.position);
     }
 
     IFB_ENG_INTERNAL const cchar*
-    eng_core_window_open_file_dialog(
-        const cchar* path) {
+    core_window_open_file_dialog(
+        const core_window_file_dialog_t& file_dialog) {
 
         static sld::os_window_dialog_t dialog;
-        dialog.did_select           = false;
-        dialog.path_buffer_start    = NULL;
-        dialog.path_buffer_selected = _eng_core_file_dialog_selection_buffer;
-        dialog.path_size_start      = 0;
-        dialog.path_size_selected   = ENG_CORE_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+        dialog.did_select            = false;
+        dialog.filter                = file_dialog.filter;
+        dialog.path_start.buffer     = NULL;
+        dialog.path_start.size       = 0;
+        dialog.path_selection.buffer = _eng_core_file_dialog_selection_buffer;
+        dialog.path_selection.size   = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
 
         sld::os_window_open_file_dialog(
-            _eng_core_window.handle,
+            _window.handle,
             dialog            
         );
 
         const cchar* selection = (dialog.did_select)
-            ? dialog.path_buffer_selected
+            ? dialog.path_selection.buffer
+            : NULL;
+
+        return(selection);
+    }
+    
+    IFB_ENG_INTERNAL const cchar*
+    core_window_save_file_dialog(
+        const core_window_file_dialog_t& file_dialog) {
+
+        static sld::os_window_dialog_t dialog;
+        dialog.did_select            = false;
+        dialog.filter                = file_dialog.filter;
+        dialog.path_start.buffer     = NULL;
+        dialog.path_start.size       = 0;
+        dialog.path_selection.buffer = _eng_core_file_dialog_selection_buffer;
+        dialog.path_selection.size   = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+
+        sld::os_window_save_file_dialog(
+            _window.handle,
+            dialog            
+        );
+
+        const cchar* selection = (dialog.did_select)
+            ? dialog.path_selection.buffer
             : NULL;
 
         return(selection);

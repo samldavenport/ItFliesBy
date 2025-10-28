@@ -13,6 +13,8 @@
 
 namespace ifb::eng {
 
+    constexpr cchar CSTR_CONFIG_FILE_FILTER[] = "XML Files\0*.xml\0";
+
     //-------------------------------------------------------------------
     // INTERNAL TYPES
     //-------------------------------------------------------------------
@@ -38,6 +40,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void gui_asset_config_browse_config_file (string_c256_t& file_path);
     IFB_ENG_INTERNAL void gui_asset_config_browse_assets_dir  (string_c256_t& dir_path);
     IFB_ENG_INTERNAL void gui_asset_config_section_text       (void);
+    IFB_ENG_INTERNAL void gui_asset_config_menu_bar           (void);
 
     //-------------------------------------------------------------------
     // INTERNAL METHODS
@@ -64,14 +67,15 @@ namespace ifb::eng {
         }
 
         bool is_open = true;
-        const bool window_begin   = ImGui::Begin(CSTR_WINDOW_TITLE, &is_open);
+        const ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
+        const bool             window_begin = ImGui::Begin(CSTR_WINDOW_TITLE, &is_open, window_flags);
 
         if (!window_begin) {
             ImGui::End();
             return;
         }
 
-        gui_asset_config_settings();
+        gui_asset_config_menu_bar();
 
         if (!is_open) {
             gui_asset_flag_clear(gui_asset_flag_e_config);
@@ -79,6 +83,28 @@ namespace ifb::eng {
         }
 
         ImGui::End();
+    }
+
+    IFB_ENG_INTERNAL void
+    gui_asset_config_menu_bar(
+        void) {
+
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                const bool file_new     = ImGui::MenuItem("New",       NULL);
+                const bool file_open    = ImGui::MenuItem("Open...",   NULL);
+                const bool file_save    = ImGui::MenuItem("Save",      NULL);
+                const bool file_save_as = ImGui::MenuItem("Save As..", NULL);
+                ImGui::EndMenu();
+
+                if (file_new) {
+                    eng_core_window_save_file_dialog(NULL, CSTR_CONFIG_FILE_FILTER);
+                }
+
+
+            }
+            ImGui::EndMenuBar();
+        }
     }
 
     IFB_ENG_INTERNAL void

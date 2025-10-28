@@ -21,6 +21,7 @@ namespace ifb::eng {
         if (ImGui::BeginMenuBar()) {
             gui_menu_bar_imgui  ();
             gui_menu_bar_assets ();
+            ImGui::EndMenuBar();
         }
     }
 
@@ -77,6 +78,5 @@ namespace ifb::eng {
             if (state_config)   gui_asset_flag_set(gui_asset_flag_e_config);   
             if (state_database) gui_asset_flag_set(gui_asset_flag_e_database); 
         }
-        ImGui::EndMenuBar();
     }
 };
