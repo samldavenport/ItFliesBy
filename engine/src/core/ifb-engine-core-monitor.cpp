@@ -3,20 +3,20 @@
 #include "ifb-engine-core-monitor.hpp"
 namespace ifb::eng {
 
-    static core_monitor_table_t     _table;
-    static core_monitor_pos_t       _array_pos    [ENG_CORE_MONITOR_COUNT_MAX];
-    static core_monitor_size_t      _array_size   [ENG_CORE_MONITOR_COUNT_MAX];
-    static core_monitor_name_t      _array_name   [ENG_CORE_MONITOR_COUNT_MAX];
-    static core_monitor_os_handle_t _array_handle [ENG_CORE_MONITOR_COUNT_MAX];
-    static cchar                    _name_buffer  [ENG_CORE_MONITOR_NAME_BUFFER_SIZE];
-
+    IFB_ENG_GLOBAL core_monitor_table_t     _table;
+    IFB_ENG_GLOBAL core_monitor_pos_t       _array_pos    [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL core_monitor_size_t      _array_size   [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL core_monitor_name_t      _array_name   [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL core_monitor_os_handle_t _array_handle [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL cchar                    _name_buffer  [ENG_CORE_MONITOR_NAME_BUFFER_SIZE];
 
     IFB_ENG_INTERNAL bool
     core_monitor_table_validate(
         void) {
 
-        //TODO(SAM): primary and active handles
+        //TODO(SAM): active handle
         bool is_valid = true;
+        is_valid &= (_table.monitor_primary.val          <  ENG_CORE_MONITOR_INDEX_INVALID);
         is_valid &= (_table.monitor_count                != 0);
         is_valid &= (_table.monitor_virtual_size.width   != 0);
         is_valid &= (_table.monitor_virtual_size.height  != 0);
@@ -76,19 +76,16 @@ namespace ifb::eng {
         sld::os_monitor_info_t         info_array[ENG_CORE_MONITOR_COUNT_MAX];
         sld::os_monitor_working_area   (working_area);
         sld::os_monitor_info           (info_array);
+        sld::os_monitor_handle_t primary_handle = sld::os_monitor_primary (); 
 
         // update the table
-        _table.monitor_primary             = sld::os_monitor_primary ();
         _table.monitor_count               = sld::os_monitor_count   ();
         _table.monitor_virtual_size.width  = working_area.virtual_pixel_height;
         _table.monitor_virtual_size.height = working_area.virtual_pixel_width;
+        _table.monitor_active.val          = ENG_CORE_MONITOR_INDEX_INVALID;
+        _table.monitor_primary.val         = ENG_CORE_MONITOR_INDEX_INVALID;
 
-        // check the properties
-        bool is_valid = true;
-        is_valid &= core_monitor_table_validate();
 
-        assert(is_valid);        
-        
         // add the monitors to the table
         cstr_t monitor_name_cstr_src = { NULL, sld::OS_MONITOR_NAME_WIDTH};
         cstr_t monitor_name_cstr_dst = { NULL, sld::OS_MONITOR_NAME_WIDTH};
@@ -112,9 +109,18 @@ namespace ifb::eng {
             is_monitor_valid = (info.position_y   <= working_area.virtual_pixel_height);
             assert(is_monitor_valid);
 
+            if (info.handle.val == primary_handle.val) {
+                _table.monitor_primary.val = monitor;
+            }
+
             // copy the name
             cchar* name_cstr = _table.array.name[monitor].buffer;
-            sprintf_s(name_cstr, ENG_CORE_MONITOR_NAME_LENGTH, "%s", info.name_cstr.info.name_cstr);
+            sprintf_s(
+                name_cstr,
+                sld::OS_MONITOR_NAME_WIDTH,
+                "%s", info.name_cstr
+            );
+
 
             // set remaining properties
             _table.array.position [monitor].x      = info.position_x;    
@@ -123,6 +129,12 @@ namespace ifb::eng {
             _table.array.size     [monitor].height = info.pixel_height;    
             _table.array.handle   [monitor]        = info.handle;
         }
+
+        // check the properties
+        bool is_valid = true;
+        is_valid &= core_monitor_table_validate();
+        is_valid &= (_table.monitor_primary.val < ENG_CORE_MONITOR_INDEX_INVALID); 
+        assert(is_valid);        
     }
 
     IFB_ENG_INTERNAL u32
@@ -133,7 +145,71 @@ namespace ifb::eng {
         return(_table.monitor_count);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_size_t*
+    IFB_ENG_INTERNAL const core_monitor_index_t
+    core_monitor_get_index_from_handle(
+        const core_monitor_os_handle_t handle) {
+
+        core_monitor_table_assert_valid();
+
+        core_monitor_index_t index;
+        bool found = false;
+        for (
+            index.val = 0;
+            index.val < _table.monitor_count;
+            ++index.val) {
+
+            if (_table.array.handle[index.val].val == handle.val) {
+                found = true;
+                break;
+            }
+        }
+
+        assert(found);
+        return(index);
+    }
+
+    IFB_ENG_INTERNAL const core_monitor_size_t&
+    core_monitor_get_primary_size(
+        void) {
+
+        core_monitor_table_assert_valid();
+
+        const u32 index = _table.monitor_primary.val;
+        return(_table.array.size[index]);
+    }
+
+    IFB_ENG_INTERNAL const core_monitor_pos_t&
+    core_monitor_get_primary_position(
+        void) {
+
+        core_monitor_table_assert_valid();
+
+        const u32 index = _table.monitor_primary.val;
+        return(_table.array.position[index]);
+    }
+
+    IFB_ENG_INTERNAL const core_monitor_name_t&
+    core_monitor_get_primary_name(
+        void) {
+
+        core_monitor_table_assert_valid();
+
+        const u32 index = _table.monitor_primary.val;
+        return(_table.array.name[index]);
+    }
+
+    IFB_ENG_INTERNAL const core_monitor_os_handle_t&
+    core_monitor_get_primary_handle(
+        void) {
+
+        core_monitor_table_assert_valid();
+
+        const u32 index = _table.monitor_primary.val;
+        return(_table.array.handle[index]);
+    }
+
+
+    IFB_ENG_INTERNAL const core_monitor_size_t&
     core_monitor_get_size(
         const core_monitor_index_t index) {
 
@@ -142,10 +218,10 @@ namespace ifb::eng {
         is_valid &= (index.val < _table.monitor_count);
         assert(is_valid);
 
-        return(&_table.array.size[index.val]);
+        return(_table.array.size[index.val]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_pos_t*
+    IFB_ENG_INTERNAL const core_monitor_pos_t&
     core_monitor_get_position(
         const core_monitor_index_t index) {
 
@@ -154,10 +230,10 @@ namespace ifb::eng {
         is_valid &= (index.val < _table.monitor_count);
         assert(is_valid);
 
-        return(&_table.array.position[index.val]);
+        return(_table.array.position[index.val]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_name_t*
+    IFB_ENG_INTERNAL const core_monitor_name_t&
     core_monitor_get_name(
         const core_monitor_index_t index) {
 
@@ -166,10 +242,10 @@ namespace ifb::eng {
         is_valid &= (index.val < _table.monitor_count);
         assert(is_valid);
 
-        return(&_table.array.name[index.val]);
+        return(_table.array.name[index.val]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_os_handle_t*
+    IFB_ENG_INTERNAL const core_monitor_os_handle_t&
     core_monitor_get_handle(
         const core_monitor_index_t index) {
 
@@ -178,22 +254,6 @@ namespace ifb::eng {
         is_valid &= (index.val < _table.monitor_count);
         assert(is_valid);
 
-        return(&_table.array.handle[index.val]);
-    }
-
-    IFB_ENG_INTERNAL void
-    core_monitor_get_info(
-        const core_monitor_index_t index,
-        core_monitor_info_t&       info) {
-
-        bool is_valid = true; 
-        is_valid &= core_monitor_table_validate();
-        is_valid &= (index.val < _table.monitor_count);
-        assert(is_valid);
-
-        info.size   = &_table.array.size     [index.val];
-        info.pos    = &_table.array.position [index.val];
-        info.name   = &_table.array.name     [index.val];
-        info.handle = &_table.array.handle   [index.val];
+        return(_table.array.handle[index.val]);
     }
 };

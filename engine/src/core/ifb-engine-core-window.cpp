@@ -78,11 +78,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     core_window_center_to_monitor(
-        const eng_core_monitor_handle_t monitor) {
-
-        dims_u32_size_t monitor_size;
-        dims_u32_pos_t  monitor_center;
-        dims_u32_pos_t  window_center;
+        const core_monitor_index_t monitor_index) {
 
         const bool should_reset_window = (_window.size.width == 0 || _window.size.height == 0); 
         if (should_reset_window) {
@@ -90,7 +86,7 @@ namespace ifb::eng {
             _window.size.height = CORE_WINDOW_DEFAULT_HEIGHT;
         }
 
-        eng_core_monitor_get_size      (monitor,               monitor_size);
+        const core_monitor_size_t& monitor_size = core_monitor_get_size(monitor_index);
         sld::dims_u32_center_a_inside_b(_window.size, monitor_size, _window.position);
     }
 
@@ -104,8 +100,7 @@ namespace ifb::eng {
             _window.size.height = CORE_WINDOW_DEFAULT_HEIGHT;
         }
 
-        dims_u32_size_t monitor_size;
-        eng_core_monitor_get_size       (_eng_core_monitor_table.monitor_primary,  monitor_size);
+        const core_monitor_size_t& monitor_size = core_monitor_get_primary_size();
         sld::dims_u32_center_a_inside_b (_window.size, monitor_size, _window.position);
     }
 
@@ -118,7 +113,7 @@ namespace ifb::eng {
         dialog.filter                = file_dialog.filter;
         dialog.path_start.buffer     = NULL;
         dialog.path_start.size       = 0;
-        dialog.path_selection.buffer = _eng_core_file_dialog_selection_buffer;
+        dialog.path_selection.buffer = _dialog_selection.buffer;
         dialog.path_selection.size   = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
 
         sld::os_window_open_file_dialog(
@@ -142,7 +137,7 @@ namespace ifb::eng {
         dialog.filter                = file_dialog.filter;
         dialog.path_start.buffer     = NULL;
         dialog.path_start.size       = 0;
-        dialog.path_selection.buffer = _eng_core_file_dialog_selection_buffer;
+        dialog.path_selection.buffer = _dialog_selection.buffer;
         dialog.path_selection.size   = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
 
         sld::os_window_save_file_dialog(
@@ -155,5 +150,19 @@ namespace ifb::eng {
             : NULL;
 
         return(selection);
+    }
+
+    IFB_ENG_INTERNAL const core_window_update_t&
+    core_window_get_update(
+        void) {
+
+        return(_window.update);
+    }
+
+    IFB_ENG_INTERNAL bool
+    core_window_quit_received(
+        void) {
+
+        return(_window.update.events.val & sld::os_window_event_e_quit);
     }
 };

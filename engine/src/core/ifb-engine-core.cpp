@@ -1,12 +1,13 @@
 #pragma once
 
-#include "ifb-engine-core-internal.hpp"
+#include "ifb-engine-core-window.hpp"
+#include "ifb-engine-core-monitor.hpp"
 #include "ifb-engine-gui.hpp"
 #include "ifb-engine-asset-config.hpp"
-namespace ifb {
+namespace ifb::eng {
 
     IFB_ENG_API bool
-    eng_core_startup(
+    core_startup(
         void) {
 
         // start managers 
@@ -15,19 +16,19 @@ namespace ifb {
         eng_asset_mngr_startup ();
 
         // initialize platform
-        eng_core_monitor_table_init               ();
-        eng_core_window_init                      ();
-        eng_core_window_center_to_primary_monitor ();
-        eng_core_window_open_and_show             ();
+        core_monitor_table_init               ();
+        core_window_init                      ();
+        core_window_center_to_primary_monitor ();
+        core_window_open_and_show             ();
 
         // initialize gui
-        eng::gui_init();
+        gui_init();
 
         return(true); 
     }
 
     IFB_ENG_API bool
-    eng_core_shutdown(
+    core_shutdown(
         void) {
 
         //////////////////////////
@@ -42,33 +43,35 @@ namespace ifb {
     }
 
     IFB_ENG_API bool
-    eng_core_update(
+    core_update(
         void) {
 
-        eng_core_window_process_events();
+        core_window_process_events();
 
         return(true);
     }
 
     IFB_ENG_API bool
-    eng_core_render(
+    core_render(
         void) {
 
         eng::gui_render();
-        eng_core_window_swap_buffers();
+        core_window_swap_buffers();
 
         return(true);
     }
 
     IFB_ENG_API bool
-    eng_core_should_quit(
+    core_should_quit(
         void) {
 
-        bool eng_core_should_quit = false;
+        bool core_should_quit = false;
 
-        eng_core_should_quit |= (_eng_core_window.update.events.val & sld::os_window_event_e_quit);
+        const core_window_update_t& window_update = core_window_get_update();
 
-        return(eng_core_should_quit);
+        core_should_quit |= (window_update.events.val & sld::os_window_event_e_quit);
+
+        return(core_should_quit);
     }
 };
 

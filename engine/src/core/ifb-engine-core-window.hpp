@@ -7,6 +7,7 @@
 #include "ifb-engine.hpp"
 #include "ifb-engine-memory-internal.hpp"
 #include "ifb-engine-string.hpp"
+#include "ifb-engine-core-monitor.hpp"
 
 namespace ifb::eng {
 
@@ -36,14 +37,16 @@ namespace ifb::eng {
     using  core_window_pos_t    = sld::dims_u32_pos_t;
     using  core_window_size_t   = sld::dims_u32_size_t;
 
-    IFB_ENG_INTERNAL void         core_window_init                      (void);
-    IFB_ENG_INTERNAL void         core_window_open_and_show             (void);
-    IFB_ENG_INTERNAL void         core_window_process_events            (void);
-    IFB_ENG_INTERNAL void         core_window_swap_buffers              (void);
-    IFB_ENG_INTERNAL void         core_window_center_to_monitor         (const eng_core_monitor_handle_t monitor);
-    IFB_ENG_INTERNAL void         core_window_center_to_primary_monitor (void);
-    IFB_ENG_INTERNAL const cchar* core_window_open_file_dialog          (const core_window_file_dialog_t& file_dialog);
-    IFB_ENG_INTERNAL const cchar* core_window_save_file_dialog          (const core_window_file_dialog_t& file_dialog);
+    IFB_ENG_INTERNAL void                        core_window_init                      (void);
+    IFB_ENG_INTERNAL void                        core_window_open_and_show             (void);
+    IFB_ENG_INTERNAL void                        core_window_process_events            (void);
+    IFB_ENG_INTERNAL void                        core_window_swap_buffers              (void);
+    IFB_ENG_INTERNAL void                        core_window_center_to_monitor         (const core_monitor_index_t monitor_index);
+    IFB_ENG_INTERNAL void                        core_window_center_to_primary_monitor (void);
+    IFB_ENG_INTERNAL const cchar*                core_window_open_file_dialog          (const core_window_file_dialog_t& file_dialog);
+    IFB_ENG_INTERNAL const cchar*                core_window_save_file_dialog          (const core_window_file_dialog_t& file_dialog);
+    IFB_ENG_INTERNAL const core_window_update_t& core_window_get_update                (void);
+    IFB_ENG_INTERNAL bool                        core_window_quit_received             (void);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
