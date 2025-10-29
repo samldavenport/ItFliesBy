@@ -15,13 +15,13 @@ namespace ifb::eng {
     // CONSTANTS
     //-------------------------------------------------------------------
 
-    constexpr cchar CORE_WINDOW_TITLE[]                           = "It Flies By";
-    constexpr u32   CORE_WINDOW_DEFAULT_WIDTH                     = 1024;
-    constexpr u32   CORE_WINDOW_DEFAULT_HEIGHT                    = 768;
-    constexpr u32   CORE_WINDOW_DEFAULT_SCREEN_X                  = 0;
-    constexpr u32   CORE_WINDOW_DEFAULT_SCREEN_Y                  = 0;
-    constexpr u32   CORE_WINDOW_INPUT_QUEUE_COUNT                 = 8;
-    constexpr u32   CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE = sld::size_kilobytes(64);
+    constexpr const cchar CORE_WINDOW_TITLE[]                           = "It Flies By";
+    constexpr const u32   CORE_WINDOW_DEFAULT_WIDTH                     = 1024;
+    constexpr const u32   CORE_WINDOW_DEFAULT_HEIGHT                    = 768;
+    constexpr const u32   CORE_WINDOW_DEFAULT_SCREEN_X                  = 0;
+    constexpr const u32   CORE_WINDOW_DEFAULT_SCREEN_Y                  = 0;
+    constexpr const u32   CORE_WINDOW_INPUT_QUEUE_COUNT                 = 8;
+    constexpr const u32   CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE = sld::size_kilobytes(64);
 
     //-------------------------------------------------------------------
     // DECLARATIONS

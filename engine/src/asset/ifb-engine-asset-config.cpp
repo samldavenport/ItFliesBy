@@ -13,9 +13,6 @@ namespace ifb::eng {
         asset_config_context_t& context) {
 
         bool is_valid = (
-            context.working_directory != NULL &&
-            context.name              != NULL &&
-            context.path              != NULL &&
             context.node_list.text    != NULL &&
             context.node_list.image   != NULL &&
             context.node_list.sound   != NULL &&
@@ -43,21 +40,16 @@ namespace ifb::eng {
         arena_t* arena = sld::arena_allocator_commit(&arena_alctr);
         assert(arena);
 
-        auto strings = string_c32_arena_alloc        (arena, 2); 
         auto lists   = asset_config_list_arena_alloc (arena, 5); 
         auto alctr   = sld::arena_push_struct<arena_allocator_t>(arena); 
 
         assert(
-            strings != NULL &&
             lists   != NULL &&            
             alctr   != NULL
         );
 
         *alctr = arena_alctr;
 
-        context.working_directory = eng_file_mngr_get_working_directory(); 
-        context.name              = &strings[0];
-        context.path              = &strings[1];
         context.node_list.text    = &lists[0];
         context.node_list.image   = &lists[1];
         context.node_list.sound   = &lists[2];
@@ -73,9 +65,6 @@ namespace ifb::eng {
 
         sld::arena_allocator_release_os_memory(context.arena_allocator);
 
-        context.working_directory = NULL;    
-        context.name              = NULL;
-        context.path              = NULL;
         context.node_list.text    = NULL;
         context.node_list.image   = NULL;
         context.node_list.sound   = NULL;
@@ -84,13 +73,13 @@ namespace ifb::eng {
         context.active_arena      = NULL;
     }
     
-    IFB_ENG_INTERNAL asset_config_node_t*
+    IFB_ENG_INTERNAL asset_config_asset_t*
     asset_config_context_add_text_node (
         asset_config_context_t& context,
         const cchar*            name,
         const cchar*            path) {
 
-        asset_config_node_t* node = asset_config_list_add_new_node(
+        asset_config_asset_t* node = asset_config_list_add_new_node(
             context.node_list.text,
             context.active_arena,
             name,
@@ -100,7 +89,7 @@ namespace ifb::eng {
         return(node);
     } 
 
-    IFB_ENG_INTERNAL asset_config_node_t*
+    IFB_ENG_INTERNAL asset_config_asset_t*
     asset_config_context_add_image_node(
         asset_config_context_t& context,
         const cchar* name,
@@ -108,7 +97,7 @@ namespace ifb::eng {
 
     }
 
-    IFB_ENG_INTERNAL asset_config_node_t*
+    IFB_ENG_INTERNAL asset_config_asset_t*
     asset_config_context_add_sound_node(
         asset_config_context_t& context,
         const cchar* name,
@@ -116,7 +105,7 @@ namespace ifb::eng {
 
     }
 
-    IFB_ENG_INTERNAL asset_config_node_t*
+    IFB_ENG_INTERNAL asset_config_asset_t*
     asset_config_context_add_font_node (
         asset_config_context_t& context,
         const cchar* name,
@@ -128,11 +117,11 @@ namespace ifb::eng {
     // CONFIG_NODES
     //-------------------------------------------------------------------
     
-    IFB_ENG_INTERNAL asset_config_node_t*
+    IFB_ENG_INTERNAL asset_config_asset_t*
     asset_config_node_arena_alloc(
         eng_mem_arena_t* arena) {
 
-        auto node = sld::arena_push_struct<asset_config_node_t>(arena);
+        auto node = sld::arena_push_struct<asset_config_asset_t>(arena);
         auto cstr = string_c32_arena_alloc(arena); 
 
         assert(node != NULL && cstr != NULL);
@@ -147,7 +136,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     asset_config_node_init(
-        asset_config_node_t* node,
+        asset_config_asset_t* node,
         const cchar*         name,
         const cchar*         path) {
 
@@ -170,7 +159,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     asset_config_node_update_name(
-        asset_config_node_t* node,
+        asset_config_asset_t* node,
         const cchar*         name) {
 
         assert(
@@ -191,7 +180,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     asset_config_node_update_path(
-        asset_config_node_t* node,
+        asset_config_asset_t* node,
         const cchar*         path) {
 
         assert(
@@ -209,19 +198,19 @@ namespace ifb::eng {
     // CONFIG LIST
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL asset_config_list_t*
+    IFB_ENG_INTERNAL asset_config_asset_list_t*
     asset_config_list_arena_alloc(
         eng_mem_arena_t* arena, const u32 count) {
 
-        auto list = (asset_config_list_t*)sld::dl_list_arena_alloc<asset_config_node_t*>(arena, count);
+        auto list = (asset_config_asset_list_t*)sld::dl_list_arena_alloc<asset_config_asset_t*>(arena, count);
         assert(list);
         return(list);
     }
 
     IFB_ENG_INTERNAL void
     asset_config_list_remove_node(
-        asset_config_list_t* file_list,
-        asset_config_node_t* file_node) {
+        asset_config_asset_list_t* file_list,
+        asset_config_asset_t* file_node) {
 
         assert(file_list != NULL && file_node != NULL);
         sld::dl_list_remove(file_list, file_node);
@@ -229,16 +218,16 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     asset_config_list_add_existing_node(
-        asset_config_list_t* list,
-        asset_config_node_t* node) {
+        asset_config_asset_list_t* list,
+        asset_config_asset_t* node) {
 
         const bool did_insert = sld::dl_list_insert_at_tail(list, node);
         assert(did_insert);
     }
 
-    IFB_ENG_INTERNAL asset_config_node_t*
+    IFB_ENG_INTERNAL asset_config_asset_t*
     asset_config_list_add_new_node(
-        asset_config_list_t* list,
+        asset_config_asset_list_t* list,
         arena_t*             arena,
         const cchar*         name,
         const cchar*         path) {
@@ -250,7 +239,7 @@ namespace ifb::eng {
             path  != NULL
         );
 
-        asset_config_node_t* node =  asset_config_node_arena_alloc(arena);
+        asset_config_asset_t* node =  asset_config_node_arena_alloc(arena);
         asset_config_node_init              (node, name, path);
         asset_config_list_add_existing_node (list, node);
 

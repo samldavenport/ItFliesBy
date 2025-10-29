@@ -2,7 +2,7 @@
 
 #include "ifb-engine-asset-internal.hpp"
 
-namespace ifb {
+namespace ifb::eng {
 
     constexpr cchar  _db_file_default_header[]  = 
         "IFBASSETDATABASE"                                                                                  // (16 bytes) verification string

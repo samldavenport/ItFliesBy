@@ -12,7 +12,7 @@ namespace ifb::eng {
 
         // start managers 
         eng_mem_mngr_startup   ();
-        eng_file_mngr_startup  ();
+        file_mngr_startup      ();
         eng_asset_mngr_startup ();
 
         // initialize platform

@@ -2,7 +2,7 @@
 
 #include "ifb-engine-asset-internal.hpp"
 
-namespace ifb {
+namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     eng_asset_db_create(

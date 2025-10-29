@@ -4,20 +4,20 @@
 #include <stb_image.h>
 
 #include "ifb-engine-image.hpp"
-namespace ifb {
+namespace ifb::eng {
 
     IFB_ENG_API bool
-    eng_img_get_info(
-        const eng_file_h32_t file_h,
-        eng_img_info_t&      img_info) {
+    img_get_info(
+        const file_h32_t file_h,
+        img_info_t&      img_info) {
 
         return(false);
     }
 
     IFB_ENG_API bool
-    eng_img_load(
-        const eng_file_h32_t file_h,
-        eng_img_buffer_t&    img_buffer) {
+    img_load(
+        const file_h32_t file_h,
+        img_buffer_t&    img_buffer) {
 
         return(false);
     }

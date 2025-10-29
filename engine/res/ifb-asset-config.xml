@@ -1,5 +1,5 @@
-<ifb-assets>
-    <text path="../assets/text">
+<assets>
+    <text>
         <asset name="" path ="" />
         <asset name="" path ="" />
         <asset name="" path ="" />
@@ -7,7 +7,7 @@
         <asset name="" path ="" />
         <asset name="" path ="" />
         <asset name="" path ="" />
-    <image path="../assets/image">
+    <image>
         <asset name="" path ="" />
         <asset name="" path ="" />
         <asset name="" path ="" />
@@ -15,14 +15,14 @@
         <asset name="" path ="" />
         <asset name="" path ="" />
         <asset name="" path ="" />
-    <sound path="../assets/sound">
+    <sound>
         <asset name="" path ="" />
         <asset name="" path ="" />
         <asset name="" path ="" />
     </sound>
-    <font path="../assets/font">
+    <font>
         <asset name="" path ="" />
         <asset name="" path ="" />
         <asset name="" path ="" />
     </font>
-</ifb-assets>
+<assets>

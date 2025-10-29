@@ -9,9 +9,9 @@
 #include "ifb-engine-hash.hpp"
 #include "ifb-engine-asset.hpp"
 #include "ifb-engine-memory-internal.hpp"
-#include "ifb-engine-file-internal.hpp"
+#include "ifb-engine-file-manager.hpp"
 
-namespace ifb {
+namespace ifb::eng {
 
     //-------------------------------------------------------------------
     // TYPES
@@ -129,18 +129,18 @@ namespace ifb {
     };
 
     struct eng_asset_db_file_t {
-        eng_file_h32_t             handle;
+        file_h32_t             handle;
         u32                        index_count;
         eng_asset_db_file_index_t* index_array;
         u64                        size;
         eng_asset_db_file_verif_t  verif;
         eng_hash128_t*             hash;
-        eng_file_buffer_t          header_buffer;
+        file_buffer_t          header_buffer;
         eng_mem_arena_t*           arena;
     };
 
     struct eng_asset_db_builder_t {
-        eng_file_h32_t config_file_handle;
+        file_h32_t config_file_handle;
     };
 
     //-------------------------------------------------------------------

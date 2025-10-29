@@ -109,12 +109,12 @@ namespace ifb::eng {
         const core_window_file_dialog_t& file_dialog) {
 
         static sld::os_window_dialog_t dialog;
-        dialog.did_select            = false;
-        dialog.filter                = file_dialog.filter;
-        dialog.path_start.buffer     = NULL;
-        dialog.path_start.size       = 0;
-        dialog.path_selection.buffer = _dialog_selection.buffer;
-        dialog.path_selection.size   = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+        dialog.filter                 = file_dialog.filter;
+        dialog.start                  = file_dialog.starting_path;
+        dialog.title                  = file_dialog.title; 
+        dialog.selection_buffer_cstr  = _dialog_selection.buffer;
+        dialog.selection_buffer_size  = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+        dialog.did_select             = false;
 
         sld::os_window_open_file_dialog(
             _window.handle,
@@ -122,7 +122,7 @@ namespace ifb::eng {
         );
 
         const cchar* selection = (dialog.did_select)
-            ? dialog.path_selection.buffer
+            ? dialog.selection_buffer_cstr
             : NULL;
 
         return(selection);
@@ -133,12 +133,12 @@ namespace ifb::eng {
         const core_window_file_dialog_t& file_dialog) {
 
         static sld::os_window_dialog_t dialog;
-        dialog.did_select            = false;
-        dialog.filter                = file_dialog.filter;
-        dialog.path_start.buffer     = NULL;
-        dialog.path_start.size       = 0;
-        dialog.path_selection.buffer = _dialog_selection.buffer;
-        dialog.path_selection.size   = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+        dialog.filter                 = file_dialog.filter;
+        dialog.start                  = file_dialog.starting_path;
+        dialog.title                  = file_dialog.title; 
+        dialog.selection_buffer_cstr  = _dialog_selection.buffer;
+        dialog.selection_buffer_size  = CORE_WINDOW_FILE_DIALOG_SELECTION_BUFFER_SIZE;
+        dialog.did_select             = false;
 
         sld::os_window_save_file_dialog(
             _window.handle,
@@ -146,7 +146,7 @@ namespace ifb::eng {
         );
 
         const cchar* selection = (dialog.did_select)
-            ? dialog.path_selection.buffer
+            ? dialog.selection_buffer_cstr
             : NULL;
 
         return(selection);
