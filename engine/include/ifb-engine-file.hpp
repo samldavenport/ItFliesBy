@@ -24,18 +24,17 @@ namespace ifb::eng {
     using file_h32_t       = h32_t;
     using file_flags_u32_t = u32_t;
 
-    IFB_ENG_API const file_h32_t       file_mngr_open_ro               (const cchar*          file_path);
-    IFB_ENG_API const file_h32_t       file_mngr_open_rw               (const cchar*          file_path);
-    IFB_ENG_API bool                   file_mngr_close                 (const file_h32_t  file_handle);
-    IFB_ENG_API const u64              file_mngr_get_size              (const file_h32_t  file_handle);
-    IFB_ENG_API const file_flags_u32_t file_mngr_get_flags             (const file_h32_t  file_handle);
-    IFB_ENG_API const cchar*           file_mngr_get_path              (const file_h32_t  file_handle);
-    IFB_ENG_API const file_error_s32_t file_mngr_get_last_error        (const file_h32_t  file_handle = { IFB_ENG_FILE_H32_INVALID} );
-    IFB_ENG_API bool                   file_mngr_read                  (const file_h32_t  file_handle, file_buffer_t& read_buffer);
-    IFB_ENG_API bool                   file_mngr_write                 (const file_h32_t  file_handle, file_buffer_t& write_buffer);
-    IFB_ENG_API bool                   file_mngr_read_async            (const file_h32_t  file_handle);
-    IFB_ENG_API bool                   file_mngr_write_async           (const file_h32_t  file_handle);
-    IFB_ENG_API const cchar*           file_mngr_get_working_directory (void);
+    IFB_ENG_API const file_h32_t       file_open_ro               (const cchar*      file_path);
+    IFB_ENG_API const file_h32_t       file_open_rw               (const cchar*      file_path);
+    IFB_ENG_API bool                   file_close                 (const file_h32_t  file_handle);
+    IFB_ENG_API const u64              file_get_size              (const file_h32_t  file_handle);
+    IFB_ENG_API const file_flags_u32_t file_get_flags             (const file_h32_t  file_handle);
+    IFB_ENG_API const cchar*           file_get_path              (const file_h32_t  file_handle);
+    IFB_ENG_API const file_error_s32_t file_get_last_error        (const file_h32_t  file_handle = { IFB_ENG_FILE_H32_INVALID} );
+    IFB_ENG_API bool                   file_read                  (const file_h32_t  file_handle, file_buffer_t& read_buffer);
+    IFB_ENG_API bool                   file_write                 (const file_h32_t  file_handle, file_buffer_t& write_buffer);
+    IFB_ENG_API bool                   file_read_async            (const file_h32_t  file_handle);
+    IFB_ENG_API bool                   file_write_async           (const file_h32_t  file_handle);
 
     enum file_flag_e32_ {
         file_flag_e32_none        = 0,

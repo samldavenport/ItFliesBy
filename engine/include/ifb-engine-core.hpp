@@ -4,9 +4,10 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_API bool core_startup     (void);
-    IFB_ENG_API bool core_shutdown    (void);
-    IFB_ENG_API bool core_update      (void);
-    IFB_ENG_API bool core_render      (void);
-    IFB_ENG_API bool core_should_quit (void);
+    IFB_ENG_API bool         core_startup     (void);
+    IFB_ENG_API bool         core_shutdown    (void);
+    IFB_ENG_API bool         core_update      (void);
+    IFB_ENG_API bool         core_render      (void);
+    IFB_ENG_API bool         core_should_quit (void);
+    IFB_ENG_API const cchar* core_get_working_directory(void);
 };

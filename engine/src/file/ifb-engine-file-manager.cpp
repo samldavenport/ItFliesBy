@@ -15,7 +15,6 @@ namespace ifb::eng {
     static file_callback_context_t _callback_context [IFB_ENG_FILE_TABLE_CAPACITY];
     static file_t                  _file             [IFB_ENG_FILE_TABLE_CAPACITY];
     static cchar                   _path_buffer      [IFB_ENG_FILE_TABLE_CAPACITY * IFB_ENG_FILE_PATH_SIZE];
-    static file_path_t             _working_directory;
 
     //-------------------------------------------------------------------
     // DECLARATIONS
@@ -46,7 +45,7 @@ namespace ifb::eng {
         static const sld::os_file_access_flags_t access_flags = { sld::os_file_access_flag_e_read };
         static const sld::os_file_share_flags_t  share_flags  = { sld::os_file_share_flag_e_read  };
         static const sld::os_file_mode_t         mode         = { sld::os_file_mode_e_open_always };
-        static const bool                    is_async     = false;
+        static const bool                        is_async     = false;
         static const sld::os_file_config_t os_file_config = {
             access_flags,
             share_flags,
@@ -428,14 +427,6 @@ namespace ifb::eng {
     //     return(is_success);
     // }
 
-    IFB_ENG_API const cchar*
-    file_mngr_get_working_directory(
-        void) {
-
-        static const cchar* dir = _working_directory.buffer; 
-        return(dir);
-    }
-
     //-------------------------------------------------------------------
     // INTERNAL
     //-------------------------------------------------------------------
@@ -446,9 +437,6 @@ namespace ifb::eng {
 
         const bool is_initialized = (_file_mngr.capacity != 0);  
         if (is_initialized) return;
-
-        sld::os_file_error_t os_error = sld::os_file_get_working_directory(_working_directory);
-        assert(os_error.val == sld::os_file_error_e_success);
 
         _file_mngr.os_callback_read  = file_mngr_async_callback_read;
         _file_mngr.os_callback_write = file_mngr_async_callback_write;

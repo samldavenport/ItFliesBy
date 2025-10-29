@@ -24,6 +24,7 @@ namespace ifb::eng {
         // initialize gui
         gui_init();
 
+
         return(true); 
     }
 
@@ -73,5 +74,14 @@ namespace ifb::eng {
 
         return(core_should_quit);
     }
+
+    IFB_ENG_API const cchar*
+    core_get_working_directory(void) {
+
+        const cchar* dir = sld::os_system_get_working_directory();
+        assert(dir);
+        return(dir);
+    }
+
 };
 
