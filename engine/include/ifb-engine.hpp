@@ -46,8 +46,8 @@ namespace ifb {
     typedef sld::b64 b64;
 
     // chars  
-    typedef sld::c8  cchar;
-    typedef sld::c16 wchar;
+    typedef sld::cchar cchar;
+    typedef sld::wchar wchar;
 
     // memory
     typedef sld::byte  byte;
@@ -73,9 +73,6 @@ namespace ifb {
     typedef sld::b16_t  b16_t;
     typedef sld::b32_t  b32_t;
     typedef sld::b64_t  b64_t;
-    typedef sld::c8_t   c8_t;
-    typedef sld::c16_t  c16_t;
-    typedef sld::c32_t  c32_t;
     typedef sld::byte_t byte_t;
     typedef sld::addr_t addr_t;
     typedef sld::vptr_t vptr_t;

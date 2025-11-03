@@ -6,36 +6,31 @@
 #include "ifb-engine-file.hpp"
 #include "ifb-engine-file-manager.hpp"
 
-#define table_iterate(index)        for (u32 index = 0; index < _mngr.table.capacity; index++)
-#define table_file_is_free(index)   (_mngr.table.array.os_handle[index].val == 0)
-#define handle_is_valid(handle)     (handle.val < FILE_MANAGER_TABLE_CAPACITY)  
-#define table_get_os_handle(handle) _mngr.table.array.os_handle[handle.val];
-#define table_get_os_error(handle)  _mngr.table.array.os_error[handle.val];
-#define table_get_os_async(handle)  _mngr.table.array.os_async[handle.val];
-#define table_get_path(handle)      _mngr.table.array.path[handle.val];
+#define table_iterate(index)      for (u32 index = 0; index < _mngr.table.capacity; index++)
+#define table_file_is_free(index) (_mngr.table.array.os_handle[index].val == 0)
+#define file_is_valid(file)       (file.index < FILE_MANAGER_TABLE_CAPACITY)  
+#define file_get_os_handle(file)  _mngr.table.array.os_handle[file.index];
+#define file_get_os_error(file)   _mngr.table.array.os_error[file.index];
+#define file_get_os_async(file)   _mngr.table.array.os_async[file.index];
+#define file_get_path(file)       _mngr.table.array.path[file.index];
 
 namespace ifb::eng {
 
     //-------------------------------------------------------------------
-    // STATIC
-    //-------------------------------------------------------------------
-
-    IFB_ENG_GLOBAL file_mngr_t      _mngr;
-    IFB_ENG_GLOBAL file_os_handle_t _array_os_handle [FILE_MANAGER_TABLE_CAPACITY];
-    IFB_ENG_GLOBAL file_os_error_t  _array_os_error  [FILE_MANAGER_TABLE_CAPACITY];  
-    IFB_ENG_GLOBAL file_path_t      _array_path      [FILE_MANAGER_TABLE_CAPACITY];
-    IFB_ENG_GLOBAL cchar            _path_buffer     [FILE_MANAGER_PATH_BUFFER_SIZE];
-
-    //-------------------------------------------------------------------
     // DECLARATIONS
+    //-------------------------------------------------------------------
+
+    IFB_ENG_INTERNAL file_t file_mngr_get_next_free (void);
+
+    //-------------------------------------------------------------------
+    // METHODS
     //-------------------------------------------------------------------
 
     IFB_ENG_INTERNAL void
     file_mngr_startup(
         void) {
 
-
-        _mngr.table.capacity = FILE_MANAGER_TABLE_CAPACITY;
+        _mngr.table.capacity        = FILE_MANAGER_TABLE_CAPACITY;
         _mngr.table.array.os_handle = _array_os_handle;
         _mngr.table.array.os_error  = _array_os_error;
         _mngr.table.array.path      = _array_path;
@@ -58,41 +53,75 @@ namespace ifb::eng {
 
     }
 
-    IFB_ENG_INTERNAL file_handle_t
-    file_mngr_get_next_free_handle(
+    IFB_ENG_INTERNAL file_t
+    file_mngr_get_next_free(
         void) {
 
-        file_handle_t handle = { FILE_MANAGER_INVALID_HANDLE };
+        file_t file = { FILE_INVALID_INDEX };
 
         table_iterate(file) {
             if (table_file_is_free(file)) {
-                handle.val = file;
                 break;
             }
         }
 
-        return(handle);
+        return(file);
     }
 
-    IFB_ENG_INTERNAL file_handle_t
+    IFB_ENG_INTERNAL file_t
     file_mngr_os_open_file(
-        const cchar*                 os_path,
-        const sld::os_file_config_t& os_config) {
+        const file_path_t       path,
+        const file_os_config_t& os_config) {
 
-        file_handle_t handle = file_mngr_get_next_free_handle();
-        if (handle_is_valid(handle)) {
+        file_t file = file_mngr_get_next_free();
+        if (file_is_valid(file)) {
 
-            file_os_handle_t&        os_handle = table_get_os_handle (handle);
-            file_os_error_t&         os_error  = table_get_os_error  (handle);
-            file_os_async_context_t& os_async  = table_get_os_async  (handle);
-            file_path_t&             path      = table_get_path      (handle);
+            file_os_handle_t&        os_handle = file_get_os_handle (file);
+            file_os_error_t&         os_error  = file_get_os_error  (file);
+            file_os_async_context_t& os_async  = file_get_os_async  (file);
+            file_path_t&             os_path   = file_get_path      (file);
 
-            os_error = sld::os_file_open(os_handle, os_path, os_config);
+            os_error = os_file_open(os_handle, path.buffer, &os_config);
             
-            (void)sprintf_s(path.buffer, FILE_MANAGER_PATH_SIZE, "%s", os_path);
+            (void)sprintf_s(os_path.buffer, FILE_MANAGER_PATH_SIZE, "%s", path.buffer);
         }
-        return(handle);
+        return(file);
+    }
+
+    IFB_ENG_INTERNAL bool
+    file_mngr_os_close_file(
+        const file_t file) {
+
+        //TODO
+
+        return(false);
     }
 
 
+
+    IFB_ENG_INTERNAL bool
+    file_mngr_os_read(
+        const file_t      file,
+        file_os_buffer_t* file_buffer) {
+
+        file_os_handle_t& os_handle = file_get_os_handle (file);
+        file_os_error_t&  os_error  = file_get_os_error  (file);
+
+        os_error = os_file_read(os_handle, file_buffer);
+
+        return(os_error.val == os_file_error_e_success);
+    }
+
+    IFB_ENG_INTERNAL bool
+    file_mngr_os_write(
+        const file_t      file,
+        file_os_buffer_t* file_buffer) {
+
+        file_os_handle_t& os_handle = file_get_os_handle (file);
+        file_os_error_t&  os_error  = file_get_os_error  (file);
+
+        os_error = os_file_write(os_handle, file_buffer);
+
+        return(os_error.val == os_file_error_e_success);
+    }
 };

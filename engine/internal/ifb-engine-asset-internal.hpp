@@ -135,7 +135,7 @@ namespace ifb::eng {
         u64                        size;
         eng_asset_db_file_verif_t  verif;
         eng_hash128_t*             hash;
-        file_buffer_t              header_buffer;
+        file_os_buffer_t           header_buffer;
         eng_mem_arena_t*           arena;
     };
 

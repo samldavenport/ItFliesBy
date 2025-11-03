@@ -21,6 +21,7 @@
 #include "ifb-engine-core-window.cpp"
 #include "ifb-engine-core.cpp"
 
+#include "ifb-engine-file.cpp"
 #include "ifb-engine-file-manager.cpp"
 
 #include "ifb-engine-gui.cpp"
