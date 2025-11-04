@@ -13,13 +13,13 @@
 using namespace sld;
 
 namespace ifb::eng {
-
+  
     //-------------------------------------------------------------------
     // CONSTANTS
     //-------------------------------------------------------------------
 
-    constexpr u32 FILE_MANAGER_PATH_SIZE        = 256;
     constexpr u32 FILE_MANAGER_TABLE_CAPACITY   = 64;
+    constexpr u32 FILE_MANAGER_PATH_SIZE        = 256;
     constexpr u32 FILE_MANAGER_PATH_BUFFER_SIZE = FILE_MANAGER_PATH_SIZE * FILE_MANAGER_TABLE_CAPACITY;
 
     //-------------------------------------------------------------------
@@ -40,12 +40,12 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool   file_mngr_os_close_file (const file_t file);
     IFB_ENG_INTERNAL bool   file_mngr_os_read       (const file_t file, file_os_buffer_t* file_buffer);
     IFB_ENG_INTERNAL bool   file_mngr_os_write      (const file_t file, file_os_buffer_t* file_buffer);
+    IFB_ENG_INTERNAL u64    file_mngr_os_get_size   (const file_t file);
 
     IFB_ENG_INTERNAL_INLINE bool                           file_mngr_file_is_valid        (const file_t file);
     IFB_ENG_INTERNAL_INLINE const file_os_handle_t&        file_mngr_get_os_handle        (const file_t file);
     IFB_ENG_INTERNAL_INLINE const file_os_error_t&         file_mngr_get_os_error         (const file_t file);
     IFB_ENG_INTERNAL_INLINE const file_os_async_context_t& file_mngr_get_os_async_context (const file_t file);
-    IFB_ENG_INTERNAL_INLINE const u64                      file_mngr_get_os_size          (const file_t file);
     IFB_ENG_INTERNAL_INLINE const file_path_t&             file_mngr_get_path             (const file_t file);
     IFB_ENG_INTERNAL_INLINE const file_flags_t&            file_mngr_get_flags            (const file_t file);
 
@@ -129,20 +129,6 @@ namespace ifb::eng {
         const file_t file) {
 
         return(_mngr.table.array.flags[file.index]);
-    }
-
-    IFB_ENG_INTERNAL_INLINE const u64
-    file_mngr_get_os_size(
-        const file_t file) {
-        
-
-        file_os_handle_t& handle = file_mngr_get_os_handle (file);
-        file_os_error_t&   error  = file_mngr_get_os_error  (file);
-
-        u64 size = 0
-        error = os_file_size(handle, &size);
-
-        return(size);
     }
 };
 

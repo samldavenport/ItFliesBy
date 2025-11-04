@@ -97,8 +97,6 @@ namespace ifb::eng {
         return(false);
     }
 
-
-
     IFB_ENG_INTERNAL bool
     file_mngr_os_read(
         const file_t      file,
@@ -123,5 +121,18 @@ namespace ifb::eng {
         os_error = os_file_write(os_handle, file_buffer);
 
         return(os_error.val == os_file_error_e_success);
+    }
+
+    IFB_ENG_INTERNAL u64
+    file_mngr_os_get_size(
+        const file_t file) {
+
+        file_os_handle_t& os_handle = file_get_os_handle (file);
+        file_os_error_t&  os_error  = file_get_os_error  (file);
+
+        u64 size = 0;
+        os_error = os_file_size(os_handle, size);
+
+        return(size);
     }
 };
