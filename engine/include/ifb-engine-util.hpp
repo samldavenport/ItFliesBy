@@ -5,7 +5,7 @@
 
 namespace ifb::eng {
 
-    const cchar* util_get_working_directory();
+    const cchar* util_get_working_directory (void);
     
 }
 

@@ -16,125 +16,113 @@
 #define IFB_ENG_INTERNAL        static
 #define IFB_ENG_INTERNAL_INLINE static inline
 
+using namespace sld;
 
-namespace ifb {
+namespace ifb::eng {
+
+    struct u32_t {
+        
+        u32 val;
+    
+        constexpr bool operator == (const u32_t& other) const noexcept { return(this->val == other.val); }
+        constexpr bool operator != (const u32_t& other) const noexcept { return(this->val != other.val); }
+        constexpr bool operator <= (const u32_t& other) const noexcept { return(this->val <= other.val); }
+        constexpr bool operator >= (const u32_t& other) const noexcept { return(this->val >= other.val); }
+        constexpr bool operator <  (const u32_t& other) const noexcept { return(this->val <  other.val); }
+        constexpr bool operator >  (const u32_t& other) const noexcept { return(this->val >  other.val); }
+
+        constexpr u32_t&
+        operator=(u32 h) noexcept {
+            this->val = h;
+            return(*this);
+        }
+    };
+
+    struct s32_t {
+        
+        s32 val;
+    
+        constexpr bool operator == (const s32_t& other) const noexcept { return(this->val == other.val); }
+        constexpr bool operator != (const s32_t& other) const noexcept { return(this->val != other.val); }
+        constexpr bool operator <= (const s32_t& other) const noexcept { return(this->val <= other.val); }
+        constexpr bool operator >= (const s32_t& other) const noexcept { return(this->val >= other.val); }
+        constexpr bool operator <  (const s32_t& other) const noexcept { return(this->val <  other.val); }
+        constexpr bool operator >  (const s32_t& other) const noexcept { return(this->val >  other.val); }
+
+        constexpr s32_t&
+        operator=(s32 h) noexcept {
+            this->val = h;
+            return(*this);
+        }
+    };
 
     //-------------------------------------------------------------------
-    // PRIMITIVES
+    // HANDLE
     //-------------------------------------------------------------------
 
-    // signed integers
-    typedef sld::s8  s8;
-    typedef sld::s16 s16;
-    typedef sld::s32 s32;
-    typedef sld::s64 s64;
+    constexpr u32 HANDLE_INVALID = 0xFFFFFFFF;
 
-    // unsigned integers
-    typedef sld::u8  u8;
-    typedef sld::u16 u16;
-    typedef sld::u32 u32;
-    typedef sld::u64 u64;
-    
-    // floats
-    typedef sld::f32 f32;
-    typedef sld::f64 f64;
-    
-    // booleans
-    typedef sld::b8  b8;
-    typedef sld::b16 b16;
-    typedef sld::b32 b32;
-    typedef sld::b64 b64;
+    struct handle_t : u32_t {
 
-    // chars  
-    typedef sld::cchar cchar;
-    typedef sld::wchar wchar;
+        constexpr                   handle_t (void)                { this->val = HANDLE_INVALID;          }
+        constexpr explicit          handle_t (u32 h)               { this->val = h;                       }
+        constexpr explicit operator bool     (void) const noexcept { return(this->val != HANDLE_INVALID); }
+    };
 
-    // memory
-    typedef sld::byte  byte;
-    typedef sld::addr  addr;
-    typedef sld::vptr  vptr;
-    typedef sld::pad8  pad8;
-    typedef sld::pad16 pad16;
-    typedef sld::pad32 pad32;
-    typedef sld::pad64 pad64;
+    //-------------------------------------------------------------------
+    // FLAGS
+    //-------------------------------------------------------------------
 
-    // structured
-    typedef sld::s8_t   s8_t;
-    typedef sld::s16_t  s16_t;
-    typedef sld::s32_t  s32_t;
-    typedef sld::s64_t  s64_t;
-    typedef sld::u8_t   u8_t;
-    typedef sld::u16_t  u16_t;
-    typedef sld::u32_t  u32_t;
-    typedef sld::u64_t  u64_t;
-    typedef sld::f32_t  f32_t;
-    typedef sld::f64_t  f64_t;
-    typedef sld::b8_t   b8_t;
-    typedef sld::b16_t  b16_t;
-    typedef sld::b32_t  b32_t;
-    typedef sld::b64_t  b64_t;
-    typedef sld::byte_t byte_t;
-    typedef sld::addr_t addr_t;
-    typedef sld::vptr_t vptr_t;
+    constexpr u32 FLAGS_NONE = 0;
 
-    // handles
-    struct h8_t  : u8_t  { };
-    struct h16_t : u16_t { };
-    struct h32_t : u32_t { };
-    struct h64_t : u64_t { };
+    struct flags_t : u32_t {
+        
+        constexpr                   flags_t (void)                                { this->val = FLAGS_NONE;          }
+        constexpr explicit          flags_t (u32 h)                               { this->val = h;                   }
+        constexpr explicit operator bool    (void) const noexcept                 { return(this->val != FLAGS_NONE); }
+
+        constexpr flags_t  operator ~       (void)                 const noexcept { return flags_t(~val);            }
+        constexpr flags_t  operator |       (const flags_t& other) const noexcept { return flags_t(val | other.val); }
+        constexpr flags_t  operator &       (const flags_t& other) const noexcept { return flags_t(val & other.val); }
+        constexpr flags_t  operator ^       (const flags_t& other) const noexcept { return flags_t(val ^ other.val); }
+        constexpr flags_t& operator |=      (const flags_t& other)       noexcept { val |= other.val; return *this;  }
+        constexpr flags_t& operator &=      (const flags_t& other)       noexcept { val &= other.val; return *this;  }
+        constexpr flags_t& operator ^=      (const flags_t& other)       noexcept { val ^= other.val; return *this;  }
+        constexpr flags_t  operator |       (const u32 other)      const noexcept { return flags_t(val | other); }
+        constexpr flags_t  operator &       (const u32 other)      const noexcept { return flags_t(val & other); }
+        constexpr flags_t  operator ^       (const u32 other)      const noexcept { return flags_t(val ^ other); }
+        constexpr flags_t& operator |=      (const u32 other)            noexcept { val |= other; return *this;  }
+        constexpr flags_t& operator &=      (const u32 other)            noexcept { val &= other; return *this;  }
+        constexpr flags_t& operator ^=      (const u32 other)            noexcept { val ^= other; return *this;  }
+        constexpr flags_t  operator <<      (u32 bits)             const noexcept { return flags_t(val << bits);     }
+        constexpr flags_t  operator >>      (u32 bits)             const noexcept { return flags_t(val >> bits);     }
+        constexpr flags_t& operator <<=     (u32 bits)                   noexcept { val <<= bits; return *this;      }
+        constexpr flags_t& operator >>=     (u32 bits)                   noexcept { val >>= bits; return *this;      }
+    };
 
     //-------------------------------------------------------------------
     // ERROR
     //-------------------------------------------------------------------
 
-    struct eng_error_s32_t : s32_t { };
-
-    enum eng_error_e32_type_ {
-        eng_error_e32_type_success = 0x10000000,
-        eng_error_e32_type_warning = 0x00000000,
-        eng_error_e32_type_failure = 0x80000000,
+    struct error_t : s32_t {
+        constexpr                   error_t (void)                { this->val = 0;          }
+        constexpr explicit          error_t (s32 e)               { this->val = e;          }
+        constexpr explicit operator bool    (void) const noexcept { return(this->val >= 0); }
     };
 
-    enum eng_error_e32_module_ {
-        eng_error_e32_module_platform = 0x00000000, 
-        eng_error_e32_module_core     = 0x00010000, 
-        eng_error_e32_module_memory   = 0x00020000, 
-        eng_error_e32_module_file     = 0x00030000,
-        eng_error_e32_module_asset    = 0x00040000
+    enum eng_error_e_type_ : u8 {
+        eng_error_e_type_success = 0x10,
+        eng_error_e_type_warning = 0x00,
+        eng_error_e_type_failure = 0x80,
     };
 
-    //-------------------------------------------------------------------
-    // STRINGS
-    //-------------------------------------------------------------------
-    
-    typedef sld::cstr_t cstr_t;
-    typedef sld::wstr_t wstr_t;
-
-    //-------------------------------------------------------------------
-    // DATA STRUCTURES
-    //-------------------------------------------------------------------g
-    
-    typedef sld::buffer_t buffer_t;
-
-    //-------------------------------------------------------------------
-    // GEOMETRY
-    //-------------------------------------------------------------------
-
-    typedef sld::dims_u32_t      dims_u32_t;
-    typedef sld::dims_u32_size_t dims_u32_size_t;
-    typedef sld::dims_u32_pos_t  dims_u32_pos_t;
-
-    typedef sld::dims_f32_t      dims_f32_t;
-    typedef sld::dims_f32_size_t dims_f32_size_t;
-    typedef sld::dims_f32_pos_t  dims_f32_pos_t;
-
-    //-------------------------------------------------------------------
-    // DATA FORMATS
-    //-------------------------------------------------------------------
-
-    using xml_doc_t    = sld::xml_doc_t;
-    using xml_node_t   = sld::xml_node_t;
-    using xml_attrib_t = sld::xml_attrib_t;
+    enum eng_error_e_module_ : u8 {
+        eng_error_e_module_platform = 0x00, 
+        eng_error_e_module_core     = 0x01, 
+        eng_error_e_module_memory   = 0x02, 
+        eng_error_e_module_file     = 0x03,
+        eng_error_e_module_asset    = 0x04
+    };
 };
 
 #endif //IFB_ENGINE_HPP

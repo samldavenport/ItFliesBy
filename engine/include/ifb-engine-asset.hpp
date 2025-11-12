@@ -21,18 +21,18 @@
 #   define IFB_ENG_ASSET_XML_STACK_SIZE_KB 4
 #endif
 
-namespace ifb {
+namespace ifb::eng {
 
-    struct eng_asset_s32_error_t : eng_error_s32_t { };
-    struct eng_asset_u32_id_t    : u32_t       { };
-    struct eng_asset_u32_type_t  : u32_t       { };
-    struct eng_asset_h32_text_t  : h32_t       { };
-    struct eng_asset_h32_image_t : h32_t       { };
-    struct eng_asset_h32_sound_t : h32_t       { };
-    struct eng_asset_h32_font_t  : h32_t       { };
+    struct asset_s32_error_t : eng_error_s32_t { };
+    struct asset_u32_id_t    : u32_t       { };
+    struct asset_u32_type_t  : u32_t       { };
+    struct asset_h32_text_t  : h32_t       { };
+    struct asset_h32_image_t : h32_t       { };
+    struct asset_h32_sound_t : h32_t       { };
+    struct asset_h32_font_t  : h32_t       { };
 
-    struct eng_asset_buffer_t : sld::buffer_t { };
-    struct eng_asset_string_t;
+    struct asset_buffer_t : sld::buffer_t { };
+    struct asset_string_t;
 
     typedef u64 eng_asset_u64_size_t;
 

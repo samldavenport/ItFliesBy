@@ -19,12 +19,13 @@ namespace ifb::eng {
     using  file_os_buffer_t           = os_file_buffer_t;
     using  file_os_async_callback_f   = os_file_async_callback_f;
     using  file_os_handle_t           = os_file_handle_t;
-    using  file_os_error_t            = os_file_error_t;
+    using  file_os_error_t            = os_file_error_s32;
     using  file_os_async_context_t    = os_file_async_context_t; 
     using  file_os_context_t          = os_file_os_context_t;
     using  file_os_callback_context_t = os_file_callback_context_t;
     using  file_os_config_t           = os_file_config_t; 
     struct file_t;
+    struct file_hnd_t;
     struct file_path_t;
     struct file_info_t;
 

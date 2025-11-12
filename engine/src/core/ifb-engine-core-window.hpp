@@ -33,7 +33,7 @@ namespace ifb::eng {
 
     using  core_window_handle_t = sld::os_window_handle_t;
     using  core_window_update_t = sld::os_window_update_t;
-    using  core_window_error_t  = sld::os_window_error_t;
+    using  core_window_error_t  = sld::os_window_error_s32;
     using  core_window_pos_t    = sld::dims_u32_pos_t;
     using  core_window_size_t   = sld::dims_u32_size_t;
 
