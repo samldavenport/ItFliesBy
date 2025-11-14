@@ -4,7 +4,6 @@
 #include <sld-cstr.hpp>
 
 #include "ifb-engine.hpp"
-#include "ifb-engine-memory-internal.hpp"
 #include "ifb-engine-string.hpp"
 
 namespace ifb {

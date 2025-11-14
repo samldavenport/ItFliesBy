@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include "ifb-engine.hpp"
-#include "ifb-engine-memory-internal.hpp"
 
 namespace ifb::eng {
 
@@ -17,7 +16,7 @@ namespace ifb::eng {
 
     IFB_ENG_API_INLINE void          cstr_sanitize(const cchar* cstr, const u64 size);
 
-    IFB_ENG_API_INLINE string_c32_t* string_c32_arena_alloc (eng_mem_arena_t*    arena, const u32 count = 1);
+    IFB_ENG_API_INLINE string_c32_t* string_c32_arena_alloc (arena_t*    arena, const u32 count = 1);
     IFB_ENG_API_INLINE string_c32_t  string_c32_static_init (const cchar* src);
     IFB_ENG_API_INLINE cstr_t        string_c32_to_cstr     (const string_c32_t* string);
     IFB_ENG_API_INLINE void          string_c32_sanitize    (string_c32_t*       string);
@@ -69,8 +68,8 @@ namespace ifb::eng {
 
     IFB_ENG_API_INLINE string_c32_t*
     string_c32_arena_alloc(
-        eng_mem_arena_t* arena,
-        const u32        count) {
+        arena_t*  arena,
+        const u32 count) {
 
         const u32     size   = (STRING_SIZE_C32 * count);
         string_c32_t* string = (string_c32_t*)sld::arena_push_bytes(arena, size);

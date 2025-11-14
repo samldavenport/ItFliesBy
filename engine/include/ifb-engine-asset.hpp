@@ -23,44 +23,41 @@
 
 namespace ifb::eng {
 
-    struct asset_s32_error_t : eng_error_s32_t { };
-    struct asset_u32_id_t    : u32_t       { };
-    struct asset_u32_type_t  : u32_t       { };
-    struct asset_h32_text_t  : h32_t       { };
-    struct asset_h32_image_t : h32_t       { };
-    struct asset_h32_sound_t : h32_t       { };
-    struct asset_h32_font_t  : h32_t       { };
-
-    struct asset_buffer_t : sld::buffer_t { };
+    struct asset_error_t  : error_t  { };
+    struct asset_id_t     : u32_t    { };
+    struct asset_type_t   : u32_t    { };
+    struct asset_text_t   : u32_t    { };
+    struct asset_image_t  : u32_t    { };
+    struct asset_sound_t  : u32_t    { };
+    struct asset_font_t   : u32_t    { };
+    struct asset_buffer_t : buffer_t { };
     struct asset_string_t;
 
-    typedef u64 eng_asset_u64_size_t;
+    IFB_ENG_API void                asset_generate_id    (const u32 i_count, const asset_string_t* i_name, asset_id_t* o_id);
+    IFB_ENG_API void                asset_name_sanitize  (const u32 i_count, asset_string_t* io_name);
 
-    IFB_ENG_API void                             eng_asset_generate_id         (const u32 i_count, const eng_asset_string_t* i_name, eng_asset_u32_id_t* o_id);
-    IFB_ENG_API void                             eng_asset_name_sanitize       (const u32 i_count, eng_asset_string_t* io_name);
+    IFB_ENG_API const asset_text_t  asset_load_text      (const asset_id_t id);
+    IFB_ENG_API const asset_image_t asset_load_image     (const asset_id_t id);
+    IFB_ENG_API const asset_sound_t asset_load_sound     (const asset_id_t id);
+    IFB_ENG_API const asset_font_t  asset_load_font      (const asset_id_t id);
+    IFB_ENG_API const asset_error_t asset_get_last_error (void); 
 
-    IFB_ENG_API const eng_asset_h32_text_t       eng_asset_mngr_load_text      (const eng_asset_u32_id_t id);
-    IFB_ENG_API const eng_asset_h32_image_t      eng_asset_mngr_load_image     (const eng_asset_u32_id_t id);
-    IFB_ENG_API const eng_asset_h32_sound_t      eng_asset_mngr_load_sound     (const eng_asset_u32_id_t id);
-    IFB_ENG_API const eng_asset_h32_font_t       eng_asset_mngr_load_font      (const eng_asset_u32_id_t id);
-    IFB_ENG_API const eng_asset_s32_error_t      eng_asset_mngr_get_last_error (void); 
-
-    enum eng_asset_e32_type_ {
-        eng_asset_e32_type_text  = 0,
-        eng_asset_e32_type_image = 1,
-        eng_asset_e32_type_sound = 2,
-        eng_asset_e32_type_font  = 3,
-        eng_asset_e32_type_count = 4
+    enum asset_type_e {
+        asset_type_e_text  = 0,
+        asset_type_e_image = 1,
+        asset_type_e_sound = 2,
+        asset_type_e_font  = 3,
+        asset_type_e_count = 4
     };
 
-    struct eng_asset_index_t {
-        eng_asset_u32_id_t   id;
-        eng_asset_u32_type_t type;
-        eng_asset_u64_size_t offset;
-        eng_asset_u64_size_t size;
+    struct asset_index_t {
+        asset_id_t   id;
+        asset_type_t type;
+        u64          offset;
+        u64          size;
     };
 
-    struct eng_asset_string_t {
+    struct asset_string_t {
         cchar chars[IFB_ENG_ASSET_CSTR_SIZE];
     };
 };
