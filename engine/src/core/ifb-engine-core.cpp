@@ -10,10 +10,6 @@ namespace ifb::eng {
     core_startup(
         void) {
 
-        // start managers 
-        eng_mem_mngr_startup   ();
-        eng_asset_mngr_startup ();
-
         // initialize platform
         core_monitor_table_init               ();
         core_window_init                      ();

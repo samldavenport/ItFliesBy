@@ -58,10 +58,10 @@ namespace ifb::eng {
     };
 
     struct file_os_context_t {
-        os_file_t               file;
-        os_file_async_t         async;
-        os_file_mapped_buffer_t mapped_buffer;
-        os_file_error_t         error;
+        os_file_handle_t     file_hnd;
+        os_file_async_t      async;
+        os_file_map_handle_t map_hnd;
+        os_file_error_t      error;
     };
 
     struct file_t {

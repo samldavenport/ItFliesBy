@@ -5,7 +5,6 @@
 #include <sld-cstr.hpp>
 
 #include "ifb-engine.hpp"
-#include "ifb-engine-memory-internal.hpp"
 #include "ifb-engine-string.hpp"
 #include "ifb-engine-core-monitor.hpp"
 
@@ -33,9 +32,9 @@ namespace ifb::eng {
 
     using  core_window_handle_t = sld::os_window_handle_t;
     using  core_window_update_t = sld::os_window_update_t;
-    using  core_window_error_t  = sld::os_window_error_s32;
-    using  core_window_pos_t    = sld::dims_u32_pos_t;
-    using  core_window_size_t   = sld::dims_u32_size_t;
+    using  core_window_error_t  = sld::os_window_error_t;
+    using  core_window_pos_t    = sld::os_window_pos_t;
+    using  core_window_size_t   = sld::os_window_size_t;
 
     IFB_ENG_INTERNAL void                        core_window_init                      (void);
     IFB_ENG_INTERNAL void                        core_window_open_and_show             (void);

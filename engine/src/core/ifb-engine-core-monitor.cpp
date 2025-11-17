@@ -4,10 +4,10 @@
 namespace ifb::eng {
 
     IFB_ENG_GLOBAL core_monitor_table_t     _table;
-    IFB_ENG_GLOBAL core_monitor_pos_t       _array_pos    [ENG_CORE_MONITOR_COUNT_MAX];
-    IFB_ENG_GLOBAL core_monitor_size_t      _array_size   [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL dims_u32_pos_t       _array_pos    [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL dims_u32_size_t      _array_size   [ENG_CORE_MONITOR_COUNT_MAX];
     IFB_ENG_GLOBAL core_monitor_name_t      _array_name   [ENG_CORE_MONITOR_COUNT_MAX];
-    IFB_ENG_GLOBAL core_monitor_os_handle_t _array_handle [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL os_monitor_handle_t _array_handle [ENG_CORE_MONITOR_COUNT_MAX];
     IFB_ENG_GLOBAL cchar                    _name_buffer  [ENG_CORE_MONITOR_NAME_BUFFER_SIZE];
 
     IFB_ENG_INTERNAL bool
@@ -147,7 +147,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL const core_monitor_index_t
     core_monitor_get_index_from_handle(
-        const core_monitor_os_handle_t handle) {
+        const os_monitor_handle_t handle) {
 
         core_monitor_table_assert_valid();
 
@@ -168,7 +168,7 @@ namespace ifb::eng {
         return(index);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_size_t&
+    IFB_ENG_INTERNAL const dims_u32_size_t&
     core_monitor_get_primary_size(
         void) {
 
@@ -178,7 +178,7 @@ namespace ifb::eng {
         return(_table.array.size[index]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_pos_t&
+    IFB_ENG_INTERNAL const dims_u32_pos_t&
     core_monitor_get_primary_position(
         void) {
 
@@ -198,7 +198,7 @@ namespace ifb::eng {
         return(_table.array.name[index]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_os_handle_t&
+    IFB_ENG_INTERNAL const os_monitor_handle_t&
     core_monitor_get_primary_handle(
         void) {
 
@@ -209,7 +209,7 @@ namespace ifb::eng {
     }
 
 
-    IFB_ENG_INTERNAL const core_monitor_size_t&
+    IFB_ENG_INTERNAL const dims_u32_size_t&
     core_monitor_get_size(
         const core_monitor_index_t index) {
 
@@ -221,7 +221,7 @@ namespace ifb::eng {
         return(_table.array.size[index.val]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_pos_t&
+    IFB_ENG_INTERNAL const dims_u32_pos_t&
     core_monitor_get_position(
         const core_monitor_index_t index) {
 
@@ -245,7 +245,7 @@ namespace ifb::eng {
         return(_table.array.name[index.val]);
     }
 
-    IFB_ENG_INTERNAL const core_monitor_os_handle_t&
+    IFB_ENG_INTERNAL const os_monitor_handle_t&
     core_monitor_get_handle(
         const core_monitor_index_t index) {
 

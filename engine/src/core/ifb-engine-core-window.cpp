@@ -42,12 +42,12 @@ namespace ifb::eng {
         clear_color.b = 0x28;
         clear_color.a = 1.0f;
 
-        // open the window
-        _window.last_error = sld::os_window_create(
-            _window.handle,
+        // open the windowg
+        os_window_create(
+            &_window.handle,
             CORE_WINDOW_TITLE,
-            _window.size,
-            _window.position
+            &_window.size,
+            &_window.position
         );
 
         // intialize the viewport
