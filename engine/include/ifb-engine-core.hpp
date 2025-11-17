@@ -2,11 +2,12 @@
 
 #include "ifb-engine.hpp"
 
-namespace ifb {
+namespace ifb::eng {
 
-    IFB_ENG_API eng_bool eng_core_startup     (void);
-    IFB_ENG_API eng_bool eng_core_shutdown    (void);
-    IFB_ENG_API eng_bool eng_core_update      (void);
-    IFB_ENG_API eng_bool eng_core_render      (void);
-    IFB_ENG_API eng_bool eng_core_should_quit (void);
+    IFB_ENG_API bool         core_startup     (void);
+    IFB_ENG_API bool         core_shutdown    (void);
+    IFB_ENG_API bool         core_update      (void);
+    IFB_ENG_API bool         core_render      (void);
+    IFB_ENG_API bool         core_should_quit (void);
+    IFB_ENG_API const cchar* core_get_working_directory(void);
 };

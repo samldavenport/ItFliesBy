@@ -4,84 +4,78 @@
 #include "ifb-engine.hpp"
 #include <sld-os.hpp>
 
-#ifndef    IFB_ENG_FILE_PATH_SIZE
-#   define IFB_ENG_FILE_PATH_SIZE 128
-#endif
-#ifndef    IFB_ENG_FILE_TABLE_CAPACITY
-#   define IFB_ENG_FILE_TABLE_CAPACITY 128
-#endif
-#ifndef    IFB_ENG_FILE_BUFFER_SIZE_KB
-#   define IFB_ENG_FILE_BUFFER_SIZE_KB 128
-#endif
+#define IFB_ENG_FILE_INVALID_INDEX 0xFFFFFFFF
 
-#define IFB_ENG_FILE_H32_INVALID 0xFFFFFFFF
+using namespace sld;
 
-namespace ifb {
+namespace ifb::eng {
 
-    typedef eng_error_s32_t       eng_file_error_s32_t;
-    typedef sld::os_file_buffer_t eng_file_buffer_t;
+    //-------------------------------------------------------------------
+    // TYPES
+    //-------------------------------------------------------------------
 
-    struct eng_file_h32_t       : eng_h32_t { };
-    struct eng_file_flags_u32_t : eng_u32_t { };
-    struct eng_file_path_t;
+    struct file_t;
+    struct file_buffer_t;
+    struct file_handle_t : handle_t { };
+    struct file_flags_t  : flags_t  { };
+    struct file_error_t  : error_t  { };
 
-    IFB_ENG_API const eng_file_h32_t       eng_file_mngr_open_ro        (const eng_c8*         file_path);
-    IFB_ENG_API const eng_file_h32_t       eng_file_mngr_open_rw        (const eng_c8*         file_path);
-    IFB_ENG_API eng_bool                   eng_file_mngr_close          (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const eng_u64              eng_file_mngr_get_size       (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const eng_file_flags_u32_t eng_file_mngr_get_flags      (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const eng_c8*              eng_file_mngr_get_path       (const eng_file_h32_t  file_handle);
-    IFB_ENG_API const eng_file_error_s32_t eng_file_mngr_get_last_error (const eng_file_h32_t  file_handle = { IFB_ENG_FILE_H32_INVALID} );
-    IFB_ENG_API eng_bool                   eng_file_mngr_read           (const eng_file_h32_t  file_handle, eng_file_buffer_t& read_buffer);
-    IFB_ENG_API eng_bool                   eng_file_mngr_write          (const eng_file_h32_t  file_handle, eng_file_buffer_t& write_buffer);
-    IFB_ENG_API eng_bool                   eng_file_mngr_read_async     (const eng_file_h32_t  file_handle);
-    IFB_ENG_API eng_bool                   eng_file_mngr_write_async    (const eng_file_h32_t  file_handle);
+    //-------------------------------------------------------------------
+    // METHODS
+    //-------------------------------------------------------------------
 
-    enum eng_file_flag_e32_ {
-        eng_file_flag_e32_none        = 0,
-        eng_file_flag_e32_error       = sld::bit_value(0),
-        eng_file_flag_e32_ro          = sld::bit_value(1),
-        eng_file_flag_e32_rw          = sld::bit_value(2),
-        eng_file_flag_e32_io_pending  = sld::bit_value(3),
-        eng_file_flag_e32_io_complete = sld::bit_value(4),
-        eng_file_flag_e32_read        = sld::bit_value(5),
-        eng_file_flag_e32_write       = sld::bit_value(6)
+    IFB_ENG_API const file_handle_t file_open_ro_new            (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_ro_existing       (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_ro_always         (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_ro_overwrite      (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_rw_new            (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_rw_existing       (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_rw_always         (const cchar* path);
+    IFB_ENG_API const file_handle_t file_open_rw_overwrite      (const cchar* path);
+    IFB_ENG_API bool                file_close                  (const file_handle_t file);
+    IFB_ENG_API void                file_reset                  (const file_handle_t file);
+    IFB_ENG_API u64                 file_get_size               (const file_handle_t file);
+    IFB_ENG_API const cchar*        file_get_path               (const file_handle_t file); 
+    IFB_ENG_API const file_error_t  file_get_error              (const file_handle_t file);
+    IFB_ENG_API const file_flags_t  file_get_flags              (const file_handle_t file);
+    IFB_ENG_API bool                file_read                   (const file_handle_t file, file_buffer_t* buffer);
+    IFB_ENG_API bool                file_write                  (const file_handle_t file, file_buffer_t* buffer);
+
+    //-------------------------------------------------------------------
+    // ENUMS
+    //-------------------------------------------------------------------
+
+    enum file_flag_ {
+        file_flag_none        = 0,
+        file_flag_error       = bit_value(0),
+        file_flag_internal    = bit_value(1),
+        file_flag_ro          = bit_value(2),
+        file_flag_rw          = bit_value(3),
+        file_flag_io_pending  = bit_value(4),
+        file_flag_io_complete = bit_value(5),
+        file_flag_read        = bit_value(6),
+        file_flag_write       = bit_value(7)
     };
 
-    enum eng_file_error_e32_ {
-        eng_file_error_e32_success               = 0x10020000,
-        eng_file_error_e32_warning               = 0x00020000,
-        eng_file_error_e32_failure               = 0x80020000,
-        eng_file_error_e32_unknown               = 0x80020001,
-        eng_file_error_e32_invalid_args          = 0x80020002,
-        eng_file_error_e32_invalid_handle        = 0x80020003,
-        eng_file_error_e32_invalid_disk          = 0x80020004,
-        eng_file_error_e32_invalid_device        = 0x80020005,
-        eng_file_error_e32_invalid_buffer        = 0x80020006,
-        eng_file_error_e32_invalid_file          = 0x80020007,
-        eng_file_error_e32_sharing_violation     = 0x80020008,
-        eng_file_error_e32_already_exists        = 0x80020009,
-        eng_file_error_e32_not_found             = 0x8002000A,
-        eng_file_error_e32_access_denied         = 0x8002000B,
-        eng_file_error_e32_pipe_busy             = 0x8002000C,
-        eng_file_error_e32_reached_end_of_file   = 0x8002000D,
-        eng_file_error_e32_broken_pipe           = 0x8002000E,
-        eng_file_error_e32_no_data               = 0x8002000F,
-        eng_file_error_e32_more_data             = 0x80020010,
-        eng_file_error_e32_io_incomplete         = 0x80020011,
-        eng_file_error_e32_io_pending            = 0x80020012,
-        eng_file_error_e32_operation_aborted     = 0x80020013,
-        eng_file_error_e32_disk_io_failure       = 0x80020014,
-        eng_file_error_e32_disk_corrupt          = 0x80020015,
-        eng_file_error_e32_device_not_ready      = 0x80020016,
-        eng_file_error_e32_out_of_memory         = 0x80020017,
-        eng_file_error_e32_device_failure        = 0x80020018,
-        eng_file_error_e32_arena_commit_fail     = 0x80020019,
-        eng_file_error_e32_buffer_alloc_fail     = 0x8002001A,
+    struct file_os_context_t {
+        os_file_handle_t     file_hnd;
+        os_file_async_t      async;
+        os_file_map_handle_t map_hnd;
+        os_file_error_t      error;
     };
 
-    struct eng_file_path_t {
-        eng_c8* cstr;
+    struct file_t {
+        cchar*            path;
+        file_handle_t     handle;
+        file_flags_t      flags;
+        file_error_t      error_t;
+        file_os_context_t os_context;
+    };
+
+    struct file_buffer_t {
+        byte* data;
+        u64   size;
+        u64   cursor;
     };
 };
 

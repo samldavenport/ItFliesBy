@@ -11,7 +11,7 @@ pushd ..
 @set cl_include= /Iengine\include /Iengine\internal /Iengine\src /Iengine\src\core /Iengine\src\file /Iengine\src\memory /Iengine\src\asset /Isld\include /Isld\vcpkg_installed\x64-windows\include
 @set cl_flags=   /nologo /c /MD /LD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
 
-@set link_in=    ItFliesBy.Engine.obj user32.lib kernel32.lib SLD.Win32.lib Gdi32.lib imgui.lib opengl32.lib
+@set link_in=    ItFliesBy.Engine.obj user32.lib kernel32.lib SLD.Win32.lib Gdi32.lib imgui.lib opengl32.lib __imp_GetOpenFileNameA
 @set link_out=   /OUT:build\debug\bin\ItFliesBy.Engine.dll /IMPLIB:build\debug\lib\ItFliesBy.Engine.lib
 @set link_path=  /LIBPATH:build\debug\obj /LIBPATH:build\debug\lib /LIBPATH:sld\build\debug\lib /LIBPATH:sld\vcpkg_installed\x64-windows\lib
 @set link_flags= /nologo /SUBSYSTEM:WINDOWS /DEBUG /DLL

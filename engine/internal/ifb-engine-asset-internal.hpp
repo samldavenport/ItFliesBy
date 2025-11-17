@@ -3,112 +3,107 @@
 
 #include <sld-xml.hpp>
 #include <sld-memory.hpp>
+#include <sld-block-allocator.hpp>
 
 #include "ifb-engine.hpp"
 #include "ifb-engine-hash.hpp"
 #include "ifb-engine-asset.hpp"
-#include "ifb-engine-memory-internal.hpp"
-#include "ifb-engine-file-internal.hpp"
+#include "ifb-engine-file.hpp"
 
-namespace ifb {
+namespace ifb::eng {
 
     //-------------------------------------------------------------------
     // TYPES
     //-------------------------------------------------------------------
 
-    typedef sld::block_allocator_t eng_asset_block_alctr_t; 
-    typedef sld::xml_stack_t       eng_asset_config_xml_stack_t;
-
-    struct eng_asset_block_t;
-    struct eng_asset_slot_t;
-
-    struct eng_asset_mngr_t;
-
-    struct eng_asset_db_t;
-    struct eng_asset_db_table_t;
-    struct eng_asset_db_builder_t;
-    struct eng_asset_db_record_t;
-
-    struct eng_asset_config_t;
-    struct eng_asset_config_node_t;
-    struct eng_asset_config_xml_properties_t;
-
-    struct eng_asset_db_t;
-    struct eng_asset_db_file_index_t;
-    struct eng_asset_db_file_verif_t;
-    struct eng_asset_db_file_header_t;
-    struct eng_asset_db_file_t;
-    struct eng_asset_db_builder_t;
+    struct asset_block_alctr_t : block_allocator_t { };
+    struct asset_block_t;
+    struct asset_slot_t;
+    struct asset_mngr_t;
+    struct asset_db_t;
+    struct asset_db_table_t;
+    struct asset_db_builder_t;
+    struct asset_db_record_t;
+    struct asset_db_t;
+    struct asset_db_file_index_t;
+    struct asset_db_file_verif_t;
+    struct asset_db_file_header_t;
+    struct asset_db_file_t;
+    struct asset_db_builder_t;
 
     //-------------------------------------------------------------------
     // ASSET
     //-------------------------------------------------------------------
 
-    struct eng_asset_slot_t {
-        eng_asset_block_alctr_t* alctr;
-        eng_asset_slot_t*        next;
-        eng_asset_slot_t*        prev;
-        eng_mem_arena_t*         arena;
+    struct asset_slot_t {
+        asset_block_alctr_t* alctr;
+        asset_slot_t*        next;
+        asset_slot_t*        prev;
+        arena_t*             arena;
     };
 
-    struct eng_asset_t {
-        eng_asset_slot_t* slot;
+    struct asset_t {
+        asset_slot_t* slot;
     };
 
     //-------------------------------------------------------------------
     // MANAGER
     //-------------------------------------------------------------------
 
-    struct eng_asset_mngr_t {
+    struct asset_mngr_t {
         struct {
-            eng_asset_slot_t* text;
-            eng_asset_slot_t* image;
-            eng_asset_slot_t* sound;
-            eng_asset_slot_t* font;
+            asset_slot_t* text;
+            asset_slot_t* image;
+            asset_slot_t* sound;
+            asset_slot_t* font;
         } slot_list;
-        eng_asset_db_t* db;
+        asset_db_t*      db;
+        asset_db_file_t* db_file;
     };
+
+    static asset_mngr_t _eng_asset_mngr;
+
+    IFB_ENG_INTERNAL void eng_asset_mngr_startup  (void);
+    IFB_ENG_INTERNAL void eng_asset_mngr_shutdown (void);
 
     //-------------------------------------------------------------------
     // DATABASE
     //-------------------------------------------------------------------
 
-    IFB_ENG_FUNC eng_asset_db_t* eng_asset_db_create     (void);
-    IFB_ENG_FUNC eng_void        eng_asset_db_destroy    (eng_asset_db_t* const db);
-    IFB_ENG_FUNC eng_void        eng_asset_db_validate   (eng_asset_db_t* const db);
-    IFB_ENG_FUNC eng_bool        eng_asset_db_load_text  (eng_asset_db_t* const db, eng_asset_db_record_t& record);
-    IFB_ENG_FUNC eng_bool        eng_asset_db_load_image (eng_asset_db_t* const db, eng_asset_db_record_t& record);
-    IFB_ENG_FUNC eng_bool        eng_asset_db_load_sound (eng_asset_db_t* const db, eng_asset_db_record_t& record);
-    IFB_ENG_FUNC eng_bool        eng_asset_db_load_font  (eng_asset_db_t* const db, eng_asset_db_record_t& record);
+    IFB_ENG_INTERNAL void asset_db_create     (void);
+    IFB_ENG_INTERNAL void asset_db_destroy    (void);
+    IFB_ENG_INTERNAL void asset_db_validate   (void);
+    IFB_ENG_INTERNAL bool asset_db_load_text  (asset_db_record_t& record);
+    IFB_ENG_INTERNAL bool asset_db_load_image (asset_db_record_t& record);
+    IFB_ENG_INTERNAL bool asset_db_load_sound (asset_db_record_t& record);
+    IFB_ENG_INTERNAL bool asset_db_load_font  (asset_db_record_t& record);
 
-    struct eng_asset_db_table_t {
-        eng_u32   row_count;
-        eng_pad32 pad;
+    struct asset_db_table_t {
+        u32   row_count;
+        pad32 pad;
         struct {
-            eng_asset_u32_id_t* id;
-            eng_u32*            size;
-            eng_u64*            offset;
-            eng_u64*            handle;
+            asset_id_t* id;
+            u32*        size;
+            u64*        offset;
+            u64*        handle;
         } col;
     };
 
-    struct eng_asset_db_record_t {
-        eng_asset_u32_id_t  id;
-        eng_u32             index;
-        eng_u32             size;
-        eng_u64             offset;
-        eng_u64             handle;
+    struct asset_db_record_t {
+        asset_id_t id;
+        u32        index;
+        u32        size;
+        u64        offset;
+        u64        handle;
     };
 
-    struct eng_asset_db_t {
-        eng_mem_arena_t*     arena;
-        eng_asset_db_file_t* file;
-        eng_asset_config_t*  config;
+    struct asset_db_t {
+        arena_t* arena;
         struct {
-            eng_asset_db_table_t* text;
-            eng_asset_db_table_t* image;
-            eng_asset_db_table_t* sound;
-            eng_asset_db_table_t* font;
+            asset_db_table_t* text;
+            asset_db_table_t* image;
+            asset_db_table_t* sound;
+            asset_db_table_t* font;
         } table;
     };
 
@@ -116,91 +111,42 @@ namespace ifb {
     // DATABASE FILE
     //-------------------------------------------------------------------
 
-    struct eng_asset_db_file_index_t {
-        eng_u32 type;
-        eng_u32 count;
-        eng_u64 start;
-        eng_u64 size;
+    struct asset_db_file_index_t {
+        u32 type;
+        u32 count;
+        u64 start;
+        u64 size;
     };
 
-    struct eng_asset_db_file_verif_t {
-        eng_c8* data;
-        eng_u64 length;
+    struct asset_db_file_verif_t {
+        cchar* data;
+        u64    length;
     };
 
-    struct eng_asset_db_file_t {
-        eng_file_h32_t             handle;
-        eng_u32                    index_count;
-        eng_asset_db_file_index_t* index_array;
-        eng_u64                    size;
-        eng_asset_db_file_verif_t  verif;
-        eng_hash128_t*             hash;
-        eng_file_buffer_t          header_buffer;
-        eng_mem_arena_t*           arena;
+    struct asset_db_file_t {
+        file_t                 handle;
+        u32                    index_count;
+        asset_db_file_index_t* index_array;
+        u64                    size;
+        asset_db_file_verif_t  verif;
+        hash128_t*             hash;
+        file_buffer_t          header_buffer;
+        arena_t*               arena;
     };
 
-    struct eng_asset_db_builder_t {
-        eng_file_h32_t config_file_handle;
+    struct asset_db_builder_t {
+        file_t config_file_handle;
     };
-
-    IFB_ENG_FUNC eng_asset_db_file_t* eng_asset_db_file_create               (void);
-    IFB_ENG_FUNC eng_void             eng_asset_db_file_destroy              (eng_asset_db_file_t* const db_file);
-    IFB_ENG_FUNC eng_void             eng_asset_db_file_validate             (eng_asset_db_file_t* const db_file);
-    IFB_ENG_FUNC eng_bool             eng_asset_db_file_read_header          (eng_asset_db_file_t* const db_file);
-    IFB_ENG_FUNC eng_void             eng_asset_db_file_write_header         (eng_asset_db_file_t* const db_file);
-    IFB_ENG_FUNC eng_void             eng_asset_db_file_write_header_default (eng_asset_db_file_t* const db_file);
 
     //-------------------------------------------------------------------
     // CONFIG
     //-------------------------------------------------------------------
 
-    IFB_ENG_FUNC eng_asset_config_t* eng_asset_config_create              (void);    
-    IFB_ENG_FUNC eng_void            eng_asset_config_destroy             (eng_asset_config_t* const config);
-    IFB_ENG_FUNC eng_void            eng_asset_config_validate            (eng_asset_config_t* const config);
-    IFB_ENG_FUNC eng_void            eng_asset_config_load_default        (eng_asset_config_t* const config);
-    IFB_ENG_FUNC eng_void            eng_asset_config_save_file           (eng_asset_config_t* const config);
-    IFB_ENG_FUNC eng_void            eng_asset_config_read_file           (eng_asset_config_t* const config);
-    IFB_ENG_FUNC eng_u64             eng_asset_config_get_xml_buffer_size (eng_asset_config_t* const config);
-    IFB_ENG_FUNC eng_void            eng_asset_config_get_xml_buffer      (eng_asset_config_t* const config, eng_buffer_t& buffer);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_read_text      (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_read_image     (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_read_sound     (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_read_font      (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_write_text     (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_write_image    (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_write_sound    (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_write_font     (eng_asset_config_t* const config, eng_asset_config_node_t& assets);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_read_assets    (eng_asset_config_t* const config, eng_asset_config_node_t& node, eng_xml_node_t* xml_type);
-    IFB_ENG_FUNC eng_bool            eng_asset_config_node_write_assets   (eng_asset_config_t* const config, eng_asset_config_node_t& node, eng_xml_node_t* xml_type);
-
-    struct eng_asset_config_t {
-        eng_mem_arena_t* arena;
-        eng_file_h32_t   file;
-        struct {
-            eng_asset_config_xml_stack_t* stack;
-            eng_xml_doc_t*                doc;
-            struct {
-                eng_xml_node_t* root;
-                eng_xml_node_t* text;
-                eng_xml_node_t* image;
-                eng_xml_node_t* sound;
-                eng_xml_node_t* font;
-                eng_xml_node_t* asset;
-            } node;
-            struct {
-                eng_xml_attrib_t* name;
-                eng_xml_attrib_t* path;
-            } attrib;
-        } xml;
+    struct asset_config_t {
     };
 
-    struct eng_asset_config_node_t {
-        eng_u32 count;
-        struct {
-            eng_asset_cstr_t* name;
-            eng_asset_cstr_t* path;
-        } array;
-    };
+
+
 };
 
 #endif //IFB_ENG_ASSET_INTERNAL_HPP

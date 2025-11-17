@@ -1,41 +1,30 @@
 #pragma once
 
-#include "ifb-engine-core-internal.hpp"
-#include "ifb-engine-gui-internal.hpp"
-namespace ifb {
+#include "ifb-engine-core-window.hpp"
+#include "ifb-engine-core-monitor.hpp"
+#include "ifb-engine-gui.hpp"
+#include "ifb-engine-asset-config.hpp"
+namespace ifb::eng {
 
-    IFB_ENG_API eng_bool
-    eng_core_startup(
+    IFB_ENG_API bool
+    core_startup(
         void) {
 
-        // start managers
-        eng_mem_mngr_startup  ();
-        eng_file_mngr_startup ();
-
-        // allocate core memory
-        _eng_core_arenas.xml      = eng_mem_arena_commit_core();
-        _eng_core_arenas.platform = eng_mem_arena_commit_core();
-        eng_bool is_mem_ok = true;
-        is_mem_ok &= (_eng_core_arenas.xml      != NULL);
-        is_mem_ok &= (_eng_core_arenas.platform != NULL);
-        
-        // initialize xml
-        sld::xml_parser_init((void*)_eng_core_xml_memory, ENG_CORE_XML_MEMORY_SIZE);
-        
         // initialize platform
-        eng_core_monitor_table_init               ();
-        eng_core_window_init                      ();
-        eng_core_window_center_to_primary_monitor ();
-        eng_core_window_open_and_show             ();
+        core_monitor_table_init               ();
+        core_window_init                      ();
+        core_window_center_to_primary_monitor ();
+        core_window_open_and_show             ();
 
         // initialize gui
-        eng_gui_init();
+        gui_init();
+
 
         return(true); 
     }
 
-    IFB_ENG_API eng_bool
-    eng_core_shutdown(
+    IFB_ENG_API bool
+    core_shutdown(
         void) {
 
         //////////////////////////
@@ -49,34 +38,45 @@ namespace ifb {
         return(true);
     }
 
-    IFB_ENG_API eng_bool
-    eng_core_update(
+    IFB_ENG_API bool
+    core_update(
         void) {
 
-        eng_core_window_process_events();
+        core_window_process_events();
 
         return(true);
     }
 
-    IFB_ENG_API eng_bool
-    eng_core_render(
+    IFB_ENG_API bool
+    core_render(
         void) {
 
-        eng_gui_render();
-        eng_core_window_swap_buffers();
+        eng::gui_render();
+        core_window_swap_buffers();
 
         return(true);
     }
 
-    IFB_ENG_API eng_bool
-    eng_core_should_quit(
+    IFB_ENG_API bool
+    core_should_quit(
         void) {
 
-        eng_bool eng_core_should_quit = false;
+        bool core_should_quit = false;
 
-        eng_core_should_quit |= (_eng_core_window.update.events.val & sld::os_window_event_e_quit);
+        const core_window_update_t& window_update = core_window_get_update();
 
-        return(eng_core_should_quit);
+        core_should_quit |= (window_update.events.val & sld::os_window_event_e_quit);
+
+        return(core_should_quit);
     }
+
+    IFB_ENG_API const cchar*
+    core_get_working_directory(void) {
+
+        const cchar* dir = sld::os_system_get_working_directory();
+        assert(dir);
+        return(dir);
+    }
+
 };
 
