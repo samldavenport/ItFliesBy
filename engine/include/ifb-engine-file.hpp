@@ -3,6 +3,7 @@
 
 #include "ifb-engine.hpp"
 #include <sld-os.hpp>
+#include <sld-array-list.hpp>
 
 #define IFB_ENG_FILE_INVALID_INDEX 0xFFFFFFFF
 
@@ -14,11 +15,11 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct file_t;
     struct file_buffer_t;
-    struct file_handle_t : handle_t { };
-    struct file_flags_t  : flags_t  { };
-    struct file_error_t  : error_t  { };
+    struct file_handle_t;
+    struct file_flags_t;
+    struct file_error_t;
+    struct file_handle_list_t;
 
     //-------------------------------------------------------------------
     // METHODS
@@ -45,17 +46,22 @@ namespace ifb::eng {
     // ENUMS
     //-------------------------------------------------------------------
 
-    enum file_flag_ {
-        file_flag_none        = 0,
-        file_flag_error       = bit_value(0),
-        file_flag_internal    = bit_value(1),
-        file_flag_ro          = bit_value(2),
-        file_flag_rw          = bit_value(3),
-        file_flag_io_pending  = bit_value(4),
-        file_flag_io_complete = bit_value(5),
-        file_flag_read        = bit_value(6),
-        file_flag_write       = bit_value(7)
+    enum file_flag_e {
+        file_flag_e_none        = 0,
+        file_flag_e_error       = bit_value(0),
+        file_flag_e_internal    = bit_value(1),
+        file_flag_e_ro          = bit_value(2),
+        file_flag_e_rw          = bit_value(3),
+        file_flag_e_io_pending  = bit_value(4),
+        file_flag_e_io_complete = bit_value(5),
+        file_flag_e_read        = bit_value(6),
+        file_flag_e_write       = bit_value(7)
     };
+
+    struct file_handle_t      : handle_t                    { };
+    struct file_flags_t       : flags_t                     { };
+    struct file_error_t       : error_t                     { };
+    struct file_handle_list_t : array_list_t<file_handle_t> { };
 
     struct file_os_context_t {
         os_file_handle_t     file_hnd;
