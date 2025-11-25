@@ -29,15 +29,15 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void                       core_monitor_table_init            (void);
     IFB_ENG_INTERNAL void                       core_monitor_table_refresh         (void);
     IFB_ENG_INTERNAL u32                        core_monitor_table_get_count       (void);
-    IFB_ENG_INTERNAL const core_monitor_index_t core_monitor_get_index_from_handle (const os_monitor_handle_t handle);
+    IFB_ENG_INTERNAL const core_monitor_index_t core_monitor_get_index_from_handle (const os_monitor_handle handle);
     IFB_ENG_INTERNAL const dims_u32_size_t&     core_monitor_get_primary_size      (void);
     IFB_ENG_INTERNAL const dims_u32_pos_t&      core_monitor_get_primary_position  (void);
     IFB_ENG_INTERNAL const core_monitor_name_t& core_monitor_get_primary_name      (void);
-    IFB_ENG_INTERNAL const os_monitor_handle_t& core_monitor_get_primary_handle    (void);
+    IFB_ENG_INTERNAL const os_monitor_handle& core_monitor_get_primary_handle    (void);
     IFB_ENG_INTERNAL const dims_u32_size_t&     core_monitor_get_size              (const core_monitor_index_t index);
     IFB_ENG_INTERNAL const dims_u32_pos_t&      core_monitor_get_position          (const core_monitor_index_t index);
     IFB_ENG_INTERNAL const core_monitor_name_t& core_monitor_get_name              (const core_monitor_index_t index);
-    IFB_ENG_INTERNAL const os_monitor_handle_t& core_monitor_get_handle            (const core_monitor_index_t index);
+    IFB_ENG_INTERNAL const os_monitor_handle& core_monitor_get_handle            (const core_monitor_index_t index);
 
     struct core_monitor_name_t {
         cchar* buffer;
@@ -52,7 +52,7 @@ namespace ifb::eng {
             dims_u32_pos_t*      position;
             dims_u32_size_t*     size;
             core_monitor_name_t* name;
-            os_monitor_handle_t* handle;
+            os_monitor_handle* handle;
         } array;
     };
 };

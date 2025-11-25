@@ -108,7 +108,7 @@ namespace ifb::eng {
     core_window_open_file_dialog(
         const core_window_file_dialog_t& file_dialog) {
 
-        static sld::os_window_dialog_t dialog;
+        static sld::os_window_dialog dialog;
         dialog.filter                 = file_dialog.filter;
         dialog.start                  = file_dialog.starting_path;
         dialog.title                  = file_dialog.title; 
@@ -132,7 +132,7 @@ namespace ifb::eng {
     core_window_save_file_dialog(
         const core_window_file_dialog_t& file_dialog) {
 
-        static sld::os_window_dialog_t dialog;
+        static sld::os_window_dialog dialog;
         dialog.filter                 = file_dialog.filter;
         dialog.start                  = file_dialog.starting_path;
         dialog.title                  = file_dialog.title; 

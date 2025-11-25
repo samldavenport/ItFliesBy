@@ -30,7 +30,7 @@ namespace ifb::eng {
     struct asset_image_t  : u32_t    { };
     struct asset_sound_t  : u32_t    { };
     struct asset_font_t   : u32_t    { };
-    struct asset_buffer_t : buffer_t { };
+    struct asset_buffer : buffer { };
     struct asset_string_t;
 
     IFB_ENG_API void                asset_generate_id    (const u32 i_count, const asset_string_t* i_name, asset_id_t* o_id);

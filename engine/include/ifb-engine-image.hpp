@@ -8,12 +8,12 @@ namespace ifb::eng {
 
     struct img_t;
     struct img_info_t;
-    struct img_buffer_t;
+    struct img_buffer;
 
     IFB_ENG_API bool img_get_info (const file_h32_t file_h, img_info_t&   img_info);
-    IFB_ENG_API bool img_load     (const file_h32_t file_h, img_buffer_t& img_buffer);
+    IFB_ENG_API bool img_load     (const file_h32_t file_h, img_buffer& img_buffer);
 
-    struct img_buffer_t {
+    struct img_buffer {
         byte* data;
         u32   size;
         u32   channels;

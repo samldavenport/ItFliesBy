@@ -3,6 +3,7 @@
 
 #include "ifb-engine.hpp"
 #include <sld-os.hpp>
+#include <sld-array-list.hpp>
 
 #define IFB_ENG_FILE_INVALID_INDEX 0xFFFFFFFF
 
@@ -14,11 +15,11 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct file_t;
-    struct file_buffer_t;
-    struct file_handle_t : handle_t { };
-    struct file_flags_t  : flags_t  { };
-    struct file_error_t  : error_t  { };
+    struct file_buffer;
+    struct file_handle_t;
+    struct file_flags_t;
+    struct file_error_t;
+    struct file_handle_list_t;
 
     //-------------------------------------------------------------------
     // METHODS
@@ -38,30 +39,35 @@ namespace ifb::eng {
     IFB_ENG_API const cchar*        file_get_path               (const file_handle_t file); 
     IFB_ENG_API const file_error_t  file_get_error              (const file_handle_t file);
     IFB_ENG_API const file_flags_t  file_get_flags              (const file_handle_t file);
-    IFB_ENG_API bool                file_read                   (const file_handle_t file, file_buffer_t* buffer);
-    IFB_ENG_API bool                file_write                  (const file_handle_t file, file_buffer_t* buffer);
+    IFB_ENG_API bool                file_read                   (const file_handle_t file, file_buffer* buffer);
+    IFB_ENG_API bool                file_write                  (const file_handle_t file, file_buffer* buffer);
 
     //-------------------------------------------------------------------
     // ENUMS
     //-------------------------------------------------------------------
 
-    enum file_flag_ {
-        file_flag_none        = 0,
-        file_flag_error       = bit_value(0),
-        file_flag_internal    = bit_value(1),
-        file_flag_ro          = bit_value(2),
-        file_flag_rw          = bit_value(3),
-        file_flag_io_pending  = bit_value(4),
-        file_flag_io_complete = bit_value(5),
-        file_flag_read        = bit_value(6),
-        file_flag_write       = bit_value(7)
+    enum file_flag_e {
+        file_flag_e_none        = 0,
+        file_flag_e_error       = bit_value(0),
+        file_flag_e_internal    = bit_value(1),
+        file_flag_e_ro          = bit_value(2),
+        file_flag_e_rw          = bit_value(3),
+        file_flag_e_io_pending  = bit_value(4),
+        file_flag_e_io_complete = bit_value(5),
+        file_flag_e_read        = bit_value(6),
+        file_flag_e_write       = bit_value(7)
     };
 
+    struct file_handle_t      : handle_t                    { };
+    struct file_flags_t       : flags_t                     { };
+    struct file_error_t       : error_t                     { };
+    struct file_handle_list_t : array_list<file_handle_t> { };
+
     struct file_os_context_t {
-        os_file_handle_t     file_hnd;
-        os_file_async_t      async;
-        os_file_map_handle_t map_hnd;
-        os_file_error_t      error;
+        os_file_handle     file_hnd;
+        os_file_async      async;
+        os_file_map_handle map_hnd;
+        os_file_error      error;
     };
 
     struct file_t {
@@ -72,7 +78,7 @@ namespace ifb::eng {
         file_os_context_t os_context;
     };
 
-    struct file_buffer_t {
+    struct file_buffer {
         byte* data;
         u64   size;
         u64   cursor;

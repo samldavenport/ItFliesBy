@@ -30,11 +30,11 @@ namespace ifb::eng {
     struct core_window_file_dialog_t;
     struct core_window_file_dialog_selection_t;
 
-    using  core_window_handle_t = sld::os_window_handle_t;
-    using  core_window_update_t = sld::os_window_update_t;
-    using  core_window_error_t  = sld::os_window_error_t;
-    using  core_window_pos_t    = sld::os_window_pos_t;
-    using  core_window_size_t   = sld::os_window_size_t;
+    using  core_window_handle_t = sld::os_window_handle;
+    using  core_window_update_t = sld::os_window_update;
+    using  core_window_error_t  = sld::os_window_error;
+    using  core_window_pos_t    = sld::os_window_pos;
+    using  core_window_size_t   = sld::os_window_size;
 
     IFB_ENG_INTERNAL void                        core_window_init                      (void);
     IFB_ENG_INTERNAL void                        core_window_open_and_show             (void);
