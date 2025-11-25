@@ -2,10 +2,6 @@
 #define IFB_ENGINE_HPP
 
 #include <sld.hpp>
-#include <sld-hash.hpp>
-#include <sld-cstr.hpp>
-#include <sld-xml.hpp>
-#include <sld-geometry.hpp>
 
 #define IFB_ENG_API             __declspec(dllexport)
 #define IFB_ENG_API_INLINE      inline
@@ -19,18 +15,21 @@ using namespace sld;
 
 namespace ifb::eng {
 
-    struct error_t  : s32_t { };
-    struct handle_t : u32_t { };
-    struct flags_t  : u32_t { };
-    struct context_t;
+    struct error  : s32_t { };
+    struct handle : u32_t { };
+    struct flags  : u32_t { };
+    struct context;
 
-    IFB_ENG_API context_t* context_create      (byte* stack_data, const u64 stack_size);
-    IFB_ENG_API bool       context_startup     (context_t* context);
-    IFB_ENG_API bool       context_shutdown    (context_t* context);
-    IFB_ENG_API bool       context_update      (context_t* context);
-    IFB_ENG_API bool       context_render      (context_t* context);
-    IFB_ENG_API bool       context_should_quit (context_t* context);
+    IFB_ENG_API context* context_create      (byte* stack_data, const u64 stack_size);
+    IFB_ENG_API bool     context_startup     (context* ctx);
+    IFB_ENG_API bool     context_shutdown    (context* ctx);
+    IFB_ENG_API bool     context_update      (context* ctx);
+    IFB_ENG_API bool     context_render      (context* ctx);
+    IFB_ENG_API bool     context_should_quit (context* ctx);
 
 };
+
+#define IFB_ENG_CONFIG_OS_MAX_COUNT_MONITORS 16
+#define IFB_ENG_CONFIG_OS_MAX_COUNT_FILES    64
 
 #endif //IFB_ENGINE_HPP
