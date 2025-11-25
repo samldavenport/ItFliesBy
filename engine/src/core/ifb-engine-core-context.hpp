@@ -17,7 +17,7 @@ namespace ifb::eng {
     };
 
     struct core_context_t {
-        stack_t                  stack;
+        stack                  stack;
         core_context_managers_t* managers;        
     };
 

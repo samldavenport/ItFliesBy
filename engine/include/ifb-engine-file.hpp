@@ -15,7 +15,7 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct file_buffer_t;
+    struct file_buffer;
     struct file_handle_t;
     struct file_flags_t;
     struct file_error_t;
@@ -39,8 +39,8 @@ namespace ifb::eng {
     IFB_ENG_API const cchar*        file_get_path               (const file_handle_t file); 
     IFB_ENG_API const file_error_t  file_get_error              (const file_handle_t file);
     IFB_ENG_API const file_flags_t  file_get_flags              (const file_handle_t file);
-    IFB_ENG_API bool                file_read                   (const file_handle_t file, file_buffer_t* buffer);
-    IFB_ENG_API bool                file_write                  (const file_handle_t file, file_buffer_t* buffer);
+    IFB_ENG_API bool                file_read                   (const file_handle_t file, file_buffer* buffer);
+    IFB_ENG_API bool                file_write                  (const file_handle_t file, file_buffer* buffer);
 
     //-------------------------------------------------------------------
     // ENUMS
@@ -61,13 +61,13 @@ namespace ifb::eng {
     struct file_handle_t      : handle_t                    { };
     struct file_flags_t       : flags_t                     { };
     struct file_error_t       : error_t                     { };
-    struct file_handle_list_t : array_list_t<file_handle_t> { };
+    struct file_handle_list_t : array_list<file_handle_t> { };
 
     struct file_os_context_t {
-        os_file_handle_t     file_hnd;
-        os_file_async_t      async;
-        os_file_map_handle_t map_hnd;
-        os_file_error_t      error;
+        os_file_handle     file_hnd;
+        os_file_async      async;
+        os_file_map_handle map_hnd;
+        os_file_error      error;
     };
 
     struct file_t {
@@ -78,7 +78,7 @@ namespace ifb::eng {
         file_os_context_t os_context;
     };
 
-    struct file_buffer_t {
+    struct file_buffer {
         byte* data;
         u64   size;
         u64   cursor;

@@ -25,14 +25,14 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    file_handle_t file_manager_open  (file_manager_t* mngr, const cchar* path, const os_file_config_t* config);
+    file_handle_t file_manager_open  (file_manager_t* mngr, const cchar* path, const os_file_config* config);
     bool          file_manager_close (file_manager_t* mngr, const file_handle_t hnd);
     u32           file_manager_size  (file_manager_t* mngr, const file_handle_t hnd);
     file_error_t  file_manager_error (file_manager_t* mngr, const file_handle_t hnd);
     const cchar*  file_manager_path  (file_manager_t* mngr, const file_handle_t hnd);
     file_flags_t  file_manager_flags (file_manager_t* mngr, const file_handle_t hnd);
-    bool          file_manager_read  (file_manager_t* mngr, const file_handle_t hnd, file_buffer_t* buffer);
-    bool          file_manager_write (file_manager_t* mngr, const file_handle_t hnd, file_buffer_t* buffer);
+    bool          file_manager_read  (file_manager_t* mngr, const file_handle_t hnd, file_buffer* buffer);
+    bool          file_manager_write (file_manager_t* mngr, const file_handle_t hnd, file_buffer* buffer);
 
 
     //-------------------------------------------------------------------

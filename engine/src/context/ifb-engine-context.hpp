@@ -8,7 +8,7 @@
 namespace ifb::eng {
 
     struct context_t {
-        stack_t           stack;
+        stack           stack;
         file_manager_t*   file_mngr;
         memory_manager_t* memory_mngr;
     };

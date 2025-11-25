@@ -7,7 +7,7 @@ namespace ifb::eng {
     IFB_ENG_GLOBAL dims_u32_pos_t       _array_pos    [ENG_CORE_MONITOR_COUNT_MAX];
     IFB_ENG_GLOBAL dims_u32_size_t      _array_size   [ENG_CORE_MONITOR_COUNT_MAX];
     IFB_ENG_GLOBAL core_monitor_name_t      _array_name   [ENG_CORE_MONITOR_COUNT_MAX];
-    IFB_ENG_GLOBAL os_monitor_handle_t _array_handle [ENG_CORE_MONITOR_COUNT_MAX];
+    IFB_ENG_GLOBAL os_monitor_handle _array_handle [ENG_CORE_MONITOR_COUNT_MAX];
     IFB_ENG_GLOBAL cchar                    _name_buffer  [ENG_CORE_MONITOR_NAME_BUFFER_SIZE];
 
     IFB_ENG_INTERNAL bool
@@ -72,11 +72,11 @@ namespace ifb::eng {
         void) {
 
         // get the monitor info and working area
-        sld::os_monitor_working_area_t working_area;
-        sld::os_monitor_info_t         info_array[ENG_CORE_MONITOR_COUNT_MAX];
+        sld::os_monitor_working_area working_area;
+        sld::os_monitor_info         info_array[ENG_CORE_MONITOR_COUNT_MAX];
         sld::os_monitor_working_area   (working_area);
         sld::os_monitor_info           (info_array);
-        sld::os_monitor_handle_t primary_handle = sld::os_monitor_primary (); 
+        sld::os_monitor_handle primary_handle = sld::os_monitor_primary (); 
 
         // update the table
         _table.monitor_count               = sld::os_monitor_count   ();
@@ -87,15 +87,15 @@ namespace ifb::eng {
 
 
         // add the monitors to the table
-        cstr_t monitor_name_cstr_src = { NULL, sld::OS_MONITOR_NAME_WIDTH};
-        cstr_t monitor_name_cstr_dst = { NULL, sld::OS_MONITOR_NAME_WIDTH};
+        cstr monitor_name_cstr_src = { NULL, sld::OS_MONITOR_NAME_WIDTH};
+        cstr monitor_name_cstr_dst = { NULL, sld::OS_MONITOR_NAME_WIDTH};
         for (
             u32 monitor = 0;
                 monitor < _table.monitor_count;
               ++monitor) {
 
             // get the next info
-            sld::os_monitor_info_t& info = info_array[monitor];
+            sld::os_monitor_info& info = info_array[monitor];
 
             // check the monitor is valid
             bool is_monitor_valid = true;
@@ -147,7 +147,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL const core_monitor_index_t
     core_monitor_get_index_from_handle(
-        const os_monitor_handle_t handle) {
+        const os_monitor_handle handle) {
 
         core_monitor_table_assert_valid();
 
@@ -198,7 +198,7 @@ namespace ifb::eng {
         return(_table.array.name[index]);
     }
 
-    IFB_ENG_INTERNAL const os_monitor_handle_t&
+    IFB_ENG_INTERNAL const os_monitor_handle&
     core_monitor_get_primary_handle(
         void) {
 
@@ -245,7 +245,7 @@ namespace ifb::eng {
         return(_table.array.name[index.val]);
     }
 
-    IFB_ENG_INTERNAL const os_monitor_handle_t&
+    IFB_ENG_INTERNAL const os_monitor_handle&
     core_monitor_get_handle(
         const core_monitor_index_t index) {
 

@@ -18,17 +18,17 @@ namespace ifb::eng {
 
     IFB_ENG_API_INLINE string_c32_t* string_c32_arena_alloc (arena_t*    arena, const u32 count = 1);
     IFB_ENG_API_INLINE string_c32_t  string_c32_static_init (const cchar* src);
-    IFB_ENG_API_INLINE cstr_t        string_c32_to_cstr     (const string_c32_t* string);
+    IFB_ENG_API_INLINE cstr        string_c32_to_cstr     (const string_c32_t* string);
     IFB_ENG_API_INLINE void          string_c32_sanitize    (string_c32_t*       string);
     IFB_ENG_API_INLINE u64           string_c32_copy_from   (string_c32_t*       string, const cchar* src);
     IFB_ENG_API_INLINE u64           string_c32_copy_to     (const string_c32_t* string, cchar*       dst);
     
-    IFB_ENG_API_INLINE cstr_t        string_c64_to_cstr    (string_c64_t* string);
+    IFB_ENG_API_INLINE cstr        string_c64_to_cstr    (string_c64_t* string);
     IFB_ENG_API_INLINE void          string_c64_sanitize   (string_c64_t* string);
     IFB_ENG_API_INLINE u64           string_c64_copy_from  (string_c64_t* string, const cchar* src);
     IFB_ENG_API_INLINE u64           string_c64_copy_to    (const string_c64_t* string, cchar* dst);
     
-    IFB_ENG_API_INLINE cstr_t         string_c256_to_cstr   (string_c256_t* string);
+    IFB_ENG_API_INLINE cstr         string_c256_to_cstr   (string_c256_t* string);
     IFB_ENG_API_INLINE void          string_c256_sanitize  (string_c256_t* string);
     IFB_ENG_API_INLINE u64           string_c256_copy_from (string_c256_t* string, const cchar* src);
     IFB_ENG_API_INLINE u64           string_c256_copy_to   (const string_c256_t* string, cchar* dst);
@@ -90,13 +90,13 @@ namespace ifb::eng {
     }
 
 
-    IFB_ENG_API_INLINE cstr_t
+    IFB_ENG_API_INLINE cstr
     string_c32_to_cstr(
         const string_c32_t* string) {
 
         assert(string);
 
-        cstr_t cstr;
+        cstr cstr;
         cstr.chars = (cchar*)string->chars;
         cstr.size  = STRING_SIZE_C32;
 
@@ -117,7 +117,7 @@ namespace ifb::eng {
         string_c32_t* string,
         const cchar*  src) {
 
-        cstr_t    dst          = string_c32_to_cstr(string);
+        cstr    dst          = string_c32_to_cstr(string);
         const u64 bytes_copied = sld::cstr_copy_from(&dst, src, STRING_SIZE_C32);
         return(bytes_copied);
     }
@@ -127,7 +127,7 @@ namespace ifb::eng {
         const string_c32_t* string,
         cchar*             dst) {
 
-        cstr_t    src          = string_c32_to_cstr (string);
+        cstr    src          = string_c32_to_cstr (string);
         const u64 bytes_copied = sld::cstr_copy_to  (&src, dst, STRING_SIZE_C32);
         return(bytes_copied);
     }

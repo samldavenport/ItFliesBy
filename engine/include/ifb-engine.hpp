@@ -4,7 +4,6 @@
 #include <sld.hpp>
 #include <sld-hash.hpp>
 #include <sld-cstr.hpp>
-#include <sld-wstr.hpp>
 #include <sld-xml.hpp>
 #include <sld-geometry.hpp>
 
