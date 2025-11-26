@@ -13,7 +13,6 @@ namespace ifb::eng {
         assert(manager != NULL);
 
         // members
-        manager->system_info   = stack.push_struct<os_system_info>();
         manager->window        = stack.push_struct<os_window>();
         manager->monitor_table = stack.push_struct<os_monitor_table>();
         manager->file_table    = stack.push_struct<os_file_table>();
@@ -28,6 +27,7 @@ namespace ifb::eng {
 
         // monitor_table
         os_monitor_table* monitor_table = manager->monitor_table;
+        monitor_table->primary.index    = OS_MONITOR_INVALID;
         monitor_table->array.handles    = stack.push_struct<os_monitor_handle>    (OS_MAX_COUNT_MONITORS); 
         monitor_table->array.dimensions = stack.push_struct<os_monitor_dimensions>(OS_MAX_COUNT_MONITORS); 
         monitor_table->array.names      = stack.push_struct<os_monitor_name>      (OS_MAX_COUNT_MONITORS); 
@@ -59,14 +59,6 @@ namespace ifb::eng {
 
         os_manager_assert_valid(mngr);
 
-        // get system info
-        os_system_info* system_info = mngr->system_info;
-        os_system_get_cpu_info       (system_info->cpu);
-        os_system_get_memory_info    (system_info->memory);
-        os_system_get_cpu_cache_info (system_info->cpu_cache_l1);
-        os_system_get_cpu_cache_info (system_info->cpu_cache_l2);
-        os_system_get_cpu_cache_info (system_info->cpu_cache_l3);
-        os_system_info_assert_valid(system_info);
 
         // reserve memory equal to half of the installed RAM
         os_memory* memory = mngr->memory;
@@ -79,7 +71,8 @@ namespace ifb::eng {
         os_monitor_table* monitor_table = mngr->monitor_table;
         monitor_table->count          = os_monitor_count();
         assert(monitor_table->count <= OS_MAX_COUNT_MONITORS);
-        monitor_table->primary_handle = os_monitor_get_primary(); 
+        const os_monitor_handle primary_monitor_handle = os_monitor_get_primary(); 
+        os_monitor_get_working_area(monitor_table->working_area);
         os_monitor_info monitor_info;
         for (
             u32 monitor = 0;
@@ -93,7 +86,12 @@ namespace ifb::eng {
             monitor_table->array.handles    [monitor] = monitor_info.handle;
             monitor_table->array.dimensions [monitor] = monitor_info.dimensions;
             monitor_table->array.names      [monitor] = monitor_info.name;
+
+            if (primary_monitor_handle.val == monitor_info.handle.val) {
+                monitor_table->primary.index = monitor;
+            }
         }
+        os_monitor_table_assert_valid(monitor_table);
 
         // initialize the file table
         os_file_table* file_table = mngr->file_table;
@@ -104,7 +102,7 @@ namespace ifb::eng {
             os_file file = {0};
                     file.index < OS_MAX_COUNT_FILES;
                   ++file.index) {
-                
+            
             file_table->handle_array[file.index].val = NULL;
             assert(file_table->file_list_closed.add(file));
         }
