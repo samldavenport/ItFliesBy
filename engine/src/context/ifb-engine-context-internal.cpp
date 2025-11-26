@@ -4,10 +4,5 @@
 
 namespace ifb::eng {
 
-    void
-    context::create_managers(
-        void) {
 
-
-    }
 };

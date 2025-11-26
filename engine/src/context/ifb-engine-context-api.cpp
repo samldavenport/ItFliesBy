@@ -22,7 +22,7 @@ namespace ifb::eng {
         context*   ctx            = (context*)stack_data; 
 
         // initialize the stack
-        ctx->stack.init(stack_data, stack_size);
+        ctx->stack.init(ctx_stack_data, ctx_stack_size);
 
         // initialize managers
         ctx->os_mngr = os_manager_stack_alloc(ctx->stack);
@@ -35,6 +35,8 @@ namespace ifb::eng {
     IFB_ENG_API bool
     context_startup(
         context* ctx) {
+
+        os_manager_startup(ctx->os_mngr);
 
         return(false);
     }
