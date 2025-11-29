@@ -3,20 +3,6 @@
 #include "ifb-engine-os.hpp"
 
 namespace ifb::eng {
-    
-    IFB_ENG_INTERNAL os_memory*
-    os_memory_stack_alloc(
-        stack& stack) {
-
-        auto memory = stack.push_struct<os_memory>();
-        assert(memory);
-
-        memory->reservation_start = 0;
-        memory->reservation_size  = 0;
-        memory->committed_size    = 0;
-
-        return(memory);
-    }
 
     IFB_ENG_INTERNAL void
     os_memory_assert_valid(
@@ -31,65 +17,106 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    os_memory_virtual_reserve(
-        os_memory* memory,
-        const u64  size,
-        const u64  alignment) {
+    os_manager_memory_reserve(
+        os_manager* os_mngr) {
 
-        assert(memory != 0 && size != 0);
+        os_memory*      os_mem      = os_mngr->memory;
+        os_system_info* os_sys_info = os_mngr->system_info;
+        
+        const u64 memory_size_installed = size_kilobytes(os_sys_info->memory.installed_ram_size_kb);
 
-        const u64 alignment_pow_2 = size_round_up_pow2 (alignment);
-        const u64 size_aligned    = size_align_pow_2   (size, alignment_pow_2)
+        os_mem->reservation_size  = (memory_size_installed / 2);
+        os_mem->reservation_start = (addr)os_memory_reserve(NULL, os_mem->reservation_size);
+        os_mem->alignment         = os_sys_info->memory.page_size;  
+        os_mem->committed_size    = 0;
 
-        memory->reservation_size  = size_aligned;
-        memory->reservation_start = (addr)os_memory_reserve(NULL, size_aligned);
-        memory->committed_size    = 0;
-        memory->alignment         = alignment_pow_2;
-
-        os_memory_assert_valid(memory);
+        os_memory_assert_valid(os_mem);
     }
 
     IFB_ENG_INTERNAL void
-    os_memory_virtual_release(
-        os_memory* memory) {
+    os_manager_memory_release(
+        os_manager* os_mngr) {
 
-        os_memory_assert_valid(memory);
+        os_memory* os_mem = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
 
         const bool did_release = os_memory_release(
-            memory->reservation_start,
-            memory->reservation_size
+            os_mem->reservation_start,
+            os_mem->reservation_size
         );
-
         assert(did_release);
 
-        memory->reservation_start = 0;
-        memory->reservation_size  = 0;
-        memory->committed_size    = 0;
+        os_mem->reservation_size  = 0;
+        os_mem->reservation_start = 0;
+        os_mem->alignment         = 0;
+        os_mem->committed_size    = 0;
     }
 
     IFB_ENG_INTERNAL void*
-    os_memory_virtual_commit(
-        os_memory* memory,
-        const u64  start,
-        u64&       size) {
+    os_manager_memory_commit(
+        os_manager* os_mngr,
+        const u64   offset,
+        const u64   size) {
 
-        os_memory_assert_valid(memory);
+        os_memory* os_mem = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
 
-        void*     commit_start  = (void*)(memory->reservation_start + start);
-        const u64 commit_size   = size_align_pow_2(size, memory->alignment);
-        void*     commit_result = os_memory_commit(commit_start, commit_size);
+        const u64  commit_size     = size_align_pow_2(size, os_mem->alignment);
+        void*      commit_start    = (void*)(os_mem->reservation_start + offset); 
+        const bool is_aligned      = (offset % os_mem->alignment == 0); 
+        const bool is_reserved     = os_memory_is_reserved(commit_start); 
+        void*      commit_result   = os_memory_commit(commit_start, commit_size);
 
-        assert(commit_start == commit_result);
+        os_mem->committed_size += commit_size;
 
-        memory->committed_size += commit_size;
+        assert(
+            is_reserved                                                &&
+            os_mem->committed_size <= os_mem->reservation_size         &&
+            commit_size            != 0                                &&
+            commit_start           >= (void*)os_mem->reservation_start &&
+            commit_start           <= (void*)(os_mem->reservation_start + os_mem->reservation_size) 
+            commit_result          == commit_start
+        );
+
         return(commit_result);
     }
 
     IFB_ENG_INTERNAL void
-    os_memory_virtual_decommit(
-        os_memory* memory,
-        const u64  start,
-        const u64  size) {
-    
+    os_manager_memory_decommit(
+        os_manager* os_mngr,
+        const void* start,
+        const u64   size) {
+
+        os_memory* os_mem = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
+
+        const bool is_aligned   = (((addr)start) % os_mem->alignment == 0);
+        const u64  commit_size  = size_align_pow_2(size, os_mem->alignment);
+        const bool is_committed = os_memory_is_committed (start);
+        const bool did_decommit = os_memory_decommit     (start, commit_size);
+        const bool can_decommit = (os_mem->committed_size >= commit_size);
+
+        os_mem->committed_size -= commit_size;
+
+        assert(
+            is_aligned   &&
+            did_decommit && 
+            can_decommit && 
+            is_committed && 
+            commit_size  != 0 
+        )
     }
+
+    IFB_ENG_INTERNAL bool
+    os_manager_memory_is_page_aligned(
+        os_manager* os_mngr,
+        const u64   start) {
+
+        os_memory* os_mem = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
+
+        const bool is_aligned = (start % os_mem->alignment == 0);
+        return(is_aligned);
+    }
+
 };

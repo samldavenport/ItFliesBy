@@ -35,15 +35,16 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL os_manager* os_manager_alloc                 (stack& stack);
-    IFB_ENG_INTERNAL void        os_manager_startup               (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_shutdown              (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_system_info_refresh   (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_memory_reserve        (os_manager* os_mngr, const u64 size, const u64 alignment);
-    IFB_ENG_INTERNAL void        os_manager_memory_release        (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_memory_commit         (os_manager* os_mngr, const u64 size);
-    IFB_ENG_INTERNAL void        os_manager_memory_decommit       (os_manager* os_mngr, const void* start, const u64 size);
-    IFB_ENG_INTERNAL void        os_manager_monitor_table_refresh (os_manager* os_manager);
+    IFB_ENG_INTERNAL os_manager* os_manager_alloc                  (stack& stack);
+    IFB_ENG_INTERNAL void        os_manager_startup                (os_manager* os_mngr);
+    IFB_ENG_INTERNAL void        os_manager_shutdown               (os_manager* os_mngr);
+    IFB_ENG_INTERNAL void        os_manager_system_info_refresh    (os_manager* os_mngr);
+    IFB_ENG_INTERNAL void        os_manager_memory_reserve         (os_manager* os_mngr);
+    IFB_ENG_INTERNAL void        os_manager_memory_release         (os_manager* os_mngr);
+    IFB_ENG_INTERNAL void*       os_manager_memory_commit          (os_manager* os_mngr, const u64   start, const u64 size);
+    IFB_ENG_INTERNAL void        os_manager_memory_decommit        (os_manager* os_mngr, const void* start, const u64 size);
+    IFB_ENG_INTERNAL bool        os_manager_memory_is_page_aligned (os_manager* os_mngr, const u64   start);
+    IFB_ENG_INTERNAL void        os_manager_monitor_table_refresh  (os_manager* os_mngr);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -51,10 +52,10 @@ namespace ifb::eng {
 
     struct os_manager {
         os_system_info*   system_info;
-        os_window*        window;
-        os_monitor_table* monitor_table;
-        os_file_table*    file_table;
         os_memory*        memory;
+        os_file_table*    file_table;
+        os_monitor_table* monitor_table;
+        os_window*        window;
     };
 
     struct os_system_info {
