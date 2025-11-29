@@ -1,64 +1,41 @@
 #pragma once
 
+#include "ifb-engine-context.hpp"
 #include "ifb-engine-os.hpp"
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL os_manager*
-    os_manager_stack_alloc(
-        stack& stack) {
+    IFB_ENG_INTERNAL os_window*        os_manager_alloc_window        (stack& stack); 
+    IFB_ENG_INTERNAL os_monitor_table* os_manager_alloc_monitor_table (stack& stack); 
+    IFB_ENG_INTERNAL os_file_table*    os_manager_alloc_file_table    (stack& stack); 
+    IFB_ENG_INTERNAL os_memory*        os_manager_alloc_memory        (stack& stack); 
+    IFB_ENG_INTERNAL os_system_info*   os_manager_alloc_system_info   (stack& stack); 
+
+    IFB_ENG_INTERNAL void
+    os_manager_alloc(
+        void) {
+
+        auto& stack = _context->stack;
 
         // os manager
-        auto manager = stack.push_struct<os_manager>();
+        auto manager = stack.push_struct<os_manager>(stack);
         assert(manager != NULL);
+        _context->os_mngr
 
         // members
-        manager->window        = stack.push_struct<os_window>();
-        manager->monitor_table = stack.push_struct<os_monitor_table>();
-        manager->file_table    = stack.push_struct<os_file_table>();
-        manager->memory        = stack.push_struct<os_memory>();
-        assert(
-            manager->system_info   != NULL &&
-            manager->window        != NULL &&
-            manager->monitor_table != NULL &&
-            manager->file_table    != NULL &&
-            manager->memory        != NULL
-        );
-
-        // monitor_table
-        os_monitor_table* monitor_table = manager->monitor_table;
-        monitor_table->primary.index    = OS_MONITOR_INVALID;
-        monitor_table->array.handles    = stack.push_struct<os_monitor_handle>    (OS_MAX_COUNT_MONITORS); 
-        monitor_table->array.dimensions = stack.push_struct<os_monitor_dimensions>(OS_MAX_COUNT_MONITORS); 
-        monitor_table->array.names      = stack.push_struct<os_monitor_name>      (OS_MAX_COUNT_MONITORS); 
-        assert(
-            monitor_table->array.handles    != NULL &&
-            monitor_table->array.dimensions != NULL &&
-            monitor_table->array.names      != NULL
-        );
-
-        // file table
-        os_file_table* file_table = manager->file_table;
-        file_table->handle_array   = stack.push_struct<os_file_handle>(OS_MAX_COUNT_FILES);
-        os_file* file_array_open   = stack.push_struct<os_file>       (OS_MAX_COUNT_FILES);
-        os_file* file_array_closed = stack.push_struct<os_file>       (OS_MAX_COUNT_FILES);
-        assert(
-            file_table->handle_array != NULL &&
-            file_array_open                  &&
-            file_array_closed
-        );
-        file_table->file_list_open.init   (file_array_open, OS_MAX_COUNT_FILES);
-        file_table->file_list_closed.init (file_array_open, OS_MAX_COUNT_FILES);
-
-        return(manager);
+        manager->window        = os_manager_alloc_window        (stack);
+        manager->monitor_table = os_manager_alloc_monitor_table (stack);
+        manager->file_table    = os_manager_alloc_file_table    (stack);
+        manager->memory        = os_manager_alloc_memory        (stack);
+        manager->system_info   = os_manager_alloc_system_info   (stack);
     }
 
     IFB_ENG_INTERNAL void
     os_manager_startup(
-        os_manager* mngr) {
+        void) {
 
         os_manager_assert_valid(mngr);
-
+        os_manager_system_info_refresh()
 
         // reserve memory equal to half of the installed RAM
         os_memory* memory = mngr->memory;
@@ -114,4 +91,62 @@ namespace ifb::eng {
 
     }
 
+
+
+    IFB_ENG_INTERNAL os_window*
+    os_manager_alloc_window(
+        stack& stack) {
+
+        auto window = stack.push_struct<os_window>();
+        assert(window);
+        return(window);
+    }
+    
+    IFB_ENG_INTERNAL os_monitor_table*
+    os_manager_alloc_monitor_table(
+        stack& stack) {
+
+        auto monitor_table = stack.push_struct<os_monitor_table>();
+        auto handles       = stack.push_struct<os_monitor_handle>     (OS_MAX_COUNT_MONITORS);
+        auto dimensions    = stack.push_struct<os_monitor_dimensions> (OS_MAX_COUNT_MONITORS);
+        auto names         = stack.push_struct<os_monitor_name>       (OS_MAX_COUNT_MONITORS);
+        assert(
+            monitor_table != NULL &&
+            handles       != NULL &&
+            dimensions    != NULL &&
+            names         != NULL
+        );
+        return(monitor_table); 
+    }
+    
+    IFB_ENG_INTERNAL os_file_table*
+    os_manager_alloc_file_table(
+        stack& stack) {
+
+        auto file_table   = stack.push_struct<os_file_table>();
+        auto handle_array = stack.push_struct<os_file_handle>(OS_MAX_COUNT_FILES); 
+        assert(
+            file_table &&
+            file_handles
+        );
+        file_table->handle_array = handle_array;
+        return(file_table);
+    }
+    
+    IFB_ENG_INTERNAL os_memory*
+    os_manager_alloc_memory(
+        stack& stack) {
+
+        auto memory = stack.push_struct<os_memory>();
+        assert(memory);
+        return(memory);
+    }
+    
+    IFB_ENG_INTERNAL os_system_info*
+    os_manager_alloc_system_info(
+        stack& stack) {
+
+        auto sys_info = stack.push_struct<os_system_info>();
+        assert(sys_info);
+    }
 };

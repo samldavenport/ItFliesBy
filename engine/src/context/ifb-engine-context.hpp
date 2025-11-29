@@ -8,12 +8,18 @@
 
 namespace ifb::eng {
 
+    struct context;
+
+    IFB_ENG_GLOBAL context* _context;
+
+
     struct context {
         stack       stack;
         os_manager* os_mngr;
-
-        void create_managers (void);
     };
+
+
+
 
 };
 

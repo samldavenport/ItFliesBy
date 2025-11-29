@@ -4,15 +4,6 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL os_system_info*
-    os_system_info_stack_alloc(
-        stack& stack) {
-
-        os_system_info* system_info = stack.push_struct<os_system_info>();
-        assert(system_info);
-        return(system_info);
-    }
-
     IFB_ENG_INTERNAL void
     os_system_info_assert_valid(
         const os_system_info* system_info) {
@@ -41,6 +32,7 @@ namespace ifb::eng {
         os_system_get_cpu_cache_info (system_info->cpu_cache_l1);
         os_system_get_cpu_cache_info (system_info->cpu_cache_l2);
         os_system_get_cpu_cache_info (system_info->cpu_cache_l3);
+        
         os_system_info_assert_valid(system_info);
     }
 };
