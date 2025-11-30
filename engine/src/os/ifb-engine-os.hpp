@@ -27,6 +27,7 @@ namespace ifb::eng {
     struct os_window;
     struct os_monitor_table;
     struct os_file_table;
+    struct os_system_info;
 
     using os_file    = u32;
     using os_monitor = u32;
@@ -42,7 +43,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void        os_manager_memory_reserve         (os_manager* os_mngr);
     IFB_ENG_INTERNAL void        os_manager_memory_release         (os_manager* os_mngr);
     IFB_ENG_INTERNAL void*       os_manager_memory_commit          (os_manager* os_mngr, const u64   start, const u64 size);
-    IFB_ENG_INTERNAL void        os_manager_memory_decommit        (os_manager* os_mngr, const void* start, const u64 size);
+    IFB_ENG_INTERNAL void        os_manager_memory_decommit        (os_manager* os_mngr, void* start, const u64 size);
     IFB_ENG_INTERNAL bool        os_manager_memory_is_page_aligned (os_manager* os_mngr, const u64   start);
     IFB_ENG_INTERNAL void        os_manager_monitor_table_refresh  (os_manager* os_mngr);
 

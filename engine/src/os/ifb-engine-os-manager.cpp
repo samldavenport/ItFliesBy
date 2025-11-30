@@ -5,7 +5,7 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL void              os_manager_assert_valid        (void);
+    IFB_ENG_INTERNAL void              os_manager_assert_valid        (const os_manager* os_mngr);
     IFB_ENG_INTERNAL os_window*        os_manager_alloc_window        (stack& stack); 
     IFB_ENG_INTERNAL os_monitor_table* os_manager_alloc_monitor_table (stack& stack); 
     IFB_ENG_INTERNAL os_file_table*    os_manager_alloc_file_table    (stack& stack); 
@@ -16,12 +16,8 @@ namespace ifb::eng {
     os_manager_alloc(
         stack& stack) {
 
-        auto& stack = _context->stack;
-
-        // os manager
-        auto manager = stack.push_struct<os_manager>(stack);
+        auto manager = stack.push_struct<os_manager>();
         assert(manager != NULL);
-        _context->os_mngr
 
         // members
         manager->window        = os_manager_alloc_window        (stack);
@@ -83,8 +79,8 @@ namespace ifb::eng {
         auto file_table   = stack.push_struct<os_file_table>();
         auto handle_array = stack.push_struct<os_file_handle>(OS_MAX_COUNT_FILES); 
         assert(
-            file_table &&
-            file_handles
+            file_table   != NULL &&
+            handle_array != NULL
         );
         file_table->handle_array = handle_array;
         return(file_table);
@@ -105,6 +101,8 @@ namespace ifb::eng {
 
         auto sys_info = stack.push_struct<os_system_info>();
         assert(sys_info);
+
+        return(sys_info);
     }
 
     IFB_ENG_INTERNAL void

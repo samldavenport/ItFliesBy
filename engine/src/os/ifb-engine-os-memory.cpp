@@ -41,7 +41,7 @@ namespace ifb::eng {
         os_memory_assert_valid(os_mem);
 
         const bool did_release = os_memory_release(
-            os_mem->reservation_start,
+            (void*)os_mem->reservation_start,
             os_mem->reservation_size
         );
         assert(did_release);
@@ -70,11 +70,11 @@ namespace ifb::eng {
         os_mem->committed_size += commit_size;
 
         assert(
-            is_reserved                                                &&
-            os_mem->committed_size <= os_mem->reservation_size         &&
-            commit_size            != 0                                &&
-            commit_start           >= (void*)os_mem->reservation_start &&
-            commit_start           <= (void*)(os_mem->reservation_start + os_mem->reservation_size) 
+            is_reserved                                                                             &&
+            os_mem->committed_size <= os_mem->reservation_size                                      &&
+            commit_size            != 0                                                             &&
+            commit_start           >= (void*)os_mem->reservation_start                              &&
+            commit_start           <= (void*)(os_mem->reservation_start + os_mem->reservation_size) &&
             commit_result          == commit_start
         );
 
@@ -84,7 +84,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void
     os_manager_memory_decommit(
         os_manager* os_mngr,
-        const void* start,
+        void*       start,
         const u64   size) {
 
         os_memory* os_mem = os_mngr->memory;
@@ -104,7 +104,7 @@ namespace ifb::eng {
             can_decommit && 
             is_committed && 
             commit_size  != 0 
-        )
+        );
     }
 
     IFB_ENG_INTERNAL bool
