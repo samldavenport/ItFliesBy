@@ -39,7 +39,7 @@ namespace ifb::eng {
 
         os_manager_assert_valid        (mngr);
         os_manager_system_info_refresh (mngr);
-
+        os_manager_memory_reserve      (mngr);
 
     }
 
@@ -48,7 +48,6 @@ namespace ifb::eng {
         os_manager* mngr) {
 
     }
-
 
 
     IFB_ENG_INTERNAL os_window*
@@ -64,7 +63,7 @@ namespace ifb::eng {
     os_manager_alloc_monitor_table(
         stack& stack) {
 
-        auto monitor_table = stack.push_struct<os_monitor_table>();
+        auto monitor_table = stack.push_struct<os_monitor_table>      ();
         auto handles       = stack.push_struct<os_monitor_handle>     (OS_MAX_COUNT_MONITORS);
         auto dimensions    = stack.push_struct<os_monitor_dimensions> (OS_MAX_COUNT_MONITORS);
         auto names         = stack.push_struct<os_monitor_name>       (OS_MAX_COUNT_MONITORS);

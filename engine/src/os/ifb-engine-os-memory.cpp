@@ -118,5 +118,4 @@ namespace ifb::eng {
         const bool is_aligned = (start % os_mem->alignment == 0);
         return(is_aligned);
     }
-
 };
