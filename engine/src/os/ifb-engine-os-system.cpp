@@ -23,8 +23,8 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    os_manager_system_info_refresh(
-        os_manager* os_mngr) {
+    os_system_refresh_info(
+        os_context* os_mngr) {
 
         assert(os_mngr);
         os_system_info* sys_info = os_mngr->system_info;

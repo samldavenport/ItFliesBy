@@ -25,7 +25,7 @@ namespace ifb::eng {
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
 
         // initialize managers
-        ctx->os_mngr = os_manager_alloc(ctx->stack);
+        ctx->os_mngr = os_context_alloc(ctx->stack);
 
         return(ctx);        
     }
@@ -34,7 +34,7 @@ namespace ifb::eng {
     context_startup(
         context* ctx) {
 
-        os_manager_startup(ctx->os_mngr);
+        os_context_init(ctx->os_mngr);
 
         return(false);
     }

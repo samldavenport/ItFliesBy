@@ -15,7 +15,7 @@ namespace ifb::eng {
 
     struct context {
         stack       stack;
-        os_manager* os_mngr;
+        os_context* os_mngr;
     };
 
 

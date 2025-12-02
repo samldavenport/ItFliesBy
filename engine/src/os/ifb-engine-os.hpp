@@ -13,16 +13,17 @@ namespace ifb::eng {
     // CONSTANTS
     //-------------------------------------------------------------------
 
-    constexpr u32 OS_MAX_COUNT_FILES    = IFB_ENG_CONFIG_OS_MAX_COUNT_FILES;
-    constexpr u32 OS_MAX_COUNT_MONITORS = IFB_ENG_CONFIG_OS_MAX_COUNT_MONITORS;
-    constexpr u32 OS_FILE_INVALID       = OS_MAX_COUNT_FILES; 
-    constexpr u32 OS_MONITOR_INVALID    = OS_MAX_COUNT_MONITORS; 
+    constexpr u32 OS_MAX_COUNT_FILES       = IFB_ENG_CONFIG_OS_MAX_COUNT_FILES;
+    constexpr u32 OS_MAX_COUNT_MONITORS    = IFB_ENG_CONFIG_OS_MAX_COUNT_MONITORS;
+    constexpr u32 OS_FILE_INVALID          = OS_MAX_COUNT_FILES; 
+    constexpr u32 OS_MONITOR_INVALID       = OS_MAX_COUNT_MONITORS; 
+    constexpr u32 OS_WINDOW_EVENT_CAPACITY = IFB_ENG_CONFIG_OS_WINDOW_EVENT_CAPACITY;
 
     //-------------------------------------------------------------------
     // TYPES
     //-------------------------------------------------------------------
 
-    struct os_manager;
+    struct os_context;
     struct os_memory;
     struct os_window;
     struct os_monitor_table;
@@ -36,22 +37,34 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL os_manager* os_manager_alloc                  (stack& stack);
-    IFB_ENG_INTERNAL void        os_manager_startup                (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_shutdown               (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_system_info_refresh    (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_memory_reserve         (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void        os_manager_memory_release         (os_manager* os_mngr);
-    IFB_ENG_INTERNAL void*       os_manager_memory_commit          (os_manager* os_mngr, const u64   start, const u64 size);
-    IFB_ENG_INTERNAL void        os_manager_memory_decommit        (os_manager* os_mngr, void* start, const u64 size);
-    IFB_ENG_INTERNAL bool        os_manager_memory_is_page_aligned (os_manager* os_mngr, const u64   start);
-    IFB_ENG_INTERNAL void        os_manager_monitor_table_refresh  (os_manager* os_mngr);
+    // context
+    IFB_ENG_INTERNAL os_context*                  os_context_alloc                  (stack& stack);
+    IFB_ENG_INTERNAL void                         os_context_init                   (os_context* os);
+    IFB_ENG_INTERNAL void                         os_context_destroy                (os_context* os);
+
+    // memory
+    IFB_ENG_INTERNAL void                         os_memory_reserve                  (os_context* os);
+    IFB_ENG_INTERNAL void                         os_memory_release                  (os_context* os);
+    IFB_ENG_INTERNAL void*                        os_memory_commit                   (os_context* os, const u64   start, const u64 size);
+    IFB_ENG_INTERNAL void                         os_memory_decommit                 (os_context* os, void* start, const u64 size);
+    IFB_ENG_INTERNAL bool                         os_memory_is_page_aligned          (os_context* os, const u64   start);
+
+    // monitors
+    IFB_ENG_INTERNAL void                         os_monitor_init_table              (os_context* os);
+    IFB_ENG_INTERNAL const os_monitor_dimensions* os_monitor_get_primrary_dimensions (os_context* os);
+
+    // system
+    IFB_ENG_INTERNAL void                         os_system_refresh_info             (os_context* os);
+
+    // window
+    IFB_ENG_INTERNAL void                         os_window_create_and_show          (os_context* os);
+
 
     //-------------------------------------------------------------------
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct os_manager {
+    struct os_context {
         os_system_info*   system_info;
         os_memory*        memory;
         os_file_table*    file_table;
@@ -79,7 +92,11 @@ namespace ifb::eng {
     };
 
     struct os_window {
-        os_window_handle window_handle;
+        os_window_handle     handle;
+        os_window_position   position;
+        os_window_size       size;
+        os_window_viewport   viewport;
+        os_window_event_list event_list;
     };
 
     struct os_file_table {
@@ -92,10 +109,6 @@ namespace ifb::eng {
         u64  committed_size;
         u64  alignment;
     };
-
-
-
-
 };
 
 #endif //IFB_ENGINE_PLATFORM_MANAGER_HPP

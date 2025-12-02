@@ -5,58 +5,68 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL void              os_manager_assert_valid        (const os_manager* os_mngr);
-    IFB_ENG_INTERNAL os_window*        os_manager_alloc_window        (stack& stack); 
-    IFB_ENG_INTERNAL os_monitor_table* os_manager_alloc_monitor_table (stack& stack); 
-    IFB_ENG_INTERNAL os_file_table*    os_manager_alloc_file_table    (stack& stack); 
-    IFB_ENG_INTERNAL os_memory*        os_manager_alloc_memory        (stack& stack); 
-    IFB_ENG_INTERNAL os_system_info*   os_manager_alloc_system_info   (stack& stack); 
+    IFB_ENG_INTERNAL void              os_context_assert_valid        (const os_context* os_mngr);
+    IFB_ENG_INTERNAL os_window*        os_context_alloc_window        (stack& stack); 
+    IFB_ENG_INTERNAL os_monitor_table* os_context_alloc_monitor_table (stack& stack); 
+    IFB_ENG_INTERNAL os_file_table*    os_context_alloc_file_table    (stack& stack); 
+    IFB_ENG_INTERNAL os_memory*        os_context_alloc_memory        (stack& stack); 
+    IFB_ENG_INTERNAL os_system_info*   os_context_alloc_system_info   (stack& stack); 
 
-    IFB_ENG_INTERNAL os_manager*
-    os_manager_alloc(
+    IFB_ENG_INTERNAL os_context*
+    os_context_alloc(
         stack& stack) {
 
-        auto manager = stack.push_struct<os_manager>();
-        assert(manager != NULL);
+        auto context = stack.push_struct<os_context>();
+        assert(context != NULL);
 
         // members
-        manager->window        = os_manager_alloc_window        (stack);
-        manager->monitor_table = os_manager_alloc_monitor_table (stack);
-        manager->file_table    = os_manager_alloc_file_table    (stack);
-        manager->memory        = os_manager_alloc_memory        (stack);
-        manager->system_info   = os_manager_alloc_system_info   (stack);
+        context->window        = os_context_alloc_window        (stack);
+        context->monitor_table = os_context_alloc_monitor_table (stack);
+        context->file_table    = os_context_alloc_file_table    (stack);
+        context->memory        = os_context_alloc_memory        (stack);
+        context->system_info   = os_context_alloc_system_info   (stack);
 
-        return(manager);
+        return(context);
     }
 
     IFB_ENG_INTERNAL void
-    os_manager_startup(
-        os_manager* mngr) {
+    os_context_init(
+        os_context* mngr) {
 
-        os_manager_assert_valid        (mngr);
-        os_manager_system_info_refresh (mngr);
-        os_manager_memory_reserve      (mngr);
-
+        os_context_assert_valid (mngr);
+        os_system_refresh_info  (mngr);
+        os_memory_reserve       (mngr);
+        os_monitor_init_table   (mngr);
     }
 
     IFB_ENG_INTERNAL void
-    os_manager_shutdown(
-        os_manager* mngr) {
+    os_context_shutdown(
+        os_context* mngr) {
 
     }
 
 
     IFB_ENG_INTERNAL os_window*
-    os_manager_alloc_window(
+    os_context_alloc_window(
         stack& stack) {
 
-        auto window = stack.push_struct<os_window>();
-        assert(window);
+        auto window = stack.push_struct<os_window>      ();
+        auto events = stack.push_struct<os_window_event>(OS_WINDOW_EVENT_CAPACITY);
+        
+        assert(
+            window &&
+            events
+        );
+
+        window->event_list.array    = events;
+        window->event_list.capacity = OS_WINDOW_EVENT_CAPACITY;  
+        window->event_list.count    = 0;  
+
         return(window);
     }
     
     IFB_ENG_INTERNAL os_monitor_table*
-    os_manager_alloc_monitor_table(
+    os_context_alloc_monitor_table(
         stack& stack) {
 
         auto monitor_table = stack.push_struct<os_monitor_table>      ();
@@ -73,7 +83,7 @@ namespace ifb::eng {
     }
     
     IFB_ENG_INTERNAL os_file_table*
-    os_manager_alloc_file_table(
+    os_context_alloc_file_table(
         stack& stack) {
 
         auto file_table   = stack.push_struct<os_file_table>();
@@ -87,7 +97,7 @@ namespace ifb::eng {
     }
     
     IFB_ENG_INTERNAL os_memory*
-    os_manager_alloc_memory(
+    os_context_alloc_memory(
         stack& stack) {
 
         auto memory = stack.push_struct<os_memory>();
@@ -96,7 +106,7 @@ namespace ifb::eng {
     }
     
     IFB_ENG_INTERNAL os_system_info*
-    os_manager_alloc_system_info(
+    os_context_alloc_system_info(
         stack& stack) {
 
         auto sys_info = stack.push_struct<os_system_info>();
@@ -106,8 +116,8 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    os_manager_assert_valid(
-        const os_manager* os_mngr) {
+    os_context_assert_valid(
+        const os_context* os_mngr) {
 
         assert(
             os_mngr                != NULL &&
