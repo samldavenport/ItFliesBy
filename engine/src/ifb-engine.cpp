@@ -6,3 +6,4 @@
 #include "ifb-engine-os-system.cpp"
 #include "ifb-engine-os-memory.cpp"
 #include "ifb-engine-os-monitor.cpp"
+#include "ifb-engine-os-window.cpp"

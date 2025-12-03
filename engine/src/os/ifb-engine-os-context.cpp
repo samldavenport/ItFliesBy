@@ -33,14 +33,15 @@ namespace ifb::eng {
     os_context_init(
         os_context* mngr) {
 
-        os_context_assert_valid (mngr);
-        os_system_refresh_info  (mngr);
-        os_memory_reserve       (mngr);
-        os_monitor_init_table   (mngr);
+        os_context_assert_valid   (mngr);
+        os_system_refresh_info    (mngr);
+        os_memory_reserve         (mngr);
+        os_monitor_init_table     (mngr);
+        os_window_create_and_show (mngr);
     }
 
     IFB_ENG_INTERNAL void
-    os_context_shutdown(
+    os_context_destroy(
         os_context* mngr) {
 
     }

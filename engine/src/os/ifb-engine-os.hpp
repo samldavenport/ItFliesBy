@@ -43,11 +43,11 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void                         os_context_destroy                (os_context* os);
 
     // memory
-    IFB_ENG_INTERNAL void                         os_memory_reserve                  (os_context* os);
-    IFB_ENG_INTERNAL void                         os_memory_release                  (os_context* os);
-    IFB_ENG_INTERNAL void*                        os_memory_commit                   (os_context* os, const u64   start, const u64 size);
-    IFB_ENG_INTERNAL void                         os_memory_decommit                 (os_context* os, void* start, const u64 size);
-    IFB_ENG_INTERNAL bool                         os_memory_is_page_aligned          (os_context* os, const u64   start);
+    IFB_ENG_INTERNAL void                         os_memory_reserve                 (os_context* os);
+    IFB_ENG_INTERNAL void                         os_memory_release                 (os_context* os);
+    IFB_ENG_INTERNAL void*                        os_memory_commit                  (os_context* os, const u64   start, const u64 size);
+    IFB_ENG_INTERNAL void                         os_memory_decommit                (os_context* os, void* start, const u64 size);
+    IFB_ENG_INTERNAL bool                         os_memory_is_page_aligned         (os_context* os, const u64   start);
 
     // monitors
     IFB_ENG_INTERNAL void                         os_monitor_init_table              (os_context* os);

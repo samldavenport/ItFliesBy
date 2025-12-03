@@ -39,7 +39,7 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL const os_monitor_dimensions*
-    os_monitor_get_primary_dimensions(
+    os_monitor_get_primrary_dimensions(
         os_context* os) {
 
         os_monitor_table* monitor_table = (os != NULL)
