@@ -118,4 +118,21 @@ namespace ifb::eng {
         const bool is_aligned = (start % os_mem->alignment == 0);
         return(is_aligned);
     }
+
+    IFB_ENG_INTERNAL void
+    os_memory_check_usage(
+        os_context* os) {
+
+        os_memory* mem = (os != NULL)
+            ? os->memory
+            : NULL;
+
+        assert(
+            mem != NULL &&
+            mem->reservation_start != 0 &&
+            mem->reservation_size  != 0 &&
+            mem->committed_size    <= mem->reservation_size
+        );
+    }
+
 };

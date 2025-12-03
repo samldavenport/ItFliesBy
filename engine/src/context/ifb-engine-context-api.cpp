@@ -21,11 +21,9 @@ namespace ifb::eng {
         byte*      ctx_stack_data = stack_data + ctx_size;  
         context*   ctx            = (context*)stack_data; 
 
-        // initialize the stack
+        // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-
-        // initialize managers
-        ctx->os_mngr = os_context_alloc(ctx->stack);
+        ctx->os = os_context_alloc(ctx->stack);
 
         return(ctx);        
     }
@@ -34,30 +32,33 @@ namespace ifb::eng {
     context_startup(
         context* ctx) {
 
-        os_context_init(ctx->os_mngr);
+        os_context_init(ctx->os);
 
-        return(false);
+        return(true);
     }
 
     IFB_ENG_API bool
     context_shutdown(
         context* ctx) {
 
-        return(false);
+        return(true);
     }
 
     IFB_ENG_API bool
     context_update(
         context* ctx) {
 
-        return(false);
+        assert(ctx);
+        os_context_refresh_system_info(ctx->os);
+
+        return(true);
     }
 
     IFB_ENG_API bool
     context_render(
         context* ctx) {
 
-        return(false);
+        return(true);
     }
 
     IFB_ENG_API bool

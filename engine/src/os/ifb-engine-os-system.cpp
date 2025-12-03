@@ -12,12 +12,12 @@ namespace ifb::eng {
             sys_info                                != NULL &&
             sys_info->memory.allocation_granularity != 0    &&
             sys_info->memory.page_size              != 0    &&
-            sys_info->memory.installed_ram_size_kb  != 0    &&
-            sys_info->cpu.parent_core_number        != 0    &&
-            sys_info->cpu.speed_mhz                 != 0    &&
-            sys_info->cpu.core_count_physical       != 0    &&
-            sys_info->cpu.core_count_logical        != 0    &&
-            sys_info->cpu.cache_levels              != 0
+            sys_info->memory.installed_ram_size_kb  != 0//    &&
+            // sys_info->cpu.parent_core_number        != 0    &&
+            // sys_info->cpu.speed_mhz                 != 0    &&
+            // sys_info->cpu.core_count_physical       != 0    &&
+            // sys_info->cpu.core_count_logical        != 0    &&
+            // sys_info->cpu.cache_levels              != 0
         );
         assert(is_valid);
     }

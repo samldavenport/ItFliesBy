@@ -5,7 +5,7 @@
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
-    os_monitor_init_table(
+    os_monitor_refresh_table(
         os_context* os) {
 
         os_monitor_table* monitor_table = (os != NULL)
@@ -16,12 +16,12 @@ namespace ifb::eng {
         const os_monitor_handle primary_handle = sld::os_monitor_get_primary();
         monitor_table->primary = OS_MONITOR_INVALID;
         monitor_table->count   = sld::os_monitor_count();
-        assert(monitor_table->count <= OS_MAX_COUNT_MONITORS);
+        assert(monitor_table->count <= OS_MONITOR_MAX_COUNT);
 
         sld::os_monitor_info monitor_info;
         for (
-            monitor_info.index = 0;
-            monitor_info.index < monitor_table->count;
+              monitor_info.index = 0;
+              monitor_info.index < monitor_table->count;
             ++monitor_info.index) {
 
             sld::os_monitor_get_info(monitor_info);
@@ -49,7 +49,7 @@ namespace ifb::eng {
         assert(
             monitor_table                                &&
             monitor_table->primary != OS_MONITOR_INVALID &&
-            monitor_table->count   <= OS_MAX_COUNT_MONITORS
+            monitor_table->count   <= OS_MONITOR_MAX_COUNT
         );
 
         const os_monitor             monitor = monitor_table->primary;
@@ -58,4 +58,60 @@ namespace ifb::eng {
         return(dims);
     }
 
+    IFB_ENG_INTERNAL const os_monitor_handle&
+    os_monitor_get_handle(
+        const os_context* os,
+        const os_monitor  monitor) {
+
+        const os_monitor_table* tbl = (os != NULL)
+            ? os->monitor_table
+            : NULL;
+        
+        assert(
+            tbl                != NULL &&
+            tbl->array.handles != NULL &&
+            monitor            < tbl->count
+        );
+
+        const os_monitor_handle& hnd = tbl->array.handles[monitor];
+        return(hnd);
+    }
+
+    IFB_ENG_INTERNAL const os_monitor_dimensions&
+    os_monitor_get_dimensions(
+        const os_context* os,
+        const os_monitor  monitor) {
+
+        const os_monitor_table* tbl = (os != NULL)
+            ? os->monitor_table
+            : NULL;
+        
+        assert(
+            tbl                   != NULL &&
+            tbl->array.dimensions != NULL &&
+            monitor               < tbl->count
+        );
+
+        const os_monitor_dimensions& dims = tbl->array.dimensions[monitor];
+        return(dims);
+    }
+
+    IFB_ENG_INTERNAL const os_monitor_name&
+    os_monitor_get_name(
+        const os_context* os,
+        const os_monitor  monitor) {
+
+        const os_monitor_table* tbl = (os != NULL)
+            ? os->monitor_table
+            : NULL;
+        
+        assert(
+            tbl              != NULL &&
+            tbl->array.names != NULL &&
+            monitor          <  tbl->count
+        );
+
+        const os_monitor_name& name = tbl->array.names[monitor];
+        return(name);
+    }
 };
