@@ -55,11 +55,18 @@ namespace ifb::eng {
 
         assert(ctx);
 
+        // check system resources
         os_system_refresh_info   (ctx->os);
         os_monitor_refresh_table (ctx->os);
         os_memory_check_usage    (ctx->os);
 
-        os_window_start_frame_and_process_events(ctx->os);
+        // process events and input
+        os_window_start_frame_and_process_events (ctx->os);
+        context_process_keycodes                 (ctx);
+
+        // reset window events and input
+        os_window_reset_events (ctx->os);
+        os_window_reset_input  (ctx->os);
 
         return(true);
     }

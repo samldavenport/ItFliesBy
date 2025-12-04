@@ -115,7 +115,7 @@ namespace ifb::eng {
                         if (key_down_index < OS_WINDOW_KEYCODE_CAPACITY) {
                             window->input.keycodes.array_down[key_down_index] = event.keycode;
                             ++key_down_index;
-                            window->flags &= os_window_flag_e_keydown; 
+                            window->flags |= os_window_flag_e_keydown; 
                         }
                     } break;
                     
@@ -123,7 +123,7 @@ namespace ifb::eng {
                         if (key_up_index < OS_WINDOW_KEYCODE_CAPACITY) {
                             window->input.keycodes.array_up[key_up_index] = event.keycode;
                             ++key_up_index;
-                            window->flags &= os_window_flag_e_keyup; 
+                            window->flags |= os_window_flag_e_keyup; 
                         }
                     } break;
 
@@ -178,12 +178,13 @@ namespace ifb::eng {
         os_context* os) {
 
         os_window* window = (os != NULL) ? os->window : NULL;
+        assert(window);
 
-        assert(
-            window                                           != NULL &&
-            window->handle                                   != NULL &&
-            (window->flags & os_window_flag_e_frame_started) != 0
-        );
+        bool can_render = true;
+        can_render &= (window->handle != NULL);
+        can_render &= (window->flags & os_window_flag_e_frame_started) != 0;
+        assert(can_render);
+
 
         const bool did_render = sld::os_window_frame_render(window->handle);
 
@@ -197,8 +198,52 @@ namespace ifb::eng {
         os_context* os) {
 
         os_window* window = (os != NULL) ? os->window : NULL;
+        assert(window);
 
         const bool should_quit = (window->flags & os_window_flag_e_quit);
         return(should_quit);
+    }
+
+    IFB_ENG_INTERNAL void
+    os_window_reset_events(
+        os_context* os) {
+
+        os_window* window = (os != NULL) ? os->window : NULL;
+
+        assert(
+            window                      != NULL                        &&
+            window->event_list.array    != NULL                        &&
+            window->event_list.count    <= window->event_list.capacity &&
+            window->event_list.capacity <= OS_WINDOW_EVENT_CAPACITY 
+        );
+
+        constexpr u32 event_array_size = sizeof(os_window_event_type) * OS_WINDOW_EVENT_CAPACITY; 
+
+        (void)memset((void*)window->event_list.array, os_window_event_type_e_unknown, event_array_size);
+
+        window->event_list.count = 0;
+    }
+
+    IFB_ENG_INTERNAL void
+    os_window_reset_input(
+        os_context* os) {
+
+        os_window* window = (os != NULL) ? os->window : NULL;
+
+        assert(
+            window                            != NULL                       &&
+            window->input.keycodes.array_down != NULL                       &&
+            window->input.keycodes.array_up   != NULL                       &&
+            window->input.keycodes.count_down <= OS_WINDOW_KEYCODE_CAPACITY &&
+            window->input.keycodes.count_up   <= OS_WINDOW_KEYCODE_CAPACITY
+        );
+
+        constexpr u32 keycode_array_size = (sizeof(input_keycode) * OS_WINDOW_KEYCODE_CAPACITY);
+        (void) memset ((void*)window->input.keycodes.array_down, input_keycode_e_null, keycode_array_size);
+        (void) memset ((void*)window->input.keycodes.array_up,   input_keycode_e_null, keycode_array_size);
+        
+        window->input.keycodes.count_up   = 0;
+        window->input.keycodes.count_down = 0;
+        window->input.mouse.button        = os_window_mouse_button_e_none;
     }
 };

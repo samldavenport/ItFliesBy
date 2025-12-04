@@ -77,6 +77,8 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void os_window_start_frame_and_process_events (os_context* os);
     IFB_ENG_INTERNAL void os_window_render_frame                   (os_context* os);
     IFB_ENG_INTERNAL bool os_window_should_quit                    (os_context* os);
+    IFB_ENG_INTERNAL void os_window_reset_events                   (os_context* os);
+    IFB_ENG_INTERNAL void os_window_reset_input                    (os_context* os);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
