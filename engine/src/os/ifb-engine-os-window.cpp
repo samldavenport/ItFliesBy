@@ -8,22 +8,21 @@ namespace ifb::eng {
     os_window_create_and_show(
         os_context* os) {
 
-        assert(
-            os         != NULL &&
-            os->window != NULL
-        );
-        os_window* window = os->window;
-        
+        os_window* window = (os != NULL) ? os->window : NULL;
+        assert(window);
+
         // get monitor dimensions
-        const os_monitor_dimensions* monitor_dims = os_monitor_get_primrary_dimensions(os);
-        assert(monitor_dims != NULL);
+        const os_monitor             monitor          = os_monitor_get_primary    (os);
+        const os_monitor_dimensions& monitor_dims     = os_monitor_get_dimensions (os, monitor);
+        const u32                    monitor_center_x = os_monitor_get_center_x   (monitor_dims);
+        const u32                    monitor_center_y = os_monitor_get_center_y   (monitor_dims);
 
         // configure window 
         os_window_config config;
-        config.position.x  = monitor_dims->virtual_position_x + (monitor_dims->pixel_width  / 2);
-        config.position.y  = monitor_dims->virtual_position_y + (monitor_dims->pixel_height / 2);
-        config.size.width  = 1024;
-        config.size.height = 768;
+        config.size.width  = OS_WINDOW_DEFAULT_WIDTH;
+        config.size.height = OS_WINDOW_DEFAULT_HEIGHT;
+        config.position.x  = monitor_center_x - (OS_WINDOW_DEFAULT_WIDTH  / 2); 
+        config.position.y  = monitor_center_y - (OS_WINDOW_DEFAULT_HEIGHT / 2); 
         config.title       = "It Flies By";
 
         // create window handle

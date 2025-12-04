@@ -38,24 +38,19 @@ namespace ifb::eng {
         assert(monitor_table->primary != OS_MONITOR_INVALID);
     }
 
-    IFB_ENG_INTERNAL const os_monitor_dimensions*
-    os_monitor_get_primrary_dimensions(
-        os_context* os) {
+    IFB_ENG_INTERNAL const os_monitor
+    os_monitor_get_primary(
+        const os_context* os) {
 
-        os_monitor_table* monitor_table = (os != NULL)
-            ? os->monitor_table
-            : NULL;
-            
-        assert(
-            monitor_table                                &&
-            monitor_table->primary != OS_MONITOR_INVALID &&
-            monitor_table->count   <= OS_MONITOR_MAX_COUNT
+        os_monitor_table* tbl = (os != NULL) ? os->monitor_table : NULL;
+        bool is_valid = (
+            tbl          != NULL       &&
+            tbl->primary <= tbl->count &&
+            tbl->count   <= OS_MONITOR_MAX_COUNT
         );
+        assert(is_valid);
 
-        const os_monitor             monitor = monitor_table->primary;
-        const os_monitor_dimensions* dims    = &monitor_table->array.dimensions[monitor];
-
-        return(dims);
+        return(tbl->primary);
     }
 
     IFB_ENG_INTERNAL const os_monitor_handle&
@@ -114,4 +109,22 @@ namespace ifb::eng {
         const os_monitor_name& name = tbl->array.names[monitor];
         return(name);
     }
+
+    IFB_ENG_INTERNAL const u32
+    os_monitor_get_center_x(
+        const os_monitor_dimensions& dimensions) {
+
+        const u32 center_x = dimensions.virtual_position_x + (dimensions.pixel_width / 2);
+        return(center_x);
+    }
+
+    IFB_ENG_INTERNAL const u32
+    os_monitor_get_center_y(
+        const os_monitor_dimensions& dimensions) {
+
+        const u32 center_y = dimensions.virtual_position_y + (dimensions.pixel_height / 2);
+        return(center_y);
+    }
+
+
 };

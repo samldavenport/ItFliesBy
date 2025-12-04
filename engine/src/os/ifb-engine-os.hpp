@@ -19,6 +19,8 @@ namespace ifb::eng {
     constexpr u32 OS_MONITOR_INVALID         = 0xFFFFFFFF; 
     constexpr u32 OS_WINDOW_EVENT_CAPACITY   = IFB_ENG_CONFIG_OS_WINDOW_EVENT_CAPACITY;
     constexpr u32 OS_WINDOW_KEYCODE_CAPACITY = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
+    constexpr u32 OS_WINDOW_DEFAULT_WIDTH    = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_WIDTH;
+    constexpr u32 OS_WINDOW_DEFAULT_HEIGHT   = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT;
 
     //-------------------------------------------------------------------
     // TYPES
@@ -45,18 +47,21 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL os_context* os_context_alloc          (stack& stack);
 
     // memory
-    IFB_ENG_INTERNAL void        os_memory_reserve         (os_context* os);
-    IFB_ENG_INTERNAL void        os_memory_release         (os_context* os);
-    IFB_ENG_INTERNAL void*       os_memory_commit          (os_context* os, const u64   start, const u64 size);
-    IFB_ENG_INTERNAL void        os_memory_decommit        (os_context* os, void* start, const u64 size);
-    IFB_ENG_INTERNAL bool        os_memory_is_page_aligned (os_context* os, const u64   start);
-    IFB_ENG_INTERNAL void        os_memory_check_usage     (os_context* os);
+    IFB_ENG_INTERNAL void  os_memory_reserve         (os_context* os);
+    IFB_ENG_INTERNAL void  os_memory_release         (os_context* os);
+    IFB_ENG_INTERNAL void* os_memory_commit          (os_context* os, const u64   start, const u64 size);
+    IFB_ENG_INTERNAL void  os_memory_decommit        (os_context* os, void* start, const u64 size);
+    IFB_ENG_INTERNAL bool  os_memory_is_page_aligned (os_context* os, const u64   start);
+    IFB_ENG_INTERNAL void  os_memory_check_usage     (os_context* os);
 
     // monitors
-    IFB_ENG_INTERNAL void                            os_monitor_refresh_table        (os_context* os);
-    IFB_ENG_INTERNAL const os_monitor_handle&        os_monitor_get_handle           (const os_context* os, const os_monitor monitor);
-    IFB_ENG_INTERNAL const os_monitor_dimensions&    os_monitor_get_dimensions       (const os_context* os, const os_monitor monitor);
-    IFB_ENG_INTERNAL const os_monitor_name&          os_monitor_get_name             (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL void                         os_monitor_refresh_table  (os_context* os);
+    IFB_ENG_INTERNAL const os_monitor             os_monitor_get_primary    (const os_context* os);
+    IFB_ENG_INTERNAL const os_monitor_handle&     os_monitor_get_handle     (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL const os_monitor_dimensions& os_monitor_get_dimensions (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL const os_monitor_name&       os_monitor_get_name       (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL const u32                    os_monitor_get_center_x   (const os_monitor_dimensions& dimensions);
+    IFB_ENG_INTERNAL const u32                    os_monitor_get_center_y   (const os_monitor_dimensions& dimensions);
 
     // system
     IFB_ENG_INTERNAL void                            os_system_refresh_info          (os_context* os);
