@@ -4,7 +4,7 @@
 
 namespace ifb::eng {
     
-    IFB_ENG_API context_t*
+    IFB_ENG_API context*
     context_create(
         byte*     stack_data,
         const u64 stack_size) {
@@ -13,52 +13,73 @@ namespace ifb::eng {
             stack_data != NULL &&
             stack_size != 0
         );
-     
+
+        // cast context     
         memset(stack_data, 0, stack_size);
+        const u64  ctx_size       = sizeof(context);
+        const u64  ctx_stack_size = stack_size - ctx_size;
+        byte*      ctx_stack_data = stack_data + ctx_size;  
+        context*   ctx            = (context*)stack_data; 
 
-        const u64  context_size       = sizeof(context_t);
-        const u64  context_stack_size = stack_size - context_size;
-        byte*      context_stack_data = stack_data + context_size;  
-        context_t* context            = (context_t*)stack_data; 
+        // initialize the stack and allocate structures
+        ctx->stack.init(ctx_stack_data, ctx_stack_size);
+        ctx->os = os_context_alloc(ctx->stack);
 
-        context_init_stack    (context, context_stack_data, context_stack_size);
-        context_init_managers (context);
-
-        return(context);        
+        return(ctx);        
     }
 
     IFB_ENG_API bool
     context_startup(
-        context_t* context) {
+        context* ctx) {
 
-        return(false);
+        assert(ctx);
+        
+        os_system_refresh_info    (ctx->os);
+        os_memory_reserve         (ctx->os);
+        os_monitor_refresh_table  (ctx->os);
+        os_window_create_and_show (ctx->os);
+
+        return(true);
     }
 
     IFB_ENG_API bool
     context_shutdown(
-        context_t* context) {
+        context* ctx) {
 
-        return(false);
+        return(true);
     }
 
     IFB_ENG_API bool
     context_update(
-        context_t* context) {
+        context* ctx) {
 
-        return(false);
+        assert(ctx);
+
+        os_system_refresh_info   (ctx->os);
+        os_monitor_refresh_table (ctx->os);
+        os_memory_check_usage    (ctx->os);
+
+        os_window_start_frame_and_process_events(ctx->os);
+
+        return(true);
     }
 
     IFB_ENG_API bool
     context_render(
-        context_t* context) {
+        context* ctx) {
 
-        return(false);
+        assert(ctx);
+        os_window_render_frame(ctx->os);
+
+        return(true);
     }
 
     IFB_ENG_API bool
     context_should_quit(
-        context_t* context) {
+        context* ctx) {
 
-        return(true);
+        const bool should_quit = os_window_should_quit(ctx->os);
+
+        return(should_quit);
     }
 };

@@ -15,7 +15,7 @@ wWinMain(
     PWSTR     pCmdLine,
     int       nCmdShow) {
 
-    ifb::eng::context_t* engine_context = ifb::eng::context_create(
+    ifb::eng::context* engine_context = ifb::eng::context_create(
         engine_stack_data,
         ENGINE_STACK_SIZE
     );

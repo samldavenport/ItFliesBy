@@ -16,31 +16,31 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     struct file_buffer;
-    struct file_handle_t;
-    struct file_flags_t;
-    struct file_error_t;
-    struct file_handle_list_t;
+    struct file_handle;
+    struct file_flags;
+    struct file_error;
+    struct file_handle_list;
 
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_API const file_handle_t file_open_ro_new            (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_ro_existing       (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_ro_always         (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_ro_overwrite      (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_rw_new            (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_rw_existing       (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_rw_always         (const cchar* path);
-    IFB_ENG_API const file_handle_t file_open_rw_overwrite      (const cchar* path);
-    IFB_ENG_API bool                file_close                  (const file_handle_t file);
-    IFB_ENG_API void                file_reset                  (const file_handle_t file);
-    IFB_ENG_API u64                 file_get_size               (const file_handle_t file);
-    IFB_ENG_API const cchar*        file_get_path               (const file_handle_t file); 
-    IFB_ENG_API const file_error_t  file_get_error              (const file_handle_t file);
-    IFB_ENG_API const file_flags_t  file_get_flags              (const file_handle_t file);
-    IFB_ENG_API bool                file_read                   (const file_handle_t file, file_buffer* buffer);
-    IFB_ENG_API bool                file_write                  (const file_handle_t file, file_buffer* buffer);
+    IFB_ENG_API const file_handle  file_open_ro_new            (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_ro_existing       (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_ro_always         (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_ro_overwrite      (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_rw_new            (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_rw_existing       (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_rw_always         (const cchar* path);
+    IFB_ENG_API const file_handle  file_open_rw_overwrite      (const cchar* path);
+    IFB_ENG_API bool               file_close                  (const file_handle file);
+    IFB_ENG_API void               file_reset                  (const file_handle file);
+    IFB_ENG_API u64                file_get_size               (const file_handle file);
+    IFB_ENG_API const cchar*       file_get_path               (const file_handle file); 
+    IFB_ENG_API const file_error   file_get_error              (const file_handle file);
+    IFB_ENG_API const file_flags   file_get_flags              (const file_handle file);
+    IFB_ENG_API bool               file_read                   (const file_handle file, file_buffer* buffer);
+    IFB_ENG_API bool               file_write                  (const file_handle file, file_buffer* buffer);
 
     //-------------------------------------------------------------------
     // ENUMS
@@ -58,24 +58,24 @@ namespace ifb::eng {
         file_flag_e_write       = bit_value(7)
     };
 
-    struct file_handle_t      : handle_t                    { };
-    struct file_flags_t       : flags_t                     { };
-    struct file_error_t       : error_t                     { };
-    struct file_handle_list_t : array_list<file_handle_t> { };
+    struct file_handle      : handle                    { };
+    struct file_flags       : flags                     { };
+    struct file_error       : error                     { };
+    struct file_handle_list : array_list<file_handle> { };
 
-    struct file_os_context_t {
+    struct file_os_context {
         os_file_handle     file_hnd;
         os_file_async      async;
         os_file_map_handle map_hnd;
         os_file_error      error;
     };
 
-    struct file_t {
+    struct file {
         cchar*            path;
-        file_handle_t     handle;
-        file_flags_t      flags;
-        file_error_t      error_t;
-        file_os_context_t os_context;
+        file_handle     handle;
+        file_flags      flags;
+        file_error      error_t;
+        file_os_context os_context;
     };
 
     struct file_buffer {
