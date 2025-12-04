@@ -5,174 +5,90 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL void              os_context_assert_valid        (const os_context* os_mngr);
-    IFB_ENG_INTERNAL os_window*        os_context_alloc_window        (stack& stack); 
-    IFB_ENG_INTERNAL os_monitor_table* os_context_alloc_monitor_table (stack& stack); 
-    IFB_ENG_INTERNAL os_file_table*    os_context_alloc_file_table    (stack& stack); 
-    IFB_ENG_INTERNAL os_memory*        os_context_alloc_memory        (stack& stack); 
-    IFB_ENG_INTERNAL os_system_info*   os_context_alloc_system_info   (stack& stack); 
-
     IFB_ENG_INTERNAL os_context*
     os_context_alloc(
         stack& stack) {
 
-        auto context = stack.push_struct<os_context>();
-        assert(context != NULL);
+        // stack allocate
+        auto context              = stack.push_struct<os_context>            ();
+        auto window               = stack.push_struct<os_window>             ();
+        auto window_events        = stack.push_struct<os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
+        auto window_keycodes_up   = stack.push_struct<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto window_keycodes_down = stack.push_struct<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto monitor_table        = stack.push_struct<os_monitor_table>      ();
+        auto monitor_handles      = stack.push_struct<os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
+        auto monitor_dimensions   = stack.push_struct<os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
+        auto monitor_names        = stack.push_struct<os_monitor_name>       (OS_MONITOR_MAX_COUNT);
+        auto file_table           = stack.push_struct<os_file_table>         ();
+        auto file_handle_array    = stack.push_struct<os_file_handle>        (OS_FILE_MAX_COUNT); 
+        auto memory               = stack.push_struct<os_memory>             ();
+        auto sys_info             = stack.push_struct<os_system_info>        ();
 
-        // members
-        context->window        = os_context_alloc_window        (stack);
-        context->monitor_table = os_context_alloc_monitor_table (stack);
-        context->file_table    = os_context_alloc_file_table    (stack);
-        context->memory        = os_context_alloc_memory        (stack);
-        context->system_info   = os_context_alloc_system_info   (stack);
+        // check allocations
+        bool is_valid = true;
+        is_valid &= (context              != NULL);
+        is_valid &= (window               != NULL);
+        is_valid &= (window_events        != NULL);
+        is_valid &= (window_keycodes_up   != NULL);
+        is_valid &= (window_keycodes_down != NULL);
+        is_valid &= (monitor_table        != NULL);
+        is_valid &= (monitor_handles      != NULL);
+        is_valid &= (monitor_dimensions   != NULL);
+        is_valid &= (monitor_names        != NULL);
+        is_valid &= (file_table           != NULL);
+        is_valid &= (file_handle_array    != NULL);
+        is_valid &= (memory               != NULL);
+        is_valid &= (sys_info             != NULL);
+        assert(is_valid);
 
-        return(context);
-    }
+        // window
+        window->handle                                   = NULL;
+        window->position.x                               = 0;
+        window->position.y                               = 0;
+        window->size.width                               = 0;
+        window->size.height                              = 0;
+        window->viewport.pos_x                           = 0;
+        window->viewport.pos_y                           = 0;
+        window->viewport.width                           = 0;
+        window->viewport.height                          = 0;
+        window->event_list.array                         = window_events;
+        window->event_list.capacity                      = OS_WINDOW_EVENT_CAPACITY;  
+        window->event_list.count                         = 0;
+        window->flags                                    = os_window_flag_e_none;
+        window->input.mouse.position.x                   = 0;
+        window->input.mouse.position.y                   = 0;
+        window->input.mouse.button                       = os_window_mouse_button_e_none;
+        window->input.keycodes.array_down                = window_keycodes_down;
+        window->input.keycodes.array_up                  = window_keycodes_up;
+        window->input.keycodes.count_down                = 0;
+        window->input.keycodes.count_up                  = 0;
 
-    IFB_ENG_INTERNAL void
-    os_context_init(
-        os_context* os) {
-
-        os_context_assert_valid   (os);
-        os_system_refresh_info    (os);
-        os_memory_reserve         (os);
-        os_monitor_refresh_table  (os);
-        os_window_create_and_show (os);
-    }
-
-    IFB_ENG_INTERNAL bool
-    os_context_frame_render(
-        os_context* os) {
-
-        assert(os);
-        
-    }
-
-    IFB_ENG_INTERNAL void
-    os_context_destroy(
-        os_context* mngr) {
-
-    }
-
-    IFB_ENG_INTERNAL os_window*
-    os_context_alloc_window(
-        stack& stack) {
-
-        auto window        = stack.push_struct<os_window>         ();
-        auto events        = stack.push_struct<os_window_event>   (OS_WINDOW_EVENT_CAPACITY);
-        auto keycodes_up   = stack.push_struct<os_window_keycode> (OS_WINDOW_KEYCODE_CAPACITY);
-        auto keycodes_down = stack.push_struct<os_window_keycode> (OS_WINDOW_KEYCODE_CAPACITY);
-
-        assert(
-            window        != NULL &&
-            events        != NULL &&
-            keycodes_up   != NULL &&
-            keycodes_down != NULL
-        );
-
-        window->handle                    = NULL;
-        window->position.x                = 0;
-        window->position.y                = 0;
-        window->size.width                = 0;
-        window->size.height               = 0;
-        window->viewport.pos_x            = 0;
-        window->viewport.pos_y            = 0;
-        window->viewport.width            = 0;
-        window->viewport.height           = 0;
-        window->event_list.array          = events;
-        window->event_list.capacity       = OS_WINDOW_EVENT_CAPACITY;  
-        window->event_list.count          = 0;
-        window->flags                     = os_window_flag_e_none;
-        window->input.mouse.position.x    = 0;
-        window->input.mouse.position.y    = 0;
-        window->input.mouse.button        = os_window_mouse_button_e_none;
-        window->input.keycodes.array_down = keycodes_down;
-        window->input.keycodes.array_up   = keycodes_up;
-        window->input.keycodes.count_down = 0;
-        window->input.keycodes.count_up   = 0;
-
-        return(window);
-    }
-    
-    IFB_ENG_INTERNAL os_monitor_table*
-    os_context_alloc_monitor_table(
-        stack& stack) {
-
-        auto monitor_table = stack.push_struct<os_monitor_table>      ();
-        auto handles       = stack.push_struct<os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
-        auto dimensions    = stack.push_struct<os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
-        auto names         = stack.push_struct<os_monitor_name>       (OS_MONITOR_MAX_COUNT);
-        assert(
-            monitor_table != NULL &&
-            handles       != NULL &&
-            dimensions    != NULL &&
-            names         != NULL
-        );
-
+        // monitors
         monitor_table->count                             = 0;
         monitor_table->primary                           = OS_MONITOR_INVALID;
         monitor_table->working_area.virtual_pixel_width  = 0; 
         monitor_table->working_area.virtual_pixel_height = 0; 
-        monitor_table->array.handles                     = handles;
-        monitor_table->array.dimensions                  = dimensions;
-        monitor_table->array.names                       = names;
+        monitor_table->array.handles                     = monitor_handles;
+        monitor_table->array.dimensions                  = monitor_dimensions;
+        monitor_table->array.names                       = monitor_names;
 
-        return(monitor_table); 
-    }
-    
-    IFB_ENG_INTERNAL os_file_table*
-    os_context_alloc_file_table(
-        stack& stack) {
-
-        auto file_table   = stack.push_struct<os_file_table>();
-        auto handle_array = stack.push_struct<os_file_handle>(OS_FILE_MAX_COUNT); 
-        assert(
-            file_table   != NULL &&
-            handle_array != NULL
-        );
-
+        // files
+        file_table->handle_array                         = file_handle_array;
         for (
             os_file file = 0;
             file < OS_FILE_MAX_COUNT;
             ++file) {
 
-            handle_array[file] = NULL;
+            file_handle_array[file] = NULL;
         }
 
-        file_table->handle_array = handle_array;
-        return(file_table);
-    }
-    
-    IFB_ENG_INTERNAL os_memory*
-    os_context_alloc_memory(
-        stack& stack) {
+        // context
+        context->window                                  = window; 
+        context->monitor_table                           = monitor_table;
+        context->file_table                              = file_table;
+        context->memory                                  = memory;
+        context->system_info                             = sys_info;
 
-        auto memory = stack.push_struct<os_memory>();
-        assert(memory);
-        return(memory);
-    }
-    
-    IFB_ENG_INTERNAL os_system_info*
-    os_context_alloc_system_info(
-        stack& stack) {
-
-        auto sys_info = stack.push_struct<os_system_info>();
-        assert(sys_info);
-
-        return(sys_info);
-    }
-
-    IFB_ENG_INTERNAL void
-    os_context_assert_valid(
-        const os_context* os_mngr) {
-
-        assert(
-            os_mngr                != NULL &&
-            os_mngr->system_info   != NULL &&
-            os_mngr->memory        != NULL &&
-            os_mngr->file_table    != NULL &&
-            os_mngr->monitor_table != NULL &&
-            os_mngr->window        != NULL
-        );
+        return(context);
     }
 };

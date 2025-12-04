@@ -32,7 +32,12 @@ namespace ifb::eng {
     context_startup(
         context* ctx) {
 
-        os_context_init(ctx->os);
+        assert(ctx);
+        
+        os_system_refresh_info    (ctx->os);
+        os_memory_reserve         (ctx->os);
+        os_monitor_refresh_table  (ctx->os);
+        os_window_create_and_show (ctx->os);
 
         return(true);
     }

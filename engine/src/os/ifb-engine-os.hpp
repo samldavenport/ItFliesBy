@@ -42,9 +42,7 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // context
-    IFB_ENG_INTERNAL os_context* os_context_alloc               (stack& stack);
-    IFB_ENG_INTERNAL void        os_context_init                (os_context* os);
-    IFB_ENG_INTERNAL void        os_context_destroy             (os_context* os);
+    IFB_ENG_INTERNAL os_context* os_context_alloc          (stack& stack);
 
     // memory
     IFB_ENG_INTERNAL void        os_memory_reserve         (os_context* os);
@@ -55,13 +53,18 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void        os_memory_check_usage     (os_context* os);
 
     // monitors
-    IFB_ENG_INTERNAL void                         os_monitor_refresh_table  (os_context* os);
-    IFB_ENG_INTERNAL const os_monitor_handle&     os_monitor_get_handle     (const os_context* os, const os_monitor monitor);
-    IFB_ENG_INTERNAL const os_monitor_dimensions& os_monitor_get_dimensions (const os_context* os, const os_monitor monitor);
-    IFB_ENG_INTERNAL const os_monitor_name&       os_monitor_get_name       (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL void                            os_monitor_refresh_table        (os_context* os);
+    IFB_ENG_INTERNAL const os_monitor_handle&        os_monitor_get_handle           (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL const os_monitor_dimensions&    os_monitor_get_dimensions       (const os_context* os, const os_monitor monitor);
+    IFB_ENG_INTERNAL const os_monitor_name&          os_monitor_get_name             (const os_context* os, const os_monitor monitor);
 
     // system
-    IFB_ENG_INTERNAL void os_system_refresh_info    (os_context* os);
+    IFB_ENG_INTERNAL void                            os_system_refresh_info          (os_context* os);
+    IFB_ENG_INTERNAL const os_system_memory_info&    os_system_get_memory_info       (const os_context* os); 
+    IFB_ENG_INTERNAL const os_system_cpu_info&       os_system_get_cpu_info          (const os_context* os); 
+    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l1_cache_info (const os_context* os); 
+    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l2_cache_info (const os_context* os); 
+    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l3_cache_info (const os_context* os); 
 
     // window
     IFB_ENG_INTERNAL void os_window_create_and_show                (os_context* os);
