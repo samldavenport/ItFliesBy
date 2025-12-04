@@ -34,13 +34,22 @@ namespace ifb::eng {
         window->viewport.pos_y  = 0;
         window->viewport.width  = config.size.width;
         window->viewport.height = config.size.height;
-        (void)os_window_set_viewport(
-            window->handle,
-            &window->viewport);
+
+        // set the clear color
+        window->clear_color.r = (byte)(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA >> 24);
+        window->clear_color.g = (byte)(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA >> 16);
+        window->clear_color.b = (byte)(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA >> 8);
+        window->clear_color.a = (byte)OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA; 
 
         // show the window and set other properties
-        (void)os_window_show     (window->handle);
-        (void)os_window_get_size (window->handle, &window->size);
+        bool is_valid = true;
+        is_valid &= os_window_get_size        (window->handle, &window->size);
+        is_valid &= os_window_get_position    (window->handle, &window->position);
+        is_valid &= os_window_set_viewport    (window->handle, &window->viewport);
+        is_valid &= os_window_set_clear_color (window->handle, &window->clear_color);
+        is_valid &= os_window_show            (window->handle);
+        assert(is_valid);
+
     }
 
     IFB_ENG_INTERNAL void
