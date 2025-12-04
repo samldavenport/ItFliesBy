@@ -45,7 +45,7 @@ namespace ifb::eng {
 
             for (
                 u32 index = 0;
-                index < window->input.keycodes.count_down;
+                index < window->input.keycodes.count_up;
                 ++index) {
 
                 const input_keycode keycode = window->input.keycodes.array_up[index];
@@ -53,7 +53,6 @@ namespace ifb::eng {
                 switch(keycode) {
                     
                     case (CONTEXT_KEYCODE_DEVTOOLS): {
-
                         if (ctx->flags.keymap & context_keymap_flag_e_devtools) {
                             ctx->flags.gui ^= context_gui_flag_e_devtools;                            
                         }
