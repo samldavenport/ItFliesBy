@@ -50,8 +50,11 @@ namespace ifb::eng {
 
         assert(ctx);
 
-        os_context_refresh_system_info (ctx->os);
-        os_context_frame_start         (ctx->os);
+        os_system_refresh_info   (ctx->os);
+        os_monitor_refresh_table (ctx->os);
+        os_memory_check_usage    (ctx->os);
+
+        os_window_start_frame_and_process_events(ctx->os);
 
         return(true);
     }
@@ -61,7 +64,8 @@ namespace ifb::eng {
         context* ctx) {
 
         assert(ctx);
-        os_context_frame_render(ctx->os);
+        os_window_render_frame(ctx->os);
+
         return(true);
     }
 
@@ -69,6 +73,8 @@ namespace ifb::eng {
     context_should_quit(
         context* ctx) {
 
-        return(false);
+        const bool should_quit = os_window_should_quit(ctx->os);
+
+        return(should_quit);
     }
 };

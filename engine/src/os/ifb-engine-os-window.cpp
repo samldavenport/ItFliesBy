@@ -183,4 +183,14 @@ namespace ifb::eng {
             ? window->flags & ~(os_window_flag_e_frame_started)
             : window->flags & (os_window_flag_e_quit);
     }
+
+    IFB_ENG_INTERNAL bool
+    os_window_should_quit(
+        os_context* os) {
+
+        os_window* window = (os != NULL) ? os->window : NULL;
+
+        const bool should_quit = (window->flags & os_window_flag_e_quit);
+        return(should_quit);
+    }
 };

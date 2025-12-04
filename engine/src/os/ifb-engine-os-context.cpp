@@ -40,38 +40,12 @@ namespace ifb::eng {
         os_window_create_and_show (os);
     }
 
-    IFB_ENG_INTERNAL void
-    os_context_refresh_system_info(
-        os_context* os) {
-
-        os_system_refresh_info   (os);
-        os_monitor_refresh_table (os);
-        os_memory_check_usage    (os);
-    }
-
-    IFB_ENG_INTERNAL bool
-    os_context_frame_start(
-        os_context* os) {
-
-        assert(os);
-
-        os_window_start_frame_and_process_events(os);
-
-
-        return(true);
-
-
-    }
-
     IFB_ENG_INTERNAL bool
     os_context_frame_render(
         os_context* os) {
 
         assert(os);
         
-        os_window_render_frame(os);
-
-        return(true);
     }
 
     IFB_ENG_INTERNAL void

@@ -44,9 +44,6 @@ namespace ifb::eng {
     // context
     IFB_ENG_INTERNAL os_context* os_context_alloc               (stack& stack);
     IFB_ENG_INTERNAL void        os_context_init                (os_context* os);
-    IFB_ENG_INTERNAL void        os_context_refresh_system_info (os_context* os);
-    IFB_ENG_INTERNAL bool        os_context_frame_start         (os_context* os);
-    IFB_ENG_INTERNAL bool        os_context_frame_render        (os_context* os);
     IFB_ENG_INTERNAL void        os_context_destroy             (os_context* os);
 
     // memory
@@ -70,6 +67,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void os_window_create_and_show                (os_context* os);
     IFB_ENG_INTERNAL void os_window_start_frame_and_process_events (os_context* os);
     IFB_ENG_INTERNAL void os_window_render_frame                   (os_context* os);
+    IFB_ENG_INTERNAL bool os_window_should_quit                    (os_context* os);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
