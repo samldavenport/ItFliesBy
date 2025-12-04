@@ -49,6 +49,12 @@ namespace ifb::eng {
         context_keymap_flag_e_none     = 0,
         context_keymap_flag_e_devtools = bit_value(0)
     };
+
+    enum context_gui_flag_e {
+        context_gui_flag_e_none       = 0,
+        context_gui_flag_e_devtools   = 1,
+        context_gui_flag_e_imgui_demo = 2
+    };
 };
 
 

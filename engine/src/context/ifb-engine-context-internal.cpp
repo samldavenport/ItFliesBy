@@ -38,6 +38,29 @@ namespace ifb::eng {
         
         if (window->input.keycodes.count_up > 0) {
 
+            assert(
+                window->input.keycodes.count_up <= OS_WINDOW_KEYCODE_CAPACITY &&
+                window->input.keycodes.array_up != NULL              
+            );
+
+            for (
+                u32 index = 0;
+                index < window->input.keycodes.count_down;
+                ++index) {
+
+                const input_keycode keycode = window->input.keycodes.array_up[index];
+
+                switch(keycode) {
+                    
+                    case (CONTEXT_KEYCODE_DEVTOOLS): {
+
+                        if (ctx->flags.keymap & context_keymap_flag_e_devtools) {
+                            ctx->flags.gui ^= context_gui_flag_e_devtools;                            
+                        }
+                        ctx->flags.keymap &= ~context_keymap_flag_e_devtools;                       
+                    } break;
+                }
+            }
         }
 
     };
