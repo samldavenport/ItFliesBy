@@ -69,6 +69,7 @@ namespace ifb::eng {
     // window
     IFB_ENG_INTERNAL void os_window_create_and_show                (os_context* os);
     IFB_ENG_INTERNAL void os_window_start_frame_and_process_events (os_context* os);
+    IFB_ENG_INTERNAL void os_window_render_frame                   (os_context* os);
 
     //-------------------------------------------------------------------
     // DEFINITIONS

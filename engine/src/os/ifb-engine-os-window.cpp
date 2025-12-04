@@ -18,7 +18,6 @@ namespace ifb::eng {
         const os_monitor_dimensions* monitor_dims = os_monitor_get_primrary_dimensions(os);
         assert(monitor_dims != NULL);
 
-
         // configure window 
         os_window_config config;
         config.position.x  = monitor_dims->virtual_position_x + (monitor_dims->pixel_width  / 2);
@@ -40,57 +39,9 @@ namespace ifb::eng {
             window->handle,
             &window->viewport);
 
-        // show the window
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        (void)os_window_show(window->handle);
+        // show the window and set other properties
+        (void)os_window_show     (window->handle);
+        (void)os_window_get_size (window->handle, &window->size);
     }
 
     IFB_ENG_INTERNAL void
@@ -99,15 +50,15 @@ namespace ifb::eng {
 
         os_window* window = (os != NULL) ? os->window : NULL;
 
-        assert(
-            window                  != NULL &&
-            window->handle          != NULL &&
-            window->size.height     != 0    &&
-            window->size.width      != 0    &&
-            window->viewport.height != 0    &&
-            window->viewport.width  != 0    &&
-            window->flags & os_window_flag_e_frame_started == 0 
-        );
+        bool is_valid = true;
+        is_valid &= (window                  != NULL);
+        is_valid &= (window->handle          != NULL);
+        is_valid &= (window->size.height     != 0);   
+        is_valid &= (window->size.width      != 0);   
+        is_valid &= (window->viewport.height != 0);   
+        is_valid &= (window->viewport.width  != 0);   
+        is_valid &= ((window->flags & os_window_flag_e_frame_started) == 0); 
+        assert(is_valid);
 
         const bool did_start_frame = sld::os_window_frame_start(window->handle);
         if (did_start_frame) {
@@ -212,7 +163,24 @@ namespace ifb::eng {
                 window->input.keycodes.count_up   <= OS_WINDOW_KEYCODE_CAPACITY
             );
         }
-
     }
 
+    IFB_ENG_INTERNAL void
+    os_window_render_frame(
+        os_context* os) {
+
+        os_window* window = (os != NULL) ? os->window : NULL;
+
+        assert(
+            window                                           != NULL &&
+            window->handle                                   != NULL &&
+            (window->flags & os_window_flag_e_frame_started) != 0
+        );
+
+        const bool did_render = sld::os_window_frame_render(window->handle);
+
+        window->flags = (did_render)
+            ? window->flags & ~(os_window_flag_e_frame_started)
+            : window->flags & (os_window_flag_e_quit);
+    }
 };

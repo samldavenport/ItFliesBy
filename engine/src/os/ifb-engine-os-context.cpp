@@ -55,6 +55,10 @@ namespace ifb::eng {
 
         assert(os);
 
+        os_window_start_frame_and_process_events(os);
+
+
+        return(true);
 
 
     }
@@ -63,6 +67,11 @@ namespace ifb::eng {
     os_context_frame_render(
         os_context* os) {
 
+        assert(os);
+        
+        os_window_render_frame(os);
+
+        return(true);
     }
 
     IFB_ENG_INTERNAL void

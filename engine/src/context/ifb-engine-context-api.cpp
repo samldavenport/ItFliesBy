@@ -49,7 +49,9 @@ namespace ifb::eng {
         context* ctx) {
 
         assert(ctx);
-        os_context_refresh_system_info(ctx->os);
+
+        os_context_refresh_system_info (ctx->os);
+        os_context_frame_start         (ctx->os);
 
         return(true);
     }
@@ -58,6 +60,8 @@ namespace ifb::eng {
     context_render(
         context* ctx) {
 
+        assert(ctx);
+        os_context_frame_render(ctx->os);
         return(true);
     }
 
@@ -65,6 +69,6 @@ namespace ifb::eng {
     context_should_quit(
         context* ctx) {
 
-        return(true);
+        return(false);
     }
 };
