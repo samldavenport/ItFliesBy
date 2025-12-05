@@ -29,6 +29,8 @@ namespace ifb::eng {
 
 };
 
+#define IFB_ENG_CONFIG_CONTEXT_KEYCODE_DEVTOOLS             input_keycode_e_f1
+
 #define IFB_ENG_CONFIG_OS_MONITOR_MAX_COUNT               16
 #define IFB_ENG_CONFIG_OS_FILE_MAX_COUNT                  64
 #define IFB_ENG_CONFIG_OS_WINDOW_EVENT_CAPACITY           8
