@@ -1,5 +1,5 @@
-#ifndef IFB_ENGINE_FONT_OPEN_SANS_HPP
-#define IFB_ENGINE_FONT_OPEN_SANS_HPP
+#ifndef IFB_ENGINE_GUI_FONT_HPP
+#define IFB_ENGINE_GUI_FONT_HPP
 
 #include "ifb-engine.hpp"
 
@@ -9,9 +9,9 @@
 // do not directly edit this file
 //--------------------------------------------------
 
-namespace ifb {
+namespace ifb::eng {
 
-    constexpr cchar ENG_OPENSANS_COMPRESSED_BASE85[124400+1] =
+    constexpr cchar GUI_FONT_OPENSANS_COMPRESSED_BASE85[124400+1] =
         "7])#######4e=J('/###I),##c'ChLr*pA$$B:t8$N&<aVZ$##E,'##%71h<]`#mHds'##W_&##t5+e=13XkBRT&##',(##0Vpe=[1Hd7'Q$##ZAo?9S2^+>m[C)v^K`-68=bw')pA0F"
         "F``75nP'##*NGk=r6<'I4/W>7u9t92^bh--#%`-GIN.>+r4&##fu-R<Siw<Br4cc)^,wE7g&f--?=HkEuZ@]>8?%##d4F>#kR>UCTi^fVEgi--qA[&#TT$=($Jpi%0^Y-2*$###<_[FH"
         "ucTj8cKIV6/*PP(14JuBx7,15A3NP&MnQS%UK[^IQ`oI(E@:@-<Mfn0+>00F6^eBGI/CG)FLIv%M&S+H](-AUd;n(<G1HP/+dFVC=[:lJhRUV$iAJZ2o*,##.Sl##:rC$#*)>>#KvU*3"
@@ -903,4 +903,4 @@ namespace ifb {
         "<]E2K?MY+HMiD)FMFqE@g@p77DCH/:.9$F@OPu>#-eQfLUhNkug2#lNl?&<$IV=.#(PUV$LmJ^FT####";
 };
 
-#endif //IFB_ENGINE_FONT_OPEN_SANS_HPP
+#endif //IFB_ENGINE_GUI_FONT_HPP

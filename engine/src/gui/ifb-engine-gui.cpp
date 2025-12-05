@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ifb-engine-gui.hpp"
-#include "ifb-engine-font-opensans.hpp"
+#include "ifb-engine-gui-font.hpp"
 
 namespace ifb::eng {
 
@@ -13,7 +13,7 @@ namespace ifb::eng {
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.Fonts->AddFontFromMemoryCompressedBase85TTF(
-            ENG_OPENSANS_COMPRESSED_BASE85, 16.0f
+            GUI_FONT_OPENSANS_COMPRESSED_BASE85, 16.0f
         );
     }
 
@@ -34,11 +34,8 @@ namespace ifb::eng {
             return;
         }
 
-        gui_menu_bar_render();
-        gui_imgui_render();
-        gui_asset_render_config();
         
         ImGui::End();
     }
 
-};
+}; 

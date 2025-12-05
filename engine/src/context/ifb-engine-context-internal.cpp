@@ -17,7 +17,7 @@ namespace ifb::eng {
 
             assert(
                 window->input.keycodes.count_down <= OS_WINDOW_KEYCODE_CAPACITY &&
-                window->input.keycodes.array_down != NULL              
+                window->input.keycodes.array_down != NULL
             );
 
             for (
@@ -61,8 +61,5 @@ namespace ifb::eng {
                 }
             }
         }
-
     };
-
-
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ifb-engine-context.hpp"
+#include "ifb-engine-gui.hpp"
 
 namespace ifb::eng {
     
@@ -33,11 +34,15 @@ namespace ifb::eng {
         context* ctx) {
 
         assert(ctx);
-        
+
+        // os context        
         os_system_refresh_info    (ctx->os);
         os_memory_reserve         (ctx->os);
         os_monitor_refresh_table  (ctx->os);
         os_window_create_and_show (ctx->os);
+
+        // gui
+        gui_init();
 
         return(true);
     }
@@ -76,6 +81,8 @@ namespace ifb::eng {
         context* ctx) {
 
         assert(ctx);
+
+        gui_render();
         os_window_render_frame(ctx->os);
 
         return(true);
