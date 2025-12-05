@@ -3,6 +3,7 @@
 
 #include "ifb-engine.hpp"
 #include "ifb-engine-os.hpp"
+#include "ifb-engine-devconsole.hpp"
 
 #include <sld-stack.hpp>
 
@@ -19,9 +20,7 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     struct context;
-    struct context_flags;
 
-    using context_gui_flags    = u32;
     using context_keymap_flags = u32;
 
     IFB_ENG_INTERNAL void context_process_keycodes (context* ctx);
@@ -31,14 +30,14 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     struct context_flags {
-        context_gui_flags    gui;
         context_keymap_flags keymap;
     };
 
     struct context {
-        stack         stack;
-        os_context*   os;
-        context_flags flags;
+        stack                stack;
+        os_context*          os;
+        devconsole*            devconsole;
+        context_keymap_flags keymap_flags;
     };
 
     //-------------------------------------------------------------------
@@ -47,13 +46,7 @@ namespace ifb::eng {
 
     enum context_keymap_flag_e {
         context_keymap_flag_e_none     = 0,
-        context_keymap_flag_e_devtools = bit_value(0)
-    };
-
-    enum context_gui_flag_e {
-        context_gui_flag_e_none       = 0,
-        context_gui_flag_e_devtools   = 1,
-        context_gui_flag_e_imgui_demo = 2
+        context_keymap_flag_e_devconsole = bit_value(0)
     };
 };
 

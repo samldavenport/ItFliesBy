@@ -30,7 +30,7 @@ namespace ifb::eng {
                 switch(keycode) {
                     
                     case (CONTEXT_KEYCODE_DEVTOOLS): {
-                        ctx->flags.keymap |= context_keymap_flag_e_devtools;                       
+                        ctx->keymap_flags |= context_keymap_flag_e_devconsole;                       
                     } break;
                 }
             }
@@ -53,10 +53,10 @@ namespace ifb::eng {
                 switch(keycode) {
                     
                     case (CONTEXT_KEYCODE_DEVTOOLS): {
-                        if (ctx->flags.keymap & context_keymap_flag_e_devtools) {
-                            ctx->flags.gui ^= context_gui_flag_e_devtools;                            
+                        if (ctx->keymap_flags & context_keymap_flag_e_devconsole) {
+                            devconsole_toggle(ctx->devconsole);
                         }
-                        ctx->flags.keymap &= ~context_keymap_flag_e_devtools;                       
+                        ctx->keymap_flags &= ~context_keymap_flag_e_devconsole;                       
                     } break;
                 }
             }

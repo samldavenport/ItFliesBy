@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ifb-engine-context.hpp"
-#include "ifb-engine-gui.hpp"
 
 namespace ifb::eng {
     
@@ -24,7 +23,14 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->os = os_context_alloc(ctx->stack);
+        ctx->os       = os_context_alloc (ctx->stack);
+        ctx->devconsole = devconsole_alloc   (ctx->stack);
+
+        assert(
+            ctx->stack.is_valid() &&
+            ctx->os       != NULL &&
+            ctx->devconsole != NULL
+        );
 
         return(ctx);        
     }
@@ -41,8 +47,8 @@ namespace ifb::eng {
         os_monitor_refresh_table  (ctx->os);
         os_window_create_and_show (ctx->os);
 
-        // gui
-        gui_init();
+        // devconsole
+        devconsole_init(ctx->devconsole);
 
         return(true);
     }
@@ -82,7 +88,7 @@ namespace ifb::eng {
 
         assert(ctx);
 
-        gui_render();
+        devconsole_render(ctx->devconsole);
         os_window_render_frame(ctx->os);
 
         return(true);
