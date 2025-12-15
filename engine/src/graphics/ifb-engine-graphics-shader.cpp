@@ -6,7 +6,8 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL bool
     shader_create(
-        shader* shdr) {
+        shader*                  shdr,
+        const shader_stage_flags stage_flags) {
 
         // initialize
         assert(shdr != NULL);
@@ -19,16 +20,22 @@ namespace ifb::eng {
         shdr->stage.fragment.gl_error = GL_ERROR_SUCCESS;
 
         // create gl program
-        gl_shader_program_create(
-            shdr->program.gl_program,
-            shdr->program.gl_error
-        );
+        gl_shader_program_create(shdr->program.gl_program, shdr->program.gl_error);
+
+        const bool should_create_vertex   = stage_flags.test(shader_stage_type_vertex);  
+        const bool should_create_fragment = stage_flags.test(shader_stage_type_fragment);  
+        if (should_create_vertex)   gl_shader_stage_create_vertex   (shdr->stage.vertex.gl_stage,   shdr->stage.vertex.gl_error);
+        if (should_create_fragment) gl_shader_stage_create_fragment (shdr->stage.fragment.gl_stage, shdr->stage.fragment.gl_error);
+
+        const bool did_create_vertex   = (shdr->stage.vertex.gl_stage   != GL_SHADER_STAGE_INVALID && shdr->stage.vertex.gl_error == GL_ERROR_SUCCESS);
+        const bool did_create_fragment = (shdr->stage.fragment.gl_stage != GL_SHADER_STAGE_INVALID && shdr->stage.fragment.gl_error == GL_ERROR_SUCCESS);
 
         // check program
-        const bool did_create = (
-            shdr->program.gl_program != GL_SHADER_PROGRAM_INVALID &&
-            shdr->program.gl_error   == GL_ERROR_SUCCESS
-        );
+        bool did_create = true;
+        did_create &= shdr->program.gl_program != GL_SHADER_PROGRAM_INVALID;
+        did_create &= shdr->program.gl_error   == GL_ERROR_SUCCESS;
+        did_create &= should_create_vertex   ? did_create_vertex   : true;
+        did_create &= should_create_fragment ? did_create_fragment : true;
         return(did_create);
     }
 
@@ -43,7 +50,6 @@ namespace ifb::eng {
         panic();
     }
 
-    using func_gl_shader_create = void (*) (gl_shader_stage& stage, gl_error& error);
 
     IFB_ENG_INTERNAL bool
     shader_add_stage_from_source(
@@ -63,6 +69,7 @@ namespace ifb::eng {
         assert(can_create);
 
         // shader create method array corresponds with shader types
+        using func_gl_shader_create = void (*) (gl_shader_stage& stage, gl_error& error);
         constexpr func_gl_shader_create stage_create_method_array[] = {
             gl_shader_stage_create_vertex,
             gl_shader_stage_create_fragment
@@ -75,7 +82,8 @@ namespace ifb::eng {
         // create the stage
         stage_create_method(
             stage.gl_stage,
-            stage.gl_error);
+            stage.gl_error
+        );
 
         // if we created the stage, toggle the corresponding flag
         const bool did_create = (

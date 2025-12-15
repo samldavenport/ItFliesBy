@@ -15,7 +15,7 @@ namespace ifb::eng {
 
     using  shader_id          = u32;
     using  shader_stage_type  = u32;
-    using  shader_stage_flags = u32;
+    using  shader_stage_flags = flags;
     struct shader;
     struct shader_stage;
     struct shader_program;
@@ -24,26 +24,26 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL bool shader_create                (shader* shdr);
-    IFB_ENG_INTERNAL bool shader_add_stage_from_file   (shader* shdr, const shader_stage_type type, const cchar* file_path);
-    IFB_ENG_INTERNAL bool shader_add_stage_from_source (shader* shdr, const shader_stage_type type, const cchar* src_buffer);
-    IFB_ENG_INTERNAL bool shader_compile_and_link      (shader* shdr);
-    IFB_ENG_INTERNAL bool shader_destroy               (shader* shdr);
+    IFB_ENG_INTERNAL bool shader_create                    (shader* shdr, const shader_stage_flags stage_flags);
+    IFB_ENG_INTERNAL bool shader_compile_stage_from_file   (shader* shdr, const shader_stage_type  type, const cchar* file_path);
+    IFB_ENG_INTERNAL bool shader_compile_stage_from_source (shader* shdr, const shader_stage_type  type, const cchar* src_buffer);
+    IFB_ENG_INTERNAL bool shader_link                      (shader* shdr);
+    IFB_ENG_INTERNAL bool shader_destroy                   (shader* shdr);
 
     //-------------------------------------------------------------------
     // ENUMS
     //-------------------------------------------------------------------
 
-    enum shader_stage_type_e {
-        shader_stage_type_e_vertex   = 0,
-        shader_stage_type_e_fragment = 1,
-        shader_stage_type_e_count    = 2
+    enum shader_stage_type_ {
+        shader_stage_type_vertex   = 0,
+        shader_stage_type_fragment = 1,
+        shader_stage_type_count    = 2
     };
 
-    enum shader_stage_flag_e {
-        shader_stage_flag_e_none     = 0,
-        shader_stage_flag_e_vertex   = bit_value(shader_stage_type_e_vertex),
-        shader_stage_flag_e_fragment = bit_value(shader_stage_type_e_fragment),
+    enum shader_stage_flag_ {
+        shader_stage_flag_none     = 0,
+        shader_stage_flag_vertex   = bit_value(shader_stage_type_vertex),
+        shader_stage_flag_fragment = bit_value(shader_stage_type_fragment),
     };
 
     //-------------------------------------------------------------------
