@@ -12,131 +12,162 @@ namespace ifb::eng {
         // initialize
         assert(shdr != NULL);
         shdr->program.gl_program      = GL_ERROR_SUCCESS; 
-        shdr->program.gl_error        = GL_SHADER_PROGRAM_INVALID; 
-        shdr->stage.flags             = shader_stage_flag_e_none;
+        shdr->program.gl_error        = GL_PROGRAM_INVALID; 
+        shdr->stage.flags             = pipeline_stage_flag_e_none;
         shdr->stage.vertex.gl_stage   = GL_SHADER_STAGE_INVALID;
         shdr->stage.vertex.gl_error   = GL_ERROR_SUCCESS;
         shdr->stage.fragment.gl_stage = GL_SHADER_STAGE_INVALID;
         shdr->stage.fragment.gl_error = GL_ERROR_SUCCESS;
 
         // create gl program
-        gl_shader_program_create(shdr->program.gl_program, shdr->program.gl_error);
-
-        const bool should_create_vertex   = stage_flags.test(shader_stage_type_vertex);  
-        const bool should_create_fragment = stage_flags.test(shader_stage_type_fragment);  
-        if (should_create_vertex)   gl_shader_stage_create_vertex   (shdr->stage.vertex.gl_stage,   shdr->stage.vertex.gl_error);
-        if (should_create_fragment) gl_shader_stage_create_fragment (shdr->stage.fragment.gl_stage, shdr->stage.fragment.gl_error);
-
-        const bool did_create_vertex   = (shdr->stage.vertex.gl_stage   != GL_SHADER_STAGE_INVALID && shdr->stage.vertex.gl_error == GL_ERROR_SUCCESS);
-        const bool did_create_fragment = (shdr->stage.fragment.gl_stage != GL_SHADER_STAGE_INVALID && shdr->stage.fragment.gl_error == GL_ERROR_SUCCESS);
-
-        // check program
-        bool did_create = true;
-        did_create &= shdr->program.gl_program != GL_SHADER_PROGRAM_INVALID;
-        did_create &= shdr->program.gl_error   == GL_ERROR_SUCCESS;
-        did_create &= should_create_vertex   ? did_create_vertex   : true;
-        did_create &= should_create_fragment ? did_create_fragment : true;
-        return(did_create);
-    }
-
-    IFB_ENG_INTERNAL bool
-    shader_add_stage_from_file(
-        shader*                 shdr,
-        const shader_stage_type type,
-        const cchar*            file_path) {
-
-        // TODO
-
-        panic();
-    }
-
-
-    IFB_ENG_INTERNAL bool
-    shader_add_stage_from_source(
-        shader*                 shdr,
-        const shader_stage_type type,
-        const cchar*            src_buffer) {
-
-        // check args
-        bool can_create = (shdr != NULL);
-        if (can_create) {
-            can_create &= (shdr       != NULL);
-            can_create &= (src_buffer != NULL);
-            can_create &= (type < shader_stage_type_e_count);
-            can_create &= (shdr->program.gl_error != GL_SHADER_PROGRAM_INVALID);
-            can_create &= (shdr->program.gl_error == GL_ERROR_SUCCESS);
-        }
-        assert(can_create);
+        gl_program_create(shdr->program.gl_program, shdr->program.gl_error);
+        bool did_create = (
+            shdr->program.gl_program != GL_PROGRAM_INVALID &&
+            shdr->program.gl_error   == GL_ERROR_SUCCESS
+        );
+        if (!did_create) return(did_create);
 
         // shader create method array corresponds with shader types
-        using func_gl_shader_create = void (*) (gl_shader_stage& stage, gl_error& error);
+        using func_gl_shader_create = void (*) (gl_shader& stage, gl_error& error);
         constexpr func_gl_shader_create stage_create_method_array[] = {
-            gl_shader_stage_create_vertex,
-            gl_shader_stage_create_fragment
+            gl_shader_create_vertex,
+            gl_shader_create_fragment
         };
+        for (
+            shader_stage_type stage_type = shader_type_vertex;
+            stage_type < shader_type_count;
+            ++stage_type) {
 
-        // get the shader stage and create method
-        func_gl_shader_create& stage_create_method = stage_create_method_array [type]; 
-        shader_stage&          stage               = shdr->stage.array         [type];
+            // check if we should create this stage
+            const u32  flag_val      = (1 << stage_type); 
+            const bool should_create = shdr->stage.flags.test(flag_val);
+            if (!should_create) continue;
 
-        // create the stage
-        stage_create_method(
-            stage.gl_stage,
-            stage.gl_error
-        );
+            // get the stage and corresponding create method
+            const func_gl_shader_create create_method = stage_create_method_array [stage_type];
+            shader_stage&               stage         = shdr->stage.array         [stage_type]; 
 
-        // if we created the stage, toggle the corresponding flag
-        const bool did_create = (
-            shdr->stage.fragment.stage != GL_SHADER_STAGE_INVALID &&
-            shdr->stage.fragment.error == GL_ERROR_SUCCESS
-        );
-        shdr->stage.flags |= did_create ? bit_value(type) : shader_stage_flag_e_none;
+            // create the stage
+            create_method(stage.gl_stage, stage.gl_error);
+            const bool stage_is_created = (
+                stage.gl_stage != GL_SHADER_STAGE_INVALID &&
+                stage.gl_error == GL_ERROR_SUCCESS
+            );
+
+            // update shader
+            if (stage_is_created) shdr->stage.flags.set(stage_type);
+            did_create &= stage_is_created;
+        }
 
         // done
         return(did_create);
     }
 
     IFB_ENG_INTERNAL bool
-    shader_compile_and_link(
+    shader_add_stage_source_from_file(
+        shader*                 shdr,
+        const shader_stage_type type,
+        const cchar*            file_path) {
+
+        // check args
+        bool can_add = true;
+        can_add &= (shdr != NULL);                    
+        can_add &= (type <  shader_type_count); 
+        can_add &= (src_buffer != NULL);
+        if (can_add) {
+            can_add &= (shdr->program.gl_program != GL_PROGRAM_INVALID);
+            can_add &= (shdr->program.gl_error   != GL_ERROR_SUCCESS);
+            can_add &= shdr->stage.flags.test(type);
+        }
+        assert(can_add);
+
+        // TODO(SLD): implement
+
+        panic();
+    }
+
+
+    IFB_ENG_INTERNAL bool
+    shader_add_stage_source_from_buffer(
+        shader*                 shdr,
+        const shader_stage_type type,
+        const cchar*            src_buffer) {
+
+        // check args
+        bool can_add = true;
+        can_add &= (shdr != NULL);                    
+        can_add &= (type <  shader_type_count); 
+        can_add &= (src_buffer != NULL);
+        if (can_add) {
+            can_add &= (shdr->program.gl_program != GL_PROGRAM_INVALID);
+            can_add &= (shdr->program.gl_error   != GL_ERROR_SUCCESS);
+            can_add &= shdr->stage.flags.test(type);
+        }
+        assert(can_add);
+
+        // compile the stage
+        shader_stage& stage = shdr->stage.array[type];
+        gl_status compile_status = 0;
+        gl_shader_compile(
+            stage.gl_stage,
+            stage.gl_error,
+            compile_status,
+            src_buffer
+        );
+
+        // check compile status
+        const bool did_compile = (
+            stage.gl_stage != GL_SHADER_STAGE_INVALID &&
+            stage.gl_error == GL_ERROR_SUCCESS &&
+            compile_status == GL_ERROR_SUCCESS
+        );
+        return(did_compile);
+    }
+
+    IFB_ENG_INTERNAL bool
+    shader_link_stages(
         shader* shdr) {
 
-        bool can_compile = (shdr != NULL);
-        if (can_compile) {
-            can_compile &= (shdr->program.gl_program != GL_SHADER_PROGRAM_INVALID);
-            can_compile &= (shdr->program.gl_error   == GL_ERROR_SUCCESS);
-        }
-        assert(can_compile);
+        assert(shdr);
 
-        bool      did_compile    = true;
-        gl_status compile_status = 0;
-        for (
-            u32 shader_type = 0;
-            shader_type < shader_stage_type_e_count;
-            ++shader_type) {
+        gl_status link_status = 0;
+        gl_program_link(
+            shdr->program.gl_program,
+            shdr->program.gl_error,
+            link_status
+        );
 
-            // check if we should try to compile this stage
-            // if not, skip
-            const bool should_compile = (shdr->stage.flags & bit_value(shader_type));
-            if (!should_compile) continue;
-                
-            // get the stage and attempt to compile
-            shader_stage& stage = shdr->stage.array[shader_type];
-            gl_shader_stage_compile(
-                stage.gl_stage,
-                stage.gl_error
-            );
+        const bool did_link = (
+            shdr->program.gl_error == GL_ERROR_SUCCESS &&
+            link_status            == GL_ERROR_SUCCESS
+        );
+        return(did_link);
+    }
 
-            // check if the stage is compiled
-            did_compile &= stage.gl_stage != GL_SHADER_STAGE_INVALID;
-            did_compile &= stage.gl_error == GL_ERROR_SUCCESS; 
-        }
+    IFB_ENG_INTERNAL void
+    shader_reset(
+        shader* shdr) {
 
-
+        assert(shdr);
+        shdr->program.gl_error        = GL_ERROR_SUCCESS;
+        shdr->stage.vertex.gl_error   = GL_ERROR_SUCCESS;
+        shdr->stage.fragment.gl_error = GL_ERROR_SUCCESS;
     }
 
     IFB_ENG_INTERNAL bool
     shader_destroy(
         shader* shdr) {
+    
+        assert(shdr);
+
+        shdr->program.gl_error        = GL_ERROR_SUCCESS;
+        shdr->stage.vertex.gl_error   = GL_ERROR_SUCCESS;
+        shdr->stage.fragment.gl_error = GL_ERROR_SUCCESS;
+
+        gl_shader_destroy(
+            
+        )
+
     
     }
 };
