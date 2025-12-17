@@ -14,9 +14,9 @@ namespace ifb::eng {
         shdr->program.gl_program      = GL_ERROR_SUCCESS; 
         shdr->program.gl_error        = GL_PROGRAM_INVALID; 
         shdr->stage.flags             = pipeline_stage_flag_e_none;
-        shdr->stage.vertex.gl_stage   = GL_SHADER_STAGE_INVALID;
+        shdr->stage.vertex.gl_stage   = GL_SHADER_INVALID;
         shdr->stage.vertex.gl_error   = GL_ERROR_SUCCESS;
-        shdr->stage.fragment.gl_stage = GL_SHADER_STAGE_INVALID;
+        shdr->stage.fragment.gl_stage = GL_SHADER_INVALID;
         shdr->stage.fragment.gl_error = GL_ERROR_SUCCESS;
 
         // create gl program
@@ -50,7 +50,7 @@ namespace ifb::eng {
             // create the stage
             create_method(stage.gl_stage, stage.gl_error);
             const bool stage_is_created = (
-                stage.gl_stage != GL_SHADER_STAGE_INVALID &&
+                stage.gl_stage != GL_SHADER_INVALID &&
                 stage.gl_error == GL_ERROR_SUCCESS
             );
 
@@ -117,7 +117,7 @@ namespace ifb::eng {
 
         // check compile status
         const bool did_compile = (
-            stage.gl_stage != GL_SHADER_STAGE_INVALID &&
+            stage.gl_stage != GL_SHADER_INVALID &&
             stage.gl_error == GL_ERROR_SUCCESS &&
             compile_status == GL_ERROR_SUCCESS
         );
