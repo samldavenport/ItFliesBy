@@ -26,7 +26,7 @@ namespace ifb::eng {
 
     // pipeline
     IFB_ENG_INTERNAL void graphics_pipeline_init                                   (graphics_pipeline& pipeline);
-    IFB_ENG_INTERNAL void graphics_pipeline_cleanup                                (graphics_pipeline& pipeline);
+    IFB_ENG_INTERNAL bool graphics_pipeline_cleanup                                (graphics_pipeline& pipeline);
     IFB_ENG_INTERNAL void graphics_pipeline_clear_errors                           (graphics_pipeline& pipeline);
     IFB_ENG_INTERNAL bool graphics_pipeline_compile_shader_vertex                  (graphics_pipeline& pipeline, const cchar* shader_src);
     IFB_ENG_INTERNAL bool graphics_pipeline_compile_shader_tessellation_control    (graphics_pipeline& pipeline, const cchar* shader_src);
@@ -35,9 +35,9 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool graphics_pipeline_compile_shader_fragment                (graphics_pipeline& pipeline, const cchar* shader_src);
 
     // program
-    IFB_ENG_INTERNAL bool graphics_program_create          (graphics_program& program);
-    IFB_ENG_INTERNAL bool graphics_program_destroy         (graphics_program& program);
-    IFB_ENG_INTERNAL bool graphics_program_link_pipeline   (graphics_program& program, graphics_pipeline& pipeline);
+    IFB_ENG_INTERNAL bool graphics_program_create        (graphics_program& program);
+    IFB_ENG_INTERNAL bool graphics_program_destroy       (graphics_program& program);
+    IFB_ENG_INTERNAL bool graphics_program_link_pipeline (graphics_program& program, graphics_pipeline& pipeline);
 
     //-------------------------------------------------------------------
     // ENUMS
@@ -65,7 +65,7 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct graphics_pipeline_flags : flags {
+    struct graphics_pipeline_flags : sld::flags {
     };
 
     struct graphics_shader {

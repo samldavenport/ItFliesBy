@@ -9,3 +9,6 @@
 #include "ifb-engine-os-window.cpp"
 
 #include "ifb-engine-devconsole.cpp"
+
+#include "graphics-pipeline.cpp"
+#include "graphics-program.cpp"

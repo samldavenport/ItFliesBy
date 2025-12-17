@@ -99,6 +99,33 @@ namespace ifb::eng {
         const cchar*       shader_src) {
 
         assert(shader_src);
+
+        gl_status        shader_status = GL_ERROR_SUCCESS;
+        graphics_shader& shader        = pipeline.shader.tessellation_control;
+
+        // create the shader
+        gl_shader_create_tessellation_control(
+            shader.gl_shader,
+            shader.gl_error
+        );
+        const bool did_create = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS
+        );
+        if (!did_create) return(did_create);
+
+        // compile the shader source
+        gl_shader_compile(
+            shader.gl_shader,
+            shader.gl_error,
+            shader_status,
+            shader_src
+        );
+        const bool did_compile = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS        
+        );
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -107,6 +134,33 @@ namespace ifb::eng {
         const cchar*       shader_src) {
 
         assert(shader_src);
+
+        gl_status        shader_status = GL_ERROR_SUCCESS;
+        graphics_shader& shader        = pipeline.shader.tessellation_evaluation;
+
+        // create the shader
+        gl_shader_create_tessellation_evaluation(
+            shader.gl_shader,
+            shader.gl_error
+        );
+        const bool did_create = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS
+        );
+        if (!did_create) return(did_create);
+
+        // compile the shader source
+        gl_shader_compile(
+            shader.gl_shader,
+            shader.gl_error,
+            shader_status,
+            shader_src
+        );
+        const bool did_compile = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS        
+        );
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -115,6 +169,33 @@ namespace ifb::eng {
         const cchar*       shader_src) {
 
         assert(shader_src);
+
+        gl_status        shader_status = GL_ERROR_SUCCESS;
+        graphics_shader& shader        = pipeline.shader.geometry;
+
+        // create the shader
+        gl_shader_create_geometry(
+            shader.gl_shader,
+            shader.gl_error
+        );
+        const bool did_create = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS
+        );
+        if (!did_create) return(did_create);
+
+        // compile the shader source
+        gl_shader_compile(
+            shader.gl_shader,
+            shader.gl_error,
+            shader_status,
+            shader_src
+        );
+        const bool did_compile = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS        
+        );
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -123,5 +204,32 @@ namespace ifb::eng {
         const cchar*       shader_src) {
 
         assert(shader_src);
+
+        gl_status        shader_status = GL_ERROR_SUCCESS;
+        graphics_shader& shader        = pipeline.shader.vertex;
+
+        // create the shader
+        gl_shader_create_vertex(
+            shader.gl_shader,
+            shader.gl_error
+        );
+        const bool did_create = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS
+        );
+        if (!did_create) return(did_create);
+
+        // compile the shader source
+        gl_shader_compile(
+            shader.gl_shader,
+            shader.gl_error,
+            shader_status,
+            shader_src
+        );
+        const bool did_compile = (
+            shader.gl_shader != GL_SHADER_INVALID &&
+            shader.gl_error  == GL_ERROR_SUCCESS        
+        );
+        return(did_compile);
     }
 };
