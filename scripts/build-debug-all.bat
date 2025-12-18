@@ -17,7 +17,7 @@ pushd ..
 
 @set cl_eng_in=      engine\src\ifb-engine.cpp
 @set cl_eng_out=     /Fo:build\debug\obj\ItFliesBy.Engine.obj
-@set cl_eng_include= /Iengine\include /Iengine\src /Iengine\src\context /Iengine\src\core /Iengine\src\file /Iengine\src\memory /Iengine\src\asset /Iengine\src\devconsole /Iengine\src\os /Iengine\src\tools /Isld\include /Isld\external /Isld\vcpkg_installed\x64-windows\include
+@set cl_eng_include= /Iengine\include /Iengine\src /Iengine\src\context /Iengine\src\core /Iengine\src\file /Iengine\src\graphics /Iengine\src\memory /Iengine\src\asset /Iengine\src\devconsole /Iengine\src\os /Iengine\src\tools /Isld\include /Isld\external /Isld\vcpkg_installed\x64-windows\include
 @set cl_eng_flags=   /nologo /c /MD /LD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
 
 @set cl_tools_in=      tools\src\binary-to-compressed-c.cpp
@@ -25,7 +25,7 @@ pushd ..
 @set cl_tools_include= 
 @set cl_tools_flags=   /nologo /c /MD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
 
-@set link_eng_in=    ItFliesBy.Engine.obj user32.lib kernel32.lib SLD.Win32.lib Gdi32.lib imgui.lib opengl32.lib pugixml.lib zlib-ng.lib comdlg32.lib
+@set link_eng_in=    ItFliesBy.Engine.obj user32.lib kernel32.lib SLD.Win32.lib Gdi32.lib imgui.lib opengl32.lib pugixml.lib zlib-ng.lib comdlg32.lib glew32.lib
 @set link_eng_out=   /OUT:build\debug\bin\ItFliesBy.Engine.dll /IMPLIB:build\debug\lib\ItFliesBy.Engine.lib
 @set link_eng_path=  /LIBPATH:build\debug\obj /LIBPATH:build\debug\lib /LIBPATH:sld\build\debug\lib /LIBPATH:sld\vcpkg_installed\x64-windows\lib
 @set link_eng_flags= /nologo /SUBSYSTEM:WINDOWS /DEBUG /DLL
@@ -35,9 +35,9 @@ pushd ..
 @set cl_pfm_include= /Iplatform\include /Iplatform\src /Iengine\include /Isld\include /Isld\external /Isld\vcpkg_installed\x64-windows\include
 @set cl_pfm_flags=   /nologo /c /MD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
 
-@set link_pfm_in=    ItFliesBy.obj ItFliesBy.Engine.lib user32.lib kernel32.lib
+@set link_pfm_in=    ItFliesBy.obj ItFliesBy.Engine.lib user32.lib kernel32.lib glew32.lib
 @set link_pfm_out=   /OUT:build\debug\bin\ItFliesBy.exe
-@set link_pfm_path=  /LIBPATH:build\debug\obj /LIBPATH:build\debug\lib
+@set link_pfm_path=  /LIBPATH:build\debug\obj /LIBPATH:build\debug\lib /LIBPATH:sld\build\debug\lib /LIBPATH:sld\vcpkg_installed\x64-windows\lib
 @set link_pfm_flags= /nologo /SUBSYSTEM:WINDOWS /DEBUG
 
 @set link_tools_in=    binary-to-compressed-c.obj

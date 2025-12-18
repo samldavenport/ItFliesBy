@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLEW_STATIC
+
 #include <ifb-engine.hpp>
 #include <ifb-engine-core.hpp>
 

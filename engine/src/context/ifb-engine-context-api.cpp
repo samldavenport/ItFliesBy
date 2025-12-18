@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ifb-engine-context.hpp"
-
+#include "graphics.hpp"
 namespace ifb::eng {
     
     IFB_ENG_API context*
@@ -23,7 +23,7 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->os       = os_context_alloc (ctx->stack);
+        ctx->os         = os_context_alloc (ctx->stack);
         ctx->devconsole = devconsole_alloc   (ctx->stack);
 
         assert(
@@ -49,6 +49,28 @@ namespace ifb::eng {
 
         // devconsole
         devconsole_init(ctx->devconsole);
+
+        //-----------------------------
+        // SHADER TEST START
+        //-----------------------------
+
+        graphics_pipeline test_pipeline;
+        graphics_program  test_program;
+
+        bool result = true;
+
+        gl_context_init();
+        graphics_pipeline_init                    (test_pipeline);
+        graphics_pipeline_compile_shader_vertex   (test_pipeline, GL_HELLO_TRIANGLE_SHADER_VERTEX);
+        graphics_pipeline_compile_shader_fragment (test_pipeline, GL_HELLO_TRIANGLE_SHADER_FRAGMENT);
+
+        assert(result);
+
+        //-----------------------------
+        // SHADER TEST END
+        //-----------------------------
+
+
 
         return(true);
     }
