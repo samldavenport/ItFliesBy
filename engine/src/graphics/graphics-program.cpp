@@ -80,16 +80,19 @@ namespace ifb::eng {
                 program.pipeline_flags.set(shader_type);
             }
         }
+        if (!can_link) return(can_link);
 
-        // if all the shaders are attached, attempt to link the pipeline        
-        if (can_link) {
-            gl_status link_status = 0;
-            gl_program_link(
-                program.gl_program,
-                program.gl_error,
-                link_status
-            );
-        }
-        return(can_link);
+        // attempt to link the pipeline        
+        gl_status link_status = 0;
+        gl_program_link(
+            program.gl_program,
+            program.gl_error,
+            link_status
+        );
+        const bool did_link = (
+            program.gl_error == GL_ERROR_SUCCESS &&
+            link_status      == GL_TRUE
+        );
+        return(did_link);
     }
 };
