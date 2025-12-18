@@ -60,9 +60,12 @@ namespace ifb::eng {
         bool result = true;
 
         gl_context_init();
+        gl_context_enable_depth_buffering();
+        gl_context_enable_smoothing();
+
         graphics_pipeline_init                    (test_pipeline);
-        graphics_pipeline_compile_shader_vertex   (test_pipeline, GL_HELLO_TRIANGLE_SHADER_VERTEX);
-        graphics_pipeline_compile_shader_fragment (test_pipeline, GL_HELLO_TRIANGLE_SHADER_FRAGMENT);
+        result &= graphics_pipeline_compile_shader_vertex   (test_pipeline, GL_HELLO_TRIANGLE_SHADER_VERTEX);
+        result &= graphics_pipeline_compile_shader_fragment (test_pipeline, GL_HELLO_TRIANGLE_SHADER_FRAGMENT);
 
         assert(result);
 
