@@ -54,18 +54,23 @@ namespace ifb::eng {
         // SHADER TEST START
         //-----------------------------
 
-        graphics_pipeline test_pipeline;
-        graphics_program  test_program;
 
         bool result = true;
 
-        gl_context_init();
-        gl_context_enable_depth_buffering();
-        gl_context_enable_smoothing();
+        // init graphics
+        result &= graphics_context_init();
 
-        graphics_pipeline_init                    (test_pipeline);
+        // create the pipeline
+        graphics_pipeline test_pipeline;
+        graphics_pipeline_init                              (test_pipeline);
         result &= graphics_pipeline_compile_shader_vertex   (test_pipeline, GL_HELLO_TRIANGLE_SHADER_VERTEX);
         result &= graphics_pipeline_compile_shader_fragment (test_pipeline, GL_HELLO_TRIANGLE_SHADER_FRAGMENT);
+
+        // create the program
+        graphics_program  test_program;
+        result &= graphics_program_create        (test_program);
+        result &= graphics_program_link_pipeline (test_program, test_pipeline);
+
 
         assert(result);
 

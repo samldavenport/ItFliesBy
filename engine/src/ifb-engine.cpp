@@ -11,5 +11,6 @@
 
 #include "ifb-engine-devconsole.cpp"
 
+#include "graphics-context.cpp"
 #include "graphics-pipeline.cpp"
 #include "graphics-program.cpp"

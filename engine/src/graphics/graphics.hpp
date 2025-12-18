@@ -24,6 +24,9 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
+    // context
+    IFB_ENG_INTERNAL bool graphics_context_init (void); 
+
     // pipeline
     IFB_ENG_INTERNAL void graphics_pipeline_init                                   (graphics_pipeline& pipeline);
     IFB_ENG_INTERNAL bool graphics_pipeline_cleanup                                (graphics_pipeline& pipeline);
