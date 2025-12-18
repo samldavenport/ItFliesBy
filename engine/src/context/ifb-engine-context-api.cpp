@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ifb-engine-context.hpp"
-
+#include "graphics.hpp"
 namespace ifb::eng {
     
     IFB_ENG_API context*
@@ -23,7 +23,7 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->os       = os_context_alloc (ctx->stack);
+        ctx->os         = os_context_alloc (ctx->stack);
         ctx->devconsole = devconsole_alloc   (ctx->stack);
 
         assert(
@@ -49,6 +49,42 @@ namespace ifb::eng {
 
         // devconsole
         devconsole_init(ctx->devconsole);
+
+        //-----------------------------
+        // SHADER TEST START
+        //-----------------------------
+
+        const cchar test_buffer_vertex[] = 
+            "#version 330 core\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "}\0";
+
+        const cchar test_buffer_fragment[] =
+            "#version 330 core\n"
+            "out vec4 FragColor;\n"
+            "void main()\n"
+            "{\n"
+            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+            "}\0";
+
+        graphics_pipeline test_pipeline;
+        graphics_program  test_program;
+
+        bool result = true;
+
+        graphics_pipeline_init(test_pipeline);
+        graphics_pipeline_compile_shader_vertex(test_pipeline, test_buffer_vertex);
+
+        assert(result);
+
+        //-----------------------------
+        // SHADER TEST END
+        //-----------------------------
+
+
 
         return(true);
     }
