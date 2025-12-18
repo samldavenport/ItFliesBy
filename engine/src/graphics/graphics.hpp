@@ -14,18 +14,18 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    using  graphics_shader_type = u32;
-    struct graphics_pipeline_flags;
     struct graphics_pipeline;
-    struct graphics_shader;
-    struct graphics_program;
+    using  graphics_gl_error   = GLenum;
+    using  graphics_gl_id      = GLint;
+    using  graphics_gl_uniform = GLint;
 
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
 
     // context
-    IFB_ENG_INTERNAL bool graphics_context_init (void); 
+    IFB_ENG_INTERNAL void graphics_context_init         (void); 
+    IFB_ENG_INTERNAL void graphics_context_clear_errors (void); 
 
     // pipeline
     IFB_ENG_INTERNAL void graphics_pipeline_init                                   (graphics_pipeline& pipeline);
@@ -41,6 +41,14 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool graphics_program_create        (graphics_program& program);
     IFB_ENG_INTERNAL bool graphics_program_destroy       (graphics_program& program);
     IFB_ENG_INTERNAL bool graphics_program_link_pipeline (graphics_program& program, graphics_pipeline& pipeline);
+
+    // buffers
+
+
+    // vertex
+    IFB_ENG_INTERNAL bool graphics_vertex_create  (graphics_vertex& vertex);
+    IFB_ENG_INTERNAL bool graphics_vertex_destroy (graphics_vertex& vertex);
+
 
     //-------------------------------------------------------------------
     // ENUMS
@@ -93,6 +101,11 @@ namespace ifb::eng {
             };
             graphics_shader array[graphics_shader_type_count];
         } shader;
+    };
+
+    struct graphics_vertex {
+        gl_vertex gl_vertex;
+        gl_error  gl_error;
     };
 };
 

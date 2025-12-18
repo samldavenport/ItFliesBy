@@ -54,7 +54,6 @@ namespace ifb::eng {
         // SHADER TEST START
         //-----------------------------
 
-
         bool result = true;
 
         // init graphics
