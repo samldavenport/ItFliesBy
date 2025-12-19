@@ -11,6 +11,7 @@
 
 #include "ifb-engine-devconsole.cpp"
 
-#include "graphics-context.cpp"
-#include "graphics-pipeline.cpp"
-#include "graphics-program.cpp"
+#include "gl-context.cpp"
+#include "gl-pipeline.cpp"
+#include "gl-program.cpp"
+#include "gl-hello-triangle.cpp"

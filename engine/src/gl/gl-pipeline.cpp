@@ -8,14 +8,14 @@ namespace ifb::eng {
     gl_pipeline_init(
         gl_pipeline& pipeline) {
 
-        pipeline.vertex                  = GL_SHADER_INVALID; 
-        pipeline.tessellation_control    = GL_SHADER_INVALID; 
-        pipeline.tessellation_evaluation = GL_SHADER_INVALID; 
-        pipeline.geometry                = GL_SHADER_INVALID; 
-        pipeline.fragment                = GL_SHADER_INVALID; 
+        memset(
+            (void*)&pipeline,
+            0,
+            sizeof(gl_pipeline)
+        );
     }
 
-    IFB_ENG_INTERNAL bool
+    IFB_ENG_INTERNAL void
     gl_pipeline_cleanup(
         gl_pipeline& pipeline) {
 
@@ -24,33 +24,39 @@ namespace ifb::eng {
         bool      did_cleanup   = true;
         gl_status delete_status = GL_TRUE;
 
-        if (pipeline.vertex != GL_SHADER_INVALID) {
-            glDeleteShader (pipeline.vertex);
-            glGetShaderiv  (pipeline.vertex, GL_DELETE_STATUS, &delete_status);
-            did_cleanup &= (status == GL_TRUE);
+        if (pipeline.vertex.id != GL_ID_INVALID) {
+            glDeleteShader (pipeline.vertex.id);
+            glGetShaderiv  (pipeline.vertex.id, GL_DELETE_STATUS, &delete_status);
+            did_cleanup &= (delete_status == GL_TRUE);
         }
-        if (pipeline.tessellation_control != GL_SHADER_INVALID) {
-            glDeleteShader (pipeline.tessellation_control);
-            glGetShaderiv  (pipeline.tessellation_control, GL_DELETE_STATUS, &delete_status);
-            did_cleanup &= (status == GL_TRUE);
+        if (pipeline.tessellation_control.id != GL_ID_INVALID) {
+            glDeleteShader (pipeline.tessellation_control.id);
+            glGetShaderiv  (pipeline.tessellation_control.id, GL_DELETE_STATUS, &delete_status);
+            did_cleanup &= (delete_status == GL_TRUE);
         }
-        if (pipeline.tessellation_evaluation != GL_SHADER_INVALID) {
-            glDeleteShader (pipeline.tessellation_evaluation);
-            glGetShaderiv  (pipeline.tessellation_evaluation, GL_DELETE_STATUS, &delete_status);
-            did_cleanup &= (status == GL_TRUE);
+        if (pipeline.tessellation_evaluation.id != GL_ID_INVALID) {
+            glDeleteShader (pipeline.tessellation_evaluation.id);
+            glGetShaderiv  (pipeline.tessellation_evaluation.id, GL_DELETE_STATUS, &delete_status);
+            did_cleanup &= (delete_status == GL_TRUE);
         }
-        if (pipeline.geometry != GL_SHADER_INVALID) {
-            glDeleteShader (pipeline.geometry);
-            glGetShaderiv  (pipeline.geometry, GL_DELETE_STATUS, &delete_status);
-            did_cleanup &= (status == GL_TRUE);
+        if (pipeline.geometry.id != GL_ID_INVALID) {
+            glDeleteShader (pipeline.geometry.id);
+            glGetShaderiv  (pipeline.geometry.id, GL_DELETE_STATUS, &delete_status);
+            did_cleanup &= (delete_status == GL_TRUE);
         }
-        if (pipeline.fragment != GL_SHADER_INVALID) {
-            glDeleteShader (pipeline.fragment);
-            glGetShaderiv  (pipeline.fragment, GL_DELETE_STATUS, &delete_status);
-            did_cleanup &= (status == GL_TRUE);
+        if (pipeline.fragment.id != GL_ID_INVALID) {
+            glDeleteShader (pipeline.fragment.id);
+            glGetShaderiv  (pipeline.fragment.id, GL_DELETE_STATUS, &delete_status);
+            did_cleanup &= (delete_status == GL_TRUE);
         }
 
-        return(did_cleanup);
+        assert(did_cleanup);
+
+        memset(
+            (void*)&pipeline,
+            0,
+            sizeof(gl_pipeline)
+        );
     }
 
     IFB_ENG_INTERNAL bool
@@ -58,9 +64,25 @@ namespace ifb::eng {
         gl_pipeline& pipeline,
         const cchar* shader_src) {
 
-        shader = glCreateShader (GL_VERTEX_SHADER);
-        error  = (shader == GL_SHADER_INVALID) ? glGetError() : GL_ERROR_SUCCESS;
+        // create shader
+        pipeline.vertex.id = glCreateShader(GL_VERTEX_SHADER);
+        assert(
+            shader_src         != NULL &&
+            pipeline.vertex.id != GL_ID_INVALID
+        );
 
+        // compile shader source
+        gl_status compile_status;
+        glShaderSource  (pipeline.vertex.id, 1, &shader_src, NULL);
+        glCompileShader (pipeline.vertex.id);
+        glGetShaderiv   (pipeline.vertex.id, GL_COMPILE_STATUS, &compile_status);
+
+        // check compile status
+        const bool did_compile = (compile_status == GL_TRUE);
+        pipeline.vertex.error  = (did_compile)
+            ? GL_ERROR_SUCCESS
+            : glGetError();
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -68,6 +90,25 @@ namespace ifb::eng {
         gl_pipeline& pipeline,
         const cchar* shader_src) {
 
+        // create shader
+        pipeline.tessellation_control.id = glCreateShader(GL_TESS_CONTROL_SHADER);
+        assert(
+            shader_src                       != NULL &&
+            pipeline.tessellation_control.id != GL_ID_INVALID
+        );
+
+        // compile shader source
+        gl_status compile_status;
+        glShaderSource  (pipeline.tessellation_control.id, 1, &shader_src, NULL);
+        glCompileShader (pipeline.tessellation_control.id);
+        glGetShaderiv   (pipeline.tessellation_control.id, GL_COMPILE_STATUS, &compile_status);
+
+        // check compile status
+        const bool did_compile               = (compile_status == GL_TRUE);
+        pipeline.tessellation_control.error  = (did_compile)
+            ? GL_ERROR_SUCCESS
+            : glGetError();
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -75,6 +116,25 @@ namespace ifb::eng {
         gl_pipeline& pipeline,
         const cchar* shader_src) {
 
+        // create shader
+        pipeline.tessellation_evaluation.id = glCreateShader(GL_TESS_EVALUATION_SHADER);
+        assert(
+            shader_src                       != NULL &&
+            pipeline.tessellation_evaluation.id != GL_ID_INVALID
+        );
+
+        // compile shader source
+        gl_status compile_status;
+        glShaderSource  (pipeline.tessellation_evaluation.id, 1, &shader_src, NULL);
+        glCompileShader (pipeline.tessellation_evaluation.id);
+        glGetShaderiv   (pipeline.tessellation_evaluation.id, GL_COMPILE_STATUS, &compile_status);
+
+        // check compile status
+        const bool did_compile                 = (compile_status == GL_TRUE);
+        pipeline.tessellation_evaluation.error = (did_compile)
+            ? GL_ERROR_SUCCESS
+            : glGetError();
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -82,6 +142,25 @@ namespace ifb::eng {
         gl_pipeline& pipeline,
         const cchar* shader_src) {
 
+        // create shader
+        pipeline.geometry.id = glCreateShader(GL_GEOMETRY_SHADER);
+        assert(
+            shader_src           != NULL &&
+            pipeline.geometry.id != GL_ID_INVALID
+        );
+
+        // compile shader source
+        gl_status compile_status;
+        glShaderSource  (pipeline.geometry.id, 1, &shader_src, NULL);
+        glCompileShader (pipeline.geometry.id);
+        glGetShaderiv   (pipeline.geometry.id, GL_COMPILE_STATUS, &compile_status);
+
+        // check compile status
+        const bool did_compile  = (compile_status == GL_TRUE);
+        pipeline.geometry.error = (did_compile)
+            ? GL_ERROR_SUCCESS
+            : glGetError();
+        return(did_compile);
     }
 
     IFB_ENG_INTERNAL bool
@@ -89,5 +168,24 @@ namespace ifb::eng {
         gl_pipeline& pipeline,
         const cchar* shader_src) {
 
+        // create shader
+        pipeline.fragment.id = glCreateShader(GL_FRAGMENT_SHADER);
+        assert(
+            shader_src           != NULL &&
+            pipeline.fragment.id != GL_ID_INVALID
+        );
+
+        // compile shader source
+        gl_status compile_status;
+        glShaderSource  (pipeline.fragment.id, 1, &shader_src, NULL);
+        glCompileShader (pipeline.fragment.id);
+        glGetShaderiv   (pipeline.fragment.id, GL_COMPILE_STATUS, &compile_status);
+
+        // check compile status
+        const bool did_compile  = (compile_status == GL_TRUE);
+        pipeline.fragment.error = (did_compile)
+            ? GL_ERROR_SUCCESS
+            : glGetError();
+        return(did_compile);
     }
 };
