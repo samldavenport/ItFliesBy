@@ -4,6 +4,8 @@
 #include "gl.hpp"
 namespace ifb::eng {
     
+    static gl_hello_triangle _hello_triangle;
+
     IFB_ENG_API context*
     context_create(
         byte*     stack_data,
@@ -58,14 +60,11 @@ namespace ifb::eng {
         gl_context_enable_smoothing();
         gl_context_enable_depth_rendering();
 
-        gl_hello_triangle hello_triangle;
-        gl_hello_triangle_create(hello_triangle);
+        gl_hello_triangle_create(_hello_triangle);
 
         //-----------------------------
         // SHADER TEST END
         //-----------------------------
-
-
 
         return(true);
     }
@@ -95,6 +94,18 @@ namespace ifb::eng {
         // reset window events and input
         os_window_reset_events (ctx->os);
         os_window_reset_input  (ctx->os);
+
+       //-----------------------------
+        // SHADER TEST START
+        //-----------------------------
+
+        gl_hello_triangle_render(_hello_triangle);
+
+        //-----------------------------
+        // SHADER TEST END
+        //-----------------------------
+
+
 
         return(true);
     }

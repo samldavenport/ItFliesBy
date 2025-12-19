@@ -23,6 +23,10 @@ namespace ifb::eng {
 
         // clean up the pipeline
         gl_pipeline_cleanup(hello_triangle.pipeline);
+
+        // create the buffers
+        gl_buffer_create(hello_triangle.buffer.vertex);
+        gl_buffer_create(hello_triangle.buffer.index);
     }
 
     IFB_ENG_INTERNAL void
@@ -31,4 +35,21 @@ namespace ifb::eng {
 
         gl_program_destroy(hello_triangle.program);
     }
+
+    IFB_ENG_INTERNAL void
+    gl_hello_triangle_render(
+        gl_hello_triangle& hello_triangle) {
+
+        const byte* data_buffer_vertex = (byte*)GL_HELLO_TRIANGLE_VERTICES;
+        const u32*  data_buffer_index  = (u32*)GL_HELLO_TRIANGLE_INDICES;
+        const u32   size_buffer_vertex = sizeof(GL_HELLO_TRIANGLE_VERTICES);
+        const u32   size_buffer_index  = sizeof(GL_HELLO_TRIANGLE_INDICES);
+
+        gl_context_set_program            (hello_triangle.program);
+        gl_context_set_vertex_buffer      (hello_triangle.buffer.vertex);
+        gl_context_set_index_buffer       (hello_triangle.buffer.index);
+        gl_context_set_vertex_buffer_data (data_buffer_vertex, size_buffer_vertex);
+        gl_context_set_index_buffer_data  (data_buffer_index,  size_buffer_index);
+    }
+
 };

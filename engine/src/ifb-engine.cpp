@@ -11,6 +11,7 @@
 
 #include "ifb-engine-devconsole.cpp"
 
+#include "gl-buffer.cpp"
 #include "gl-context.cpp"
 #include "gl-pipeline.cpp"
 #include "gl-program.cpp"

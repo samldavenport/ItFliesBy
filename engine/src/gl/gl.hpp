@@ -12,15 +12,15 @@ namespace ifb::eng {
     using gl_error         = GLenum; 
     using gl_status        = GLint; 
     using gl_id            = GLuint;
-    using gl_vertex        = GLuint; 
-    using gl_buffer        = GLuint;
     using gl_buffer_type   = GLenum;
     using gl_buffer_useage = GLenum;
 
+    struct gl_object;
     struct gl_pipeline;
     struct gl_program;
     struct gl_shader;
     struct gl_hello_triangle;
+    struct gl_buffer;
 
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -28,7 +28,6 @@ namespace ifb::eng {
 
     constexpr gl_error GL_ERROR_SUCCESS = 0;
     constexpr gl_id    GL_ID_INVALID    = 0;
-
     constexpr cchar GL_HELLO_TRIANGLE_SHADER_VERTEX[] = 
         "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
@@ -36,7 +35,6 @@ namespace ifb::eng {
         "{\n"
         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
         "}\0";
-
     constexpr cchar GL_HELLO_TRIANGLE_SHADER_FRAGMENT[] =
         "#version 330 core\n"
         "out vec4 FragColor;\n"
@@ -44,6 +42,16 @@ namespace ifb::eng {
         "{\n"
         "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
         "}\0";
+    constexpr f32 GL_HELLO_TRIANGLE_VERTICES[] = {
+         0.5f,  0.5f, 0.0f, // top right
+         0.5f, -0.5f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f, // bottom left
+        -0.5f,  0.5f, 0.0f  // top left 
+    };
+    constexpr u32 GL_HELLO_TRIANGLE_INDICES[] = {
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
+    };
 
     //-------------------------------------------------------------------
     // METHODS
@@ -54,6 +62,11 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void gl_context_clear_errors           (void);
     IFB_ENG_INTERNAL void gl_context_enable_smoothing       (void);
     IFB_ENG_INTERNAL void gl_context_enable_depth_rendering (void);
+    IFB_ENG_INTERNAL void gl_context_set_program            (gl_program& program);
+    IFB_ENG_INTERNAL void gl_context_set_vertex_buffer      (gl_buffer& buffer);
+    IFB_ENG_INTERNAL void gl_context_set_vertex_buffer_data (const byte* buffer_data, const u32 buffer_size);
+    IFB_ENG_INTERNAL void gl_context_set_index_buffer       (gl_buffer&  buffer);
+    IFB_ENG_INTERNAL void gl_context_set_index_buffer_data  (const u32*  buffer_data, const u32 buffer_size);
 
     // pipeline
     IFB_ENG_INTERNAL void gl_pipeline_init                                   (gl_pipeline& pipeline);
@@ -69,23 +82,46 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void gl_program_destroy       (gl_program& program);
     IFB_ENG_INTERNAL bool gl_program_link_pipeline (gl_program& program, gl_pipeline& pipeline);
 
+    // buffer
+    IFB_ENG_INTERNAL void gl_buffer_create     (gl_buffer& buffer);
+    IFB_ENG_INTERNAL void gl_buffer_destroy    (gl_buffer& buffer);
+
     // hello triangle
     IFB_ENG_INTERNAL void gl_hello_triangle_create  (gl_hello_triangle& hello_triangle);
     IFB_ENG_INTERNAL void gl_hello_triangle_destroy (gl_hello_triangle& hello_triangle);
+    IFB_ENG_INTERNAL void gl_hello_triangle_render  (gl_hello_triangle& hello_triangle);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct gl_program {
+    struct gl_object {
         gl_id    id;
         gl_error error;
+
+        inline void
+        reset(void) {
+            this->id    = GL_ID_INVALID;
+            this->error = GL_ERROR_SUCCESS;
+        }
+
+        inline bool
+        is_valid(void) {
+            return(
+                this->id    != GL_ID_INVALID    &&
+                this->error == GL_ERROR_SUCCESS
+            );
+        }
+
+        inline void
+        clear_error(void) {
+            this->error = GL_ERROR_SUCCESS;
+        }
     };
 
-    struct gl_shader {
-        gl_id    id;
-        gl_error error;
-    };
+    struct gl_program : gl_object { };
+    struct gl_shader  : gl_object { };
+    struct gl_buffer  : gl_object { };
 
     struct gl_pipeline {
         gl_shader vertex;
@@ -97,7 +133,11 @@ namespace ifb::eng {
 
     struct gl_hello_triangle {
         gl_program  program;
-        gl_pipeline pipeline;        
+        gl_pipeline pipeline;  
+        struct {
+            gl_buffer vertex;
+            gl_buffer index;
+        } buffer;
     };
 };
 

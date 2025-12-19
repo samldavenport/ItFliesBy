@@ -61,4 +61,70 @@ namespace ifb::eng {
 
         assert(did_enable);
     }
+
+    IFB_ENG_INTERNAL void
+    gl_context_set_program(
+        gl_program& program) {
+
+        assert(program.is_valid());
+
+        gl_context_clear_errors();
+
+        glUseProgram(program.id);
+        assert(glGetError() == GL_ERROR_SUCCESS);
+    }
+
+    IFB_ENG_INTERNAL void
+    gl_context_set_vertex_buffer(
+        gl_buffer& buffer) {
+
+        assert(buffer.is_valid());
+
+        gl_context_clear_errors();
+        glBindBuffer(GL_ARRAY_BUFFER, buffer.id);
+        assert(glGetError() == GL_ERROR_SUCCESS);
+    }
+
+    IFB_ENG_INTERNAL void
+    gl_context_set_index_buffer(
+        gl_buffer& buffer) {
+
+        assert(buffer.is_valid());
+
+        gl_context_clear_errors();
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer.id);
+        assert(glGetError() == GL_ERROR_SUCCESS);        
+    }
+
+    IFB_ENG_INTERNAL void
+    gl_context_set_vertex_buffer_data(
+        const byte* buffer_data,
+        const u32   buffer_size) {
+
+        assert(
+            buffer_data != NULL &&
+            buffer_size != 0
+        );
+
+        gl_context_clear_errors();
+        glBufferData(GL_ARRAY_BUFFER, buffer_size, buffer_data, GL_STATIC_DRAW);
+        assert(glGetError() == GL_ERROR_SUCCESS);        
+    }
+    
+    IFB_ENG_INTERNAL void
+    gl_context_set_index_buffer_data(
+        const u32* buffer_data,
+        const u32  buffer_size) {
+
+        assert(
+            buffer_data != NULL &&
+            buffer_size != 0
+        );
+
+        gl_context_clear_errors();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer_size, buffer_data, GL_STATIC_DRAW);
+        assert(glGetError() == GL_ERROR_SUCCESS);        
+    }
+
 };

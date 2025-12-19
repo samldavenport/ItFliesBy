@@ -86,4 +86,16 @@ namespace ifb::eng {
         program.error = (did_link) ? GL_ERROR_SUCCESS : glGetError();
         return(did_link);
     }
+
+    IFB_ENG_INTERNAL void
+    gl_program_set_active(
+        gl_program& program) {
+
+        gl_context_clear_errors();
+
+        glUseProgram(program.id);
+    
+        const gl_error error = glGetError();
+        assert(error == GL_ERROR_SUCCESS);
+    }
 };
