@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gl.hpp"
-
+#include "sld-vector.hpp"
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
@@ -24,9 +24,20 @@ namespace ifb::eng {
         // clean up the pipeline
         gl_pipeline_cleanup(hello_triangle.pipeline);
 
-        // create the buffers
-        gl_buffer_create(hello_triangle.buffer.vertex);
-        gl_buffer_create(hello_triangle.buffer.index);
+        // create the buffers and vertex
+        gl_buffer_create (hello_triangle.buffer.vertex);
+        gl_buffer_create (hello_triangle.buffer.index);
+        gl_vertex_create (hello_triangle.vertex);
+
+        // define vertex attributes
+        constexpr u32 position_index  = 0;
+        constexpr u32 position_offset = 0;
+        constexpr u32 vertex_size     = sizeof(vec2); 
+        gl_context_set_vertex_buffer (hello_triangle.buffer.vertex);
+        gl_context_set_vertex        (hello_triangle.vertex);
+        gl_vertex_attribute_set_vec3 (hello_triangle.vertex, vertex_size, position_index, position_offset);
+        gl_vertex_attribute_enable   (hello_triangle.vertex, position_index);
+
     }
 
     IFB_ENG_INTERNAL void

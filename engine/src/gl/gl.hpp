@@ -15,6 +15,7 @@ namespace ifb::eng {
     using gl_buffer_type   = GLenum;
     using gl_buffer_useage = GLenum;
 
+    struct gl_state;
     struct gl_object;
     struct gl_pipeline;
     struct gl_program;
@@ -59,16 +60,19 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // context
-    IFB_ENG_INTERNAL void gl_context_init                   (void);
-    IFB_ENG_INTERNAL void gl_context_clear_errors           (void);
-    IFB_ENG_INTERNAL void gl_context_enable_smoothing       (void);
-    IFB_ENG_INTERNAL void gl_context_enable_depth_rendering (void);
-    IFB_ENG_INTERNAL void gl_context_set_program            (gl_program& program);
-    IFB_ENG_INTERNAL void gl_context_set_vertex_buffer      (gl_buffer& buffer);
-    IFB_ENG_INTERNAL void gl_context_set_vertex_buffer_data (const byte* buffer_data, const u32 buffer_size);
-    IFB_ENG_INTERNAL void gl_context_set_index_buffer       (gl_buffer&  buffer);
-    IFB_ENG_INTERNAL void gl_context_set_index_buffer_data  (const u32*  buffer_data, const u32 buffer_size);
-    IFB_ENG_INTERNAL void gl_context_set_vertex             (gl_vertex& vertex);
+    IFB_ENG_INTERNAL void            gl_context_init                   (void);
+    IFB_ENG_INTERNAL const gl_state& gl_context_get_state              (void);
+    IFB_ENG_INTERNAL void            gl_context_clear_errors           (void);
+    IFB_ENG_INTERNAL void            gl_context_enable_smoothing       (void);
+    IFB_ENG_INTERNAL void            gl_context_enable_depth_rendering (void);
+    IFB_ENG_INTERNAL void            gl_context_render                 (void);
+    IFB_ENG_INTERNAL void            gl_context_reset                  (void);
+    IFB_ENG_INTERNAL void            gl_context_set_program            (gl_program& program);
+    IFB_ENG_INTERNAL void            gl_context_set_vertex_buffer      (gl_buffer&  buffer);
+    IFB_ENG_INTERNAL void            gl_context_set_index_buffer       (gl_buffer&  buffer);
+    IFB_ENG_INTERNAL void            gl_context_set_vertex             (gl_vertex&  vertex);
+    IFB_ENG_INTERNAL void            gl_context_set_vertex_buffer_data (const byte* buffer_data, const u32 buffer_size);
+    IFB_ENG_INTERNAL void            gl_context_set_index_buffer_data  (const u32*  buffer_data, const u32 buffer_size);
 
     // pipeline
     IFB_ENG_INTERNAL void gl_pipeline_init                                   (gl_pipeline& pipeline);
@@ -89,12 +93,15 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void gl_buffer_destroy (gl_buffer& buffer);
 
     // vertex
-    IFB_ENG_INTERNAL void gl_vertex_create            (gl_vertex& vertex);
-    IFB_ENG_INTERNAL void gl_vertex_destroy           (gl_vertex& vertex);
-    IFB_ENG_INTERNAL bool gl_vertex_attribute_enable  (gl_vertex& vertex, const u32 index);
-    IFB_ENG_INTERNAL bool gl_vertex_attribute_disable (gl_vertex& vertex, const u32 index);
-    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_u32 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
-    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_f32 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
+    IFB_ENG_INTERNAL void gl_vertex_create             (gl_vertex& vertex);
+    IFB_ENG_INTERNAL void gl_vertex_destroy            (gl_vertex& vertex);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_enable   (gl_vertex& vertex, const u32 index);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_disable  (gl_vertex& vertex, const u32 index);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_s32  (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_u32  (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_f32  (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_vec2 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_vec3 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
 
     // hello triangle
     IFB_ENG_INTERNAL void gl_hello_triangle_create  (gl_hello_triangle& hello_triangle);
@@ -104,6 +111,27 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
     // DEFINITIONS
     //-------------------------------------------------------------------
+
+    struct gl_state {
+        gl_error error;
+        struct {
+            gl_id program;
+            gl_id vertex;
+            gl_id vertex_buffer;
+            gl_id index_buffer;
+        } object_id;
+        struct {
+            struct {
+                u32 vertex;
+                u32 index;
+            } size;
+            struct {
+                const byte* vertex;
+                const u32*  index;
+            } data;
+        } buffer;
+    };
+
 
     struct gl_object {
         gl_id    id;
@@ -145,7 +173,8 @@ namespace ifb::eng {
 
     struct gl_hello_triangle {
         gl_program  program;
-        gl_pipeline pipeline;  
+        gl_pipeline pipeline;
+        gl_vertex   vertex;
         struct {
             gl_buffer vertex;
             gl_buffer index;
