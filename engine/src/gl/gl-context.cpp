@@ -192,12 +192,13 @@ namespace ifb::eng {
         assert(can_render);
 
         // draw the indexed vertices
-        constexpr GLenum draw_mode = GL_TRIANGLES;
-        constexpr GLenum draw_type = GL_UNSIGNED_INT; 
-        constexpr void*  draw_data = NULL; // we draw whatever index buffer is bound
+        constexpr GLenum draw_mode        = GL_TRIANGLES;
+        constexpr GLenum draw_type        = GL_UNSIGNED_INT; 
+        constexpr void*  draw_data        = NULL; // we draw whatever index buffer is bound
+        const     u32    draw_index_count = _state.buffer.size.index / sizeof(u32); 
         glDrawElements(
             draw_mode,
-            _state.buffer.size.index,
+            draw_index_count,
             draw_type,
             draw_data
         );

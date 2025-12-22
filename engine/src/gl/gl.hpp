@@ -72,7 +72,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void            gl_context_set_index_buffer       (gl_buffer&  buffer);
     IFB_ENG_INTERNAL void            gl_context_set_vertex             (gl_vertex&  vertex);
     IFB_ENG_INTERNAL void            gl_context_set_vertex_buffer_data (const byte* buffer_data, const u32 buffer_size);
-    IFB_ENG_INTERNAL void            gl_context_set_index_buffer_data  (const u32*  buffer_data, const u32 buffer_size);
+    IFB_ENG_INTERNAL void            gl_context_set_index_buffer_data  (const u32*  index_array, const u32 index_count);
 
     // pipeline
     IFB_ENG_INTERNAL void gl_pipeline_init                                   (gl_pipeline& pipeline);
