@@ -19,9 +19,9 @@ namespace ifb::eng {
     struct gl_pipeline;
     struct gl_program;
     struct gl_shader;
-    struct gl_hello_triangle;
     struct gl_buffer;
     struct gl_vertex;
+    struct gl_hello_triangle;
 
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -68,6 +68,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void gl_context_set_vertex_buffer_data (const byte* buffer_data, const u32 buffer_size);
     IFB_ENG_INTERNAL void gl_context_set_index_buffer       (gl_buffer&  buffer);
     IFB_ENG_INTERNAL void gl_context_set_index_buffer_data  (const u32*  buffer_data, const u32 buffer_size);
+    IFB_ENG_INTERNAL void gl_context_set_vertex             (gl_vertex& vertex);
 
     // pipeline
     IFB_ENG_INTERNAL void gl_pipeline_init                                   (gl_pipeline& pipeline);
@@ -84,13 +85,16 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool gl_program_link_pipeline (gl_program& program, gl_pipeline& pipeline);
 
     // buffer
-    IFB_ENG_INTERNAL void gl_buffer_create     (gl_buffer& buffer);
-    IFB_ENG_INTERNAL void gl_buffer_destroy    (gl_buffer& buffer);
+    IFB_ENG_INTERNAL void gl_buffer_create  (gl_buffer& buffer);
+    IFB_ENG_INTERNAL void gl_buffer_destroy (gl_buffer& buffer);
 
-    // buffer
-    IFB_ENG_INTERNAL void gl_vertex_create     (gl_vertex& buffer);
-    IFB_ENG_INTERNAL void gl_vertex_destroy    (gl_vertex& buffer);
-
+    // vertex
+    IFB_ENG_INTERNAL void gl_vertex_create            (gl_vertex& vertex);
+    IFB_ENG_INTERNAL void gl_vertex_destroy           (gl_vertex& vertex);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_enable  (gl_vertex& vertex, const u32 index);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_disable (gl_vertex& vertex, const u32 index);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_u32 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
+    IFB_ENG_INTERNAL bool gl_vertex_attribute_set_f32 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
 
     // hello triangle
     IFB_ENG_INTERNAL void gl_hello_triangle_create  (gl_hello_triangle& hello_triangle);
@@ -130,6 +134,7 @@ namespace ifb::eng {
     struct gl_buffer  : gl_object { };
     struct gl_vertex  : gl_object { };
 
+
     struct gl_pipeline {
         gl_shader vertex;
         gl_shader tessellation_control;
@@ -141,7 +146,6 @@ namespace ifb::eng {
     struct gl_hello_triangle {
         gl_program  program;
         gl_pipeline pipeline;  
-        gl_vertex   vertex;
         struct {
             gl_buffer vertex;
             gl_buffer index;
