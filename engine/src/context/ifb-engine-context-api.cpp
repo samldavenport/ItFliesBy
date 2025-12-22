@@ -99,7 +99,6 @@ namespace ifb::eng {
         // SHADER TEST START
         //-----------------------------
 
-        gl_hello_triangle_render(_hello_triangle);
 
         //-----------------------------
         // SHADER TEST END
@@ -116,8 +115,9 @@ namespace ifb::eng {
 
         assert(ctx);
 
-        devconsole_render(ctx->devconsole);
         os_window_render_frame(ctx->os);
+        devconsole_render(ctx->devconsole);
+        gl_hello_triangle_render(_hello_triangle);
 
         return(true);
     }

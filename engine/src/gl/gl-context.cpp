@@ -18,6 +18,11 @@ namespace ifb::eng {
         _state.object_id.vertex        = GL_ID_INVALID;
         _state.object_id.vertex_buffer = GL_ID_INVALID;
         _state.object_id.index_buffer  = GL_ID_INVALID;
+
+        // for good measure, ensure GL state is clear
+        glBindVertexArray (0);
+        glBindBuffer      (GL_ARRAY_BUFFER,         0);
+        glBindBuffer      (GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
     IFB_ENG_INTERNAL const gl_state&

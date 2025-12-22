@@ -37,7 +37,6 @@ namespace ifb::eng {
         gl_context_set_vertex        (hello_triangle.vertex);
         gl_vertex_attribute_set_vec3 (hello_triangle.vertex, vertex_size, position_index, position_offset);
         gl_vertex_attribute_enable   (hello_triangle.vertex, position_index);
-
     }
 
     IFB_ENG_INTERNAL void
@@ -56,11 +55,16 @@ namespace ifb::eng {
         const u32   size_buffer_vertex = sizeof(GL_HELLO_TRIANGLE_VERTICES);
         const u32   size_buffer_index  = sizeof(GL_HELLO_TRIANGLE_INDICES);
 
+        // set the draw data
         gl_context_set_program            (hello_triangle.program);
         gl_context_set_vertex_buffer      (hello_triangle.buffer.vertex);
         gl_context_set_index_buffer       (hello_triangle.buffer.index);
         gl_context_set_vertex_buffer_data (data_buffer_vertex, size_buffer_vertex);
         gl_context_set_index_buffer_data  (data_buffer_index,  size_buffer_index);
+        
+        // render data and reset context
+        gl_context_render();
+        gl_context_reset();
     }
 
 };
