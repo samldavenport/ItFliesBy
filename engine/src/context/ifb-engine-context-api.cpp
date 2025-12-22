@@ -95,17 +95,6 @@ namespace ifb::eng {
         os_window_reset_events (ctx->os);
         os_window_reset_input  (ctx->os);
 
-       //-----------------------------
-        // SHADER TEST START
-        //-----------------------------
-
-
-        //-----------------------------
-        // SHADER TEST END
-        //-----------------------------
-
-
-
         return(true);
     }
 
@@ -115,9 +104,9 @@ namespace ifb::eng {
 
         assert(ctx);
 
-        os_window_render_frame(ctx->os);
         devconsole_render(ctx->devconsole);
         gl_hello_triangle_render(_hello_triangle);
+        os_window_render_frame(ctx->os);
 
         return(true);
     }
