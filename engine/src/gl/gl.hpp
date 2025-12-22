@@ -21,6 +21,7 @@ namespace ifb::eng {
     struct gl_shader;
     struct gl_hello_triangle;
     struct gl_buffer;
+    struct gl_vertex;
 
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -86,6 +87,11 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void gl_buffer_create     (gl_buffer& buffer);
     IFB_ENG_INTERNAL void gl_buffer_destroy    (gl_buffer& buffer);
 
+    // buffer
+    IFB_ENG_INTERNAL void gl_vertex_create     (gl_vertex& buffer);
+    IFB_ENG_INTERNAL void gl_vertex_destroy    (gl_vertex& buffer);
+
+
     // hello triangle
     IFB_ENG_INTERNAL void gl_hello_triangle_create  (gl_hello_triangle& hello_triangle);
     IFB_ENG_INTERNAL void gl_hello_triangle_destroy (gl_hello_triangle& hello_triangle);
@@ -122,6 +128,7 @@ namespace ifb::eng {
     struct gl_program : gl_object { };
     struct gl_shader  : gl_object { };
     struct gl_buffer  : gl_object { };
+    struct gl_vertex  : gl_object { };
 
     struct gl_pipeline {
         gl_shader vertex;
@@ -134,6 +141,7 @@ namespace ifb::eng {
     struct gl_hello_triangle {
         gl_program  program;
         gl_pipeline pipeline;  
+        gl_vertex   vertex;
         struct {
             gl_buffer vertex;
             gl_buffer index;
