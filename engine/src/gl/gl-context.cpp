@@ -10,14 +10,18 @@ namespace ifb::eng {
     gl_context_init(
         void) {
 
-        const bool did_init = (glewInit() == GLEW_OK);
-        assert(did_init);
+        // const bool did_init = (glewInit() == GLEW_OK);
+        // assert(did_init);
 
-        _state.error                   = GL_ERROR_SUCCESS;
-        _state.object_id.program       = GL_ID_INVALID;
-        _state.object_id.vertex        = GL_ID_INVALID;
-        _state.object_id.vertex_buffer = GL_ID_INVALID;
-        _state.object_id.index_buffer  = GL_ID_INVALID;
+        _state.error                                  = GL_ERROR_SUCCESS;
+        _state.object_id.program                      = GL_ID_INVALID;
+        _state.object_id.vertex                       = GL_ID_INVALID;
+        _state.object_id.vertex_buffer                = GL_ID_INVALID;
+        _state.object_id.index_buffer                 = GL_ID_INVALID;
+        _state.draw_data.indices.buffer_data.as_byte  = NULL;
+        _state.draw_data.indices.buffer_size          = 0;
+        _state.draw_data.vertices.buffer_data.as_byte = NULL;
+        _state.draw_data.vertices.buffer_size         = 0;
 
         // for good measure, ensure GL state is clear
         glBindVertexArray (0);
@@ -54,6 +58,8 @@ namespace ifb::eng {
     gl_context_enable_smoothing(
         void) {
 
+        gl_context_clear_errors();
+
 	    glEnable(GL_MULTISAMPLE);
         _state.error = glGetError();
         assert(_state.error == GL_ERROR_SUCCESS);
@@ -71,6 +77,8 @@ namespace ifb::eng {
     gl_context_enable_depth_rendering(
         void) {
 
+        gl_context_clear_errors();
+
 	    glEnable(GL_DEPTH_TEST);
         _state.error = glGetError();
         assert(_state.error == GL_ERROR_SUCCESS);
@@ -81,8 +89,68 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
+    gl_context_set_viewport(
+        const gl_viewport& viewport) {
+
+        gl_context_clear_errors();
+
+        glViewport(
+            viewport.x,
+            viewport.y,
+            viewport.width,
+            viewport.height
+        );
+
+        _state.error = glGetError();
+        assert(_state.error == GL_ERROR_SUCCESS);
+    }
+
+    IFB_ENG_INTERNAL void
+    gl_context_set_clear_color(
+        const u32 hex_rgba) {
+
+        gl_context_clear_errors();
+
+        _state.clear_color.from_hex(hex_rgba);
+
+        glClearColor(
+            _state.clear_color.r,
+            _state.clear_color.g,
+            _state.clear_color.b,
+            _state.clear_color.a
+        );
+
+        _state.error = glGetError();
+        assert(_state.error == GL_ERROR_SUCCESS);
+    }
+
+    IFB_ENG_INTERNAL void
+    gl_context_set_viewport(
+        const u32 x,
+        const u32 y,
+        const u32 width,
+        const u32 height) {
+
+        gl_context_clear_errors();
+
+        _state.viewport.x      = x;
+        _state.viewport.y      = y;
+        _state.viewport.width  = width;
+        _state.viewport.height = height;
+        glViewport(
+            _state.viewport.x,
+            _state.viewport.y,
+            _state.viewport.width,
+            _state.viewport.height
+        );
+
+        _state.error = glGetError();
+        assert(_state.error == GL_ERROR_SUCCESS);
+    }
+
+    IFB_ENG_INTERNAL void
     gl_context_set_program(
-        gl_program& program) {
+        const gl_program& program) {
 
         assert(program.is_valid());
 
@@ -97,7 +165,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     gl_context_set_vertex_buffer(
-        gl_buffer& buffer) {
+        const gl_buffer& buffer) {
 
         assert(buffer.is_valid());
 
@@ -111,7 +179,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     gl_context_set_index_buffer(
-        gl_buffer& buffer) {
+        const gl_buffer& buffer) {
 
         assert(buffer.is_valid());
 
@@ -136,8 +204,8 @@ namespace ifb::eng {
         gl_context_clear_errors();
         glBufferData(GL_ARRAY_BUFFER, buffer_size, buffer_data, GL_STATIC_DRAW);
         _state.error              = glGetError(); 
-        _state.buffer.data.vertex = buffer_data;
-        _state.buffer.size.vertex = buffer_size;
+        _state.draw_data.vertices.buffer_data.as_byte = buffer_data;
+        _state.draw_data.vertices.buffer_size         = buffer_size;
         assert(_state.error == GL_ERROR_SUCCESS);        
     }
     
@@ -153,9 +221,9 @@ namespace ifb::eng {
 
         gl_context_clear_errors();
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer_size, buffer_data, GL_STATIC_DRAW);
-        _state.error              = glGetError(); 
-        _state.buffer.data.index  = buffer_data;
-        _state.buffer.size.index  = buffer_size;
+        _state.error                                = glGetError(); 
+        _state.draw_data.indices.buffer_data.as_u32 = buffer_data;
+        _state.draw_data.indices.buffer_size        = buffer_size;
         assert(_state.error == GL_ERROR_SUCCESS);
     }
 
@@ -185,17 +253,13 @@ namespace ifb::eng {
         can_render &= (_state.object_id.vertex        != GL_ID_INVALID);
         can_render &= (_state.object_id.vertex_buffer != GL_ID_INVALID);
         can_render &= (_state.object_id.index_buffer  != GL_ID_INVALID);
-        can_render &= (_state.buffer.data.vertex      != NULL);
-        can_render &= (_state.buffer.data.index       != NULL);
-        can_render &= (_state.buffer.size.vertex      != 0);
-        can_render &= (_state.buffer.size.index       != 0);
         assert(can_render);
 
         // draw the indexed vertices
         constexpr GLenum draw_mode        = GL_TRIANGLES;
         constexpr GLenum draw_type        = GL_UNSIGNED_INT; 
         constexpr void*  draw_data        = NULL; // we draw whatever index buffer is bound
-        const     u32    draw_index_count = _state.buffer.size.index / sizeof(u32); 
+        const     u32    draw_index_count = _state.draw_data.vertices.count_u32(); 
         glDrawElements(
             draw_mode,
             draw_index_count,

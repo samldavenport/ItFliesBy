@@ -22,14 +22,19 @@ namespace ifb::eng {
     struct gl_shader;
     struct gl_buffer;
     struct gl_vertex;
-    struct gl_hello_triangle;
+    struct gl_color;
+    struct gl_draw_buffer;
+    struct gl_viewport;
 
+    struct gl_hello_triangle;
+    
     //-------------------------------------------------------------------
     // CONSTANTS
     //-------------------------------------------------------------------
 
-    constexpr gl_error GL_ERROR_SUCCESS = 0;
-    constexpr gl_id    GL_ID_INVALID    = 0;
+    constexpr gl_error GL_ERROR_SUCCESS      = 0;
+    constexpr gl_id    GL_ID_INVALID         = 0;
+    constexpr f32      GL_NORMAL_FACTOR_BYTE = (1.0f / 255.0f);
     constexpr cchar GL_HELLO_TRIANGLE_SHADER_VERTEX[] = 
         "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
@@ -67,10 +72,12 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void            gl_context_enable_depth_rendering (void);
     IFB_ENG_INTERNAL void            gl_context_render                 (void);
     IFB_ENG_INTERNAL void            gl_context_reset                  (void);
-    IFB_ENG_INTERNAL void            gl_context_set_program            (gl_program& program);
-    IFB_ENG_INTERNAL void            gl_context_set_vertex_buffer      (gl_buffer&  buffer);
-    IFB_ENG_INTERNAL void            gl_context_set_index_buffer       (gl_buffer&  buffer);
-    IFB_ENG_INTERNAL void            gl_context_set_vertex             (gl_vertex&  vertex);
+    IFB_ENG_INTERNAL void            gl_context_set_clear_color        (const u32 hex_rgba);
+    IFB_ENG_INTERNAL void            gl_context_set_viewport           (const u32 x, const u32 y, const u32 width, const u32 height);
+    IFB_ENG_INTERNAL void            gl_context_set_program            (const gl_program&  program);
+    IFB_ENG_INTERNAL void            gl_context_set_vertex_buffer      (const gl_buffer&   buffer);
+    IFB_ENG_INTERNAL void            gl_context_set_index_buffer       (const gl_buffer&   buffer);
+    IFB_ENG_INTERNAL void            gl_context_set_vertex             (const gl_vertex&   vertex);
     IFB_ENG_INTERNAL void            gl_context_set_vertex_buffer_data (const byte* buffer_data, const u32 buffer_size);
     IFB_ENG_INTERNAL void            gl_context_set_index_buffer_data  (const u32*  index_array, const u32 index_count);
 
@@ -112,6 +119,59 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
+    struct gl_draw_data {
+        union {
+            const byte* as_byte;
+            const u32*  as_u32;
+        } buffer_data;
+        u32 buffer_size;
+        
+        public:
+
+        inline bool
+        is_valid(
+            void) {
+
+            return(
+                this->buffer_size         != 0 &&
+                this->buffer_data.as_byte != NULL
+            );
+        }
+
+        inline u32 
+        count_u32(
+            void) {
+
+            return(this->buffer_size / sizeof(u32));
+        }
+    };
+
+    struct gl_color {
+        f32 r;
+        f32 g;
+        f32 b;
+        f32 a;
+
+        public:
+
+        inline void
+        from_hex(
+            const u32 hex_rgba) {
+
+            this->r = ((f32)(hex_rgba >> 24 & 0xFF)) * GL_NORMAL_FACTOR_BYTE;
+            this->g = ((f32)(hex_rgba >> 16 & 0xFF)) * GL_NORMAL_FACTOR_BYTE;
+            this->b = ((f32)(hex_rgba >> 8  & 0xFF)) * GL_NORMAL_FACTOR_BYTE;
+            this->a = ((f32)(hex_rgba >> 0  & 0xFF)) * GL_NORMAL_FACTOR_BYTE;
+        }
+    };
+
+    struct gl_viewport {
+        u32 x;
+        u32 y;
+        u32 width;
+        u32 height;
+    };
+
     struct gl_state {
         gl_error error;
         struct {
@@ -121,33 +181,29 @@ namespace ifb::eng {
             gl_id index_buffer;
         } object_id;
         struct {
-            struct {
-                u32 vertex;
-                u32 index;
-            } size;
-            struct {
-                const byte* vertex;
-                const u32*  index;
-            } data;
-        } buffer;
+            gl_draw_data vertices;
+            gl_draw_data indices;
+        } draw_data;
+        gl_color    clear_color;
+        gl_viewport viewport;
     };
-
 
     struct gl_object {
         gl_id    id;
         gl_error error;
 
+        public:
         inline void
         reset(void) {
-            this->id    = GL_ID_INVALID;
-            this->error = GL_ERROR_SUCCESS;
+            id    = GL_ID_INVALID;
+            error = GL_ERROR_SUCCESS;
         }
 
         inline bool
-        is_valid(void) {
+        is_valid(void) const {
             return(
-                this->id    != GL_ID_INVALID    &&
-                this->error == GL_ERROR_SUCCESS
+                id    != GL_ID_INVALID    &&
+                error == GL_ERROR_SUCCESS
             );
         }
 
@@ -156,6 +212,7 @@ namespace ifb::eng {
             this->error = GL_ERROR_SUCCESS;
         }
     };
+
 
     struct gl_program : gl_object { };
     struct gl_shader  : gl_object { };

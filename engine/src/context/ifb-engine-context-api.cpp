@@ -4,6 +4,11 @@
 #include "gl.hpp"
 namespace ifb::eng {
     
+    constexpr u32 OS_WINDOW_KEYCODE_CAPACITY         = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
+    constexpr u32 OS_WINDOW_DEFAULT_WIDTH            = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_WIDTH;
+    constexpr u32 OS_WINDOW_DEFAULT_HEIGHT           = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT;
+    constexpr u32 OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA;
+
     static gl_hello_triangle _hello_triangle;
 
     IFB_ENG_API context*
@@ -39,7 +44,7 @@ namespace ifb::eng {
 
     IFB_ENG_API bool
     context_startup(
-        context* ctx) {
+        context* ctx) { 
 
         assert(ctx);
 
@@ -53,17 +58,23 @@ namespace ifb::eng {
         devconsole_init(ctx->devconsole);
 
         //-----------------------------
-        // SHADER TEST START
+        // GL CONTEXT START
         //-----------------------------
 
         gl_context_init();
         gl_context_enable_smoothing();
         gl_context_enable_depth_rendering();
+        gl_context_set_clear_color(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA);
+        gl_context_set_viewport(
+            0,0,
+            IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_WIDTH,
+            IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT
+        );
 
         gl_hello_triangle_create(_hello_triangle);
 
         //-----------------------------
-        // SHADER TEST END
+        // GL CONTEXT END
         //-----------------------------
 
         return(true);
