@@ -10,9 +10,6 @@ namespace ifb::eng {
     gl_context_init(
         void) {
 
-        // const bool did_init = (glewInit() == GLEW_OK);
-        // assert(did_init);
-
         _state.error                                  = GL_ERROR_SUCCESS;
         _state.object_id.program                      = GL_ID_INVALID;
         _state.object_id.vertex                       = GL_ID_INVALID;
@@ -103,6 +100,13 @@ namespace ifb::eng {
 
         _state.error = glGetError();
         assert(_state.error == GL_ERROR_SUCCESS);
+    }
+
+    IFB_ENG_INTERNAL void
+    gl_context_clear_viewport(
+        void) {
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     IFB_ENG_INTERNAL void

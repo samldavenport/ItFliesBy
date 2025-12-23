@@ -57,10 +57,7 @@ namespace ifb::eng {
         // devconsole
         devconsole_init(ctx->devconsole);
 
-        //-----------------------------
-        // GL CONTEXT START
-        //-----------------------------
-
+        // initialize gl context
         gl_context_init();
         gl_context_enable_smoothing();
         gl_context_enable_depth_rendering();
@@ -71,11 +68,8 @@ namespace ifb::eng {
             IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT
         );
 
+        // hello triangle test program
         gl_hello_triangle_create(_hello_triangle);
-
-        //-----------------------------
-        // GL CONTEXT END
-        //-----------------------------
 
         return(true);
     }
@@ -92,6 +86,9 @@ namespace ifb::eng {
         context* ctx) {
 
         assert(ctx);
+
+        // clear the viewport
+        gl_context_clear_viewport();
 
         // check system resources
         os_system_refresh_info   (ctx->os);

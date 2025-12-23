@@ -72,6 +72,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void            gl_context_enable_depth_rendering (void);
     IFB_ENG_INTERNAL void            gl_context_render                 (void);
     IFB_ENG_INTERNAL void            gl_context_reset                  (void);
+    IFB_ENG_INTERNAL void            gl_context_clear_viewport         (void);
     IFB_ENG_INTERNAL void            gl_context_set_clear_color        (const u32 hex_rgba);
     IFB_ENG_INTERNAL void            gl_context_set_viewport           (const u32 x, const u32 y, const u32 width, const u32 height);
     IFB_ENG_INTERNAL void            gl_context_set_program            (const gl_program&  program);
@@ -91,13 +92,13 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool gl_pipeline_compile_shader_fragment                (gl_pipeline& pipeline, const cchar* shader_src);
 
     // program
-    IFB_ENG_INTERNAL void gl_program_create        (gl_program& program);
-    IFB_ENG_INTERNAL void gl_program_destroy       (gl_program& program);
-    IFB_ENG_INTERNAL bool gl_program_link_pipeline (gl_program& program, gl_pipeline& pipeline);
+    IFB_ENG_INTERNAL void gl_program_create            (gl_program& program);
+    IFB_ENG_INTERNAL void gl_program_destroy           (gl_program& program);
+    IFB_ENG_INTERNAL bool gl_program_link_pipeline     (gl_program& program, gl_pipeline& pipeline);
 
     // buffer
-    IFB_ENG_INTERNAL void gl_buffer_create  (gl_buffer& buffer);
-    IFB_ENG_INTERNAL void gl_buffer_destroy (gl_buffer& buffer);
+    IFB_ENG_INTERNAL void gl_buffer_create             (gl_buffer& buffer);
+    IFB_ENG_INTERNAL void gl_buffer_destroy            (gl_buffer& buffer);
 
     // vertex
     IFB_ENG_INTERNAL void gl_vertex_create             (gl_vertex& vertex);
@@ -111,9 +112,9 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool gl_vertex_attribute_set_vec3 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
 
     // hello triangle
-    IFB_ENG_INTERNAL void gl_hello_triangle_create  (gl_hello_triangle& hello_triangle);
-    IFB_ENG_INTERNAL void gl_hello_triangle_destroy (gl_hello_triangle& hello_triangle);
-    IFB_ENG_INTERNAL void gl_hello_triangle_render  (gl_hello_triangle& hello_triangle);
+    IFB_ENG_INTERNAL void gl_hello_triangle_create     (gl_hello_triangle& hello_triangle);
+    IFB_ENG_INTERNAL void gl_hello_triangle_destroy    (gl_hello_triangle& hello_triangle);
+    IFB_ENG_INTERNAL void gl_hello_triangle_render     (gl_hello_triangle& hello_triangle);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -205,10 +206,20 @@ namespace ifb::eng {
     };
 
     struct gl_object {
+        
+        //-----------------
+        // properties
+        //-----------------
+        
         gl_id    id;
         gl_error error;
 
+        //-----------------
+        // methods
+        //-----------------
+
         public:
+        
         inline void
         reset(void) {
             id    = GL_ID_INVALID;
