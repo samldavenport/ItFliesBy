@@ -263,7 +263,7 @@ namespace ifb::eng {
         constexpr GLenum draw_mode        = GL_TRIANGLES;
         constexpr GLenum draw_type        = GL_UNSIGNED_INT; 
         constexpr void*  draw_data        = NULL; // we draw whatever index buffer is bound
-        const     u32    draw_index_count = _state.draw_data.vertices.count_u32(); 
+        const     u32    draw_index_count = _state.draw_data.indices.count_u32(); 
         glDrawElements(
             draw_mode,
             draw_index_count,
