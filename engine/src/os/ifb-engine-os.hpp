@@ -18,10 +18,7 @@ namespace ifb::eng {
     constexpr u32 OS_MONITOR_MAX_COUNT               = IFB_ENG_CONFIG_OS_MONITOR_MAX_COUNT;
     constexpr u32 OS_MONITOR_INVALID                 = 0xFFFFFFFF; 
     constexpr u32 OS_WINDOW_EVENT_CAPACITY           = IFB_ENG_CONFIG_OS_WINDOW_EVENT_CAPACITY;
-    constexpr u32 OS_WINDOW_KEYCODE_CAPACITY         = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
-    constexpr u32 OS_WINDOW_DEFAULT_WIDTH            = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_WIDTH;
-    constexpr u32 OS_WINDOW_DEFAULT_HEIGHT           = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT;
-    constexpr u32 OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA;
+
 
     //-------------------------------------------------------------------
     // TYPES
@@ -126,13 +123,13 @@ namespace ifb::eng {
 
     struct os_window {
         os_window_handle     handle;
+        os_window_imgui      imgui;
+        os_window_opengl     opengl;
         os_window_position   position;
         os_window_size       size;
-        os_window_viewport   viewport;
         os_window_event_list event_list;
         os_window_flags      flags;
         os_window_input      input;
-        os_window_color      clear_color;
     };
 
     struct os_file_table {

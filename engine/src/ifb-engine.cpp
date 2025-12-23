@@ -11,5 +11,9 @@
 
 #include "ifb-engine-devconsole.cpp"
 
-#include "graphics-pipeline.cpp"
-#include "graphics-program.cpp"
+#include "gl-buffer.cpp"
+#include "gl-context.cpp"
+#include "gl-pipeline.cpp"
+#include "gl-program.cpp"
+#include "gl-hello-quad.cpp"
+#include "gl-vertex.cpp"

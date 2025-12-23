@@ -29,27 +29,20 @@ namespace ifb::eng {
         window->handle = os_window_create(&config);
         assert(window->handle != NULL);
 
-        // set the viewport
-        window->viewport.pos_x  = 0;
-        window->viewport.pos_y  = 0;
-        window->viewport.width  = config.size.width;
-        window->viewport.height = config.size.height;
-
-        // set the clear color
-        window->clear_color.r = (byte)(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA >> 24);
-        window->clear_color.g = (byte)(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA >> 16);
-        window->clear_color.b = (byte)(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA >> 8);
-        window->clear_color.a = (byte)OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA; 
+        // create graphics contexts
+        window->opengl = os_window_init_opengl (window->handle);
+        window->imgui  = os_window_init_imgui  (window->handle);
+        assert(
+            window->opengl != NULL &&
+            window->imgui  != NULL            
+        );
 
         // show the window and set other properties
         bool is_valid = true;
         is_valid &= os_window_get_size        (window->handle, &window->size);
         is_valid &= os_window_get_position    (window->handle, &window->position);
-        is_valid &= os_window_set_viewport    (window->handle, &window->viewport);
-        is_valid &= os_window_set_clear_color (window->handle, &window->clear_color);
         is_valid &= os_window_show            (window->handle);
         assert(is_valid);
-
     }
 
     IFB_ENG_INTERNAL void
@@ -63,8 +56,6 @@ namespace ifb::eng {
         is_valid &= (window->handle          != NULL);
         is_valid &= (window->size.height     != 0);   
         is_valid &= (window->size.width      != 0);   
-        is_valid &= (window->viewport.height != 0);   
-        is_valid &= (window->viewport.width  != 0);   
         is_valid &= ((window->flags & os_window_flag_e_frame_started) == 0); 
         assert(is_valid);
 

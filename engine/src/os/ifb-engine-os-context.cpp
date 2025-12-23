@@ -47,10 +47,6 @@ namespace ifb::eng {
         window->position.y                               = 0;
         window->size.width                               = 0;
         window->size.height                              = 0;
-        window->viewport.pos_x                           = 0;
-        window->viewport.pos_y                           = 0;
-        window->viewport.width                           = 0;
-        window->viewport.height                          = 0;
         window->event_list.array                         = window_events;
         window->event_list.capacity                      = OS_WINDOW_EVENT_CAPACITY;  
         window->event_list.count                         = 0;

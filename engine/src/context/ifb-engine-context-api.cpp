@@ -1,9 +1,16 @@
 #pragma once
 
 #include "ifb-engine-context.hpp"
-#include "graphics.hpp"
+#include "gl.hpp"
 namespace ifb::eng {
     
+    constexpr u32 OS_WINDOW_KEYCODE_CAPACITY         = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
+    constexpr u32 OS_WINDOW_DEFAULT_WIDTH            = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_WIDTH;
+    constexpr u32 OS_WINDOW_DEFAULT_HEIGHT           = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT;
+    constexpr u32 OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA;
+
+    static gl_hello_quad _hello_quad;
+
     IFB_ENG_API context*
     context_create(
         byte*     stack_data,
@@ -37,7 +44,7 @@ namespace ifb::eng {
 
     IFB_ENG_API bool
     context_startup(
-        context* ctx) {
+        context* ctx) { 
 
         assert(ctx);
 
@@ -50,27 +57,19 @@ namespace ifb::eng {
         // devconsole
         devconsole_init(ctx->devconsole);
 
-        //-----------------------------
-        // SHADER TEST START
-        //-----------------------------
-
-        graphics_pipeline test_pipeline;
-        graphics_program  test_program;
-
-        bool result = true;
-
+        // initialize gl context
         gl_context_init();
-        graphics_pipeline_init                    (test_pipeline);
-        graphics_pipeline_compile_shader_vertex   (test_pipeline, GL_HELLO_TRIANGLE_SHADER_VERTEX);
-        graphics_pipeline_compile_shader_fragment (test_pipeline, GL_HELLO_TRIANGLE_SHADER_FRAGMENT);
+        gl_context_enable_smoothing();
+        gl_context_enable_depth_rendering();
+        gl_context_set_clear_color(OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA);
+        gl_context_set_viewport(
+            0,0,
+            IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_WIDTH,
+            IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT
+        );
 
-        assert(result);
-
-        //-----------------------------
-        // SHADER TEST END
-        //-----------------------------
-
-
+        // hello triangle test program
+        gl_hello_quad_create(_hello_quad);
 
         return(true);
     }
@@ -87,6 +86,9 @@ namespace ifb::eng {
         context* ctx) {
 
         assert(ctx);
+
+        // clear the viewport
+        gl_context_clear_viewport();
 
         // check system resources
         os_system_refresh_info   (ctx->os);
@@ -111,6 +113,7 @@ namespace ifb::eng {
         assert(ctx);
 
         devconsole_render(ctx->devconsole);
+        gl_hello_quad_render(_hello_quad);
         os_window_render_frame(ctx->os);
 
         return(true);

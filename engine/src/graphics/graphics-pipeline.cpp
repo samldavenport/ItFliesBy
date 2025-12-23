@@ -206,10 +206,10 @@ namespace ifb::eng {
         assert(shader_src);
 
         gl_status        shader_status = GL_ERROR_SUCCESS;
-        graphics_shader& shader        = pipeline.shader.vertex;
+        graphics_shader& shader        = pipeline.shader.fragment;
 
         // create the shader
-        gl_shader_create_vertex(
+        gl_shader_create_fragment(
             shader.gl_shader,
             shader.gl_error
         );
