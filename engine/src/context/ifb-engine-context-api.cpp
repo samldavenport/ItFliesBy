@@ -9,7 +9,7 @@ namespace ifb::eng {
     constexpr u32 OS_WINDOW_DEFAULT_HEIGHT           = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT;
     constexpr u32 OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA;
 
-    static gl_hello_triangle _hello_triangle;
+    static gl_hello_quad _hello_quad;
 
     IFB_ENG_API context*
     context_create(
@@ -69,7 +69,7 @@ namespace ifb::eng {
         );
 
         // hello triangle test program
-        gl_hello_triangle_create(_hello_triangle);
+        gl_hello_quad_create(_hello_quad);
 
         return(true);
     }
@@ -113,7 +113,7 @@ namespace ifb::eng {
         assert(ctx);
 
         devconsole_render(ctx->devconsole);
-        gl_hello_triangle_render(_hello_triangle);
+        gl_hello_quad_render(_hello_quad);
         os_window_render_frame(ctx->os);
 
         return(true);
