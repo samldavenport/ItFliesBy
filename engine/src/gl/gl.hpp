@@ -2,6 +2,7 @@
 #define GL_HPP
 
 #include "ifb-engine.hpp"
+#include "ifb-engine-os.hpp"
 
 namespace ifb::eng {
 
@@ -25,7 +26,6 @@ namespace ifb::eng {
     struct gl_color;
     struct gl_draw_buffer;
     struct gl_viewport;
-
     struct gl_hello_triangle;
     
     //-------------------------------------------------------------------
@@ -120,12 +120,19 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     struct gl_draw_data {
+
+        //-----------------
+        // properties
+        //-----------------
         union {
             const byte* as_byte;
             const u32*  as_u32;
         } buffer_data;
         u32 buffer_size;
-        
+
+        //-----------------
+        // methods        
+        //-----------------
         public:
 
         inline bool
@@ -147,10 +154,19 @@ namespace ifb::eng {
     };
 
     struct gl_color {
+
+        //-----------------
+        // properties
+        //-----------------
+        
         f32 r;
         f32 g;
         f32 b;
         f32 a;
+
+        //-----------------
+        // methods
+        //-----------------
 
         public:
 
@@ -213,12 +229,10 @@ namespace ifb::eng {
         }
     };
 
-
     struct gl_program : gl_object { };
     struct gl_shader  : gl_object { };
     struct gl_buffer  : gl_object { };
     struct gl_vertex  : gl_object { };
-
 
     struct gl_pipeline {
         gl_shader vertex;

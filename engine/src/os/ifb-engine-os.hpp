@@ -123,6 +123,8 @@ namespace ifb::eng {
 
     struct os_window {
         os_window_handle     handle;
+        os_window_imgui      imgui;
+        os_window_opengl     opengl;
         os_window_position   position;
         os_window_size       size;
         os_window_event_list event_list;

@@ -29,13 +29,20 @@ namespace ifb::eng {
         window->handle = os_window_create(&config);
         assert(window->handle != NULL);
 
+        // create graphics contexts
+        window->opengl = os_window_init_opengl (window->handle);
+        window->imgui  = os_window_init_imgui  (window->handle);
+        assert(
+            window->opengl != NULL &&
+            window->imgui  != NULL            
+        );
+
         // show the window and set other properties
         bool is_valid = true;
         is_valid &= os_window_get_size        (window->handle, &window->size);
         is_valid &= os_window_get_position    (window->handle, &window->position);
         is_valid &= os_window_show            (window->handle);
         assert(is_valid);
-
     }
 
     IFB_ENG_INTERNAL void
