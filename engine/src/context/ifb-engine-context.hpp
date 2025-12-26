@@ -4,6 +4,7 @@
 #include "ifb-engine.hpp"
 #include "ifb-engine-os.hpp"
 #include "ifb-engine-devconsole.hpp"
+#include "graphics.hpp"
 
 #include <sld-stack.hpp>
 
@@ -36,7 +37,8 @@ namespace ifb::eng {
     struct context {
         stack                stack;
         os_context*          os;
-        devconsole*            devconsole;
+        devconsole*          devconsole;
+        graphics_manager*    graphics_manager;
         context_keymap_flags keymap_flags;
     };
 
@@ -45,7 +47,7 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     enum context_keymap_flag_e {
-        context_keymap_flag_e_none     = 0,
+        context_keymap_flag_e_none       = 0,
         context_keymap_flag_e_devconsole = bit_value(0)
     };
 };

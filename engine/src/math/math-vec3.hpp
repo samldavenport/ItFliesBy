@@ -54,8 +54,8 @@ namespace ifb::eng {
         const vec3& in_v,
         f32&        out_m) {
 
-        assert(v.x != 0 || v.y != 0 || v.z != 0);
-        out_m = sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
+        assert(in_v.x != 0 || in_v.y != 0 || in_v.z != 0);
+        out_m = sqrtf((in_v.x * in_v.x) + (in_v.y * in_v.y) + (in_v.z * in_v.z));
     }
 
     IFB_ENG_API_INLINE void
@@ -96,8 +96,8 @@ namespace ifb::eng {
         const vec3& in_vb,
         vec3&       out_va_sub_vb) {
 
-        out_va_add_vb.x = (in_va.x - in_vb.x);
-        out_va_add_vb.y = (in_va.y - in_vb.y);
+        out_va_sub_vb.x = (in_va.x - in_vb.x);
+        out_va_sub_vb.y = (in_va.y - in_vb.y);
     }
 
     IFB_ENG_API_INLINE void

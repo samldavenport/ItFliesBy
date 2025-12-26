@@ -233,7 +233,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     gl_context_set_vertex(
-        gl_vertex& vertex) {
+        const gl_vertex& vertex) {
         
         assert(vertex.is_valid());
 
