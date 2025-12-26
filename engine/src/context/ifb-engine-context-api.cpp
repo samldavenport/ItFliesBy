@@ -70,9 +70,6 @@ namespace ifb::eng {
             IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT
         );
 
-        // hello triangle test program
-        gl_hello_quad_create(_hello_quad);
-
         // graphics
         graphics_manager_startup(ctx->graphics_manager);
 
@@ -118,7 +115,6 @@ namespace ifb::eng {
         assert(ctx);
 
         devconsole_render(ctx->devconsole);
-        // gl_hello_quad_render(_hello_quad);
         graphics_manager_render_hello_quad(ctx->graphics_manager);
         os_window_render_frame(ctx->os);
 

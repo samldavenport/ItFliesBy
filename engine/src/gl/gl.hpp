@@ -112,9 +112,9 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool gl_vertex_attribute_set_vec3 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
 
     // hello triangle
-    IFB_ENG_INTERNAL void gl_hello_quad_create     (gl_hello_quad& hello_triangle);
-    IFB_ENG_INTERNAL void gl_hello_quad_destroy    (gl_hello_quad& hello_triangle);
-    IFB_ENG_INTERNAL void gl_hello_quad_render     (gl_hello_quad& hello_triangle);
+    // IFB_ENG_INTERNAL void gl_hello_quad_create     (gl_hello_quad& hello_triangle);
+    // IFB_ENG_INTERNAL void gl_hello_quad_destroy    (gl_hello_quad& hello_triangle);
+    // IFB_ENG_INTERNAL void gl_hello_quad_render     (gl_hello_quad& hello_triangle);
 
     //-------------------------------------------------------------------
     // DEFINITIONS

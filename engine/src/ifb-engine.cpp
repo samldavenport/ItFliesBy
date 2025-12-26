@@ -18,5 +18,4 @@
 #include "gl-context.cpp"
 #include "gl-pipeline.cpp"
 #include "gl-program.cpp"
-#include "gl-hello-quad.cpp"
 #include "gl-vertex.cpp"

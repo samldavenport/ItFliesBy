@@ -17,6 +17,8 @@ namespace ifb::eng {
     
     struct graphics_manager;
     struct graphics_renderer;
+    struct graphics_vertex_buffer;
+    struct graphics_index_buffer;
 
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -54,9 +56,15 @@ namespace ifb::eng {
         const graphics_vertex_property_type* vertex_property_array,
         const u32                            vertex_property_count
     );
+    IFB_ENG_INTERNAL void graphics_renderer_set_active        (graphics_renderer* renderer);
     IFB_ENG_INTERNAL void graphics_renderer_create_hello_quad (graphics_renderer* renderer);
     IFB_ENG_INTERNAL void graphics_renderer_destroy           (graphics_renderer* renderer);
 
+    IFB_ENG_INTERNAL void
+    graphics_renderer_draw_buffers(
+        graphics_renderer*            renderer,
+        const graphics_vertex_buffer& vertex_buffer,
+        const graphics_index_buffer&  index_buffer);
 
     //-------------------------------------------------------------------
     // ENUMS
@@ -86,6 +94,32 @@ namespace ifb::eng {
             gl_buffer vertex;
             gl_buffer index;
         } buffer;
+    };
+
+    struct graphics_vertex_buffer {
+        byte* data;
+        u32   size;
+
+        inline bool
+        is_valid(void) const {
+            return(
+                (size != 0)    &&
+                (data != NULL)
+            );
+        }
+    };
+    
+    struct graphics_index_buffer {
+        u32* array;
+        u32  count;
+
+        inline bool
+        is_valid(void) const {
+            return(
+                (count != 0) &&
+                (array != NULL)
+            );
+        }
     };
 };
 

@@ -47,19 +47,21 @@ namespace ifb::eng {
     graphics_manager_render_hello_quad(
         graphics_manager* graphics) {
 
-        assert(graphics && graphics->hello_quad_renderer);
-        graphics_renderer* renderer = graphics->hello_quad_renderer;
+        assert(graphics);
 
-        gl_context_set_program            (renderer->program);
-        gl_context_set_vertex             (renderer->vertex);
-        gl_context_set_vertex_buffer      (renderer->buffer.vertex);
-        gl_context_set_index_buffer       (renderer->buffer.index);
-        
-        gl_context_set_vertex_buffer_data ((byte*)GRAPHICS_QUAD_VERTEX_DATA, sizeof(GRAPHICS_QUAD_VERTEX_DATA));
-        gl_context_set_index_buffer_data  (GRAPHICS_QUAD_INDEX_DATA,  sizeof(GRAPHICS_QUAD_INDEX_DATA));
+        graphics_vertex_buffer vertex_buffer;
+        vertex_buffer.size = sizeof(GRAPHICS_QUAD_VERTEX_DATA);
+        vertex_buffer.data = (byte*)GRAPHICS_QUAD_VERTEX_DATA;
 
-        gl_context_render();
-        gl_context_reset();
+        graphics_index_buffer index_buffer;
+        index_buffer.array = (u32*)GRAPHICS_QUAD_INDEX_DATA;
+        index_buffer.count = 6;
+
+        graphics_renderer_draw_buffers(
+            graphics->hello_quad_renderer,
+            vertex_buffer,
+            index_buffer
+        );
     }
 
 };

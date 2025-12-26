@@ -163,5 +163,30 @@ namespace ifb::eng {
             0,                        // val
             sizeof(graphics_renderer) // size
         );
-    }   
+    }
+
+    IFB_ENG_INTERNAL void
+    graphics_renderer_draw_buffers(
+        graphics_renderer*            renderer,
+        const graphics_vertex_buffer& vertex_buffer,
+        const graphics_index_buffer&  index_buffer) {
+
+        bool can_render = true;
+        can_render &= (renderer != NULL);
+        can_render &= (vertex_buffer.is_valid());
+        can_render &= (index_buffer.is_valid());
+        assert(can_render);
+
+        // update the context
+        gl_context_set_program            (renderer->program);
+        gl_context_set_vertex             (renderer->vertex);
+        gl_context_set_vertex_buffer      (renderer->buffer.vertex);
+        gl_context_set_index_buffer       (renderer->buffer.index);
+        gl_context_set_vertex_buffer_data (vertex_buffer.data,  vertex_buffer.size);
+        gl_context_set_index_buffer_data  (index_buffer.array,  index_buffer.count);
+
+        // draw and reset
+        gl_context_render();
+        gl_context_reset();
+    }
 };
