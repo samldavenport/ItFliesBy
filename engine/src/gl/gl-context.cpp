@@ -215,25 +215,26 @@ namespace ifb::eng {
     
     IFB_ENG_INTERNAL void
     gl_context_set_index_buffer_data(
-        const u32* buffer_data,
-        const u32  buffer_size) {
+        const u32* index_array,
+        const u32  index_count) {
 
         assert(
-            buffer_data != NULL &&
-            buffer_size != 0
+            index_array != NULL &&
+            index_count != 0
         );
 
+        const u32 buffer_size = sizeof(u32) * index_count;
         gl_context_clear_errors();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer_size, buffer_data, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer_size, (void*)index_array, GL_STATIC_DRAW);
         _state.error                                = glGetError(); 
-        _state.draw_data.indices.buffer_data.as_u32 = buffer_data;
+        _state.draw_data.indices.buffer_data.as_u32 = index_array;
         _state.draw_data.indices.buffer_size        = buffer_size;
         assert(_state.error == GL_ERROR_SUCCESS);
     }
 
     IFB_ENG_INTERNAL void
     gl_context_set_vertex(
-        gl_vertex& vertex) {
+        const gl_vertex& vertex) {
         
         assert(vertex.is_valid());
 

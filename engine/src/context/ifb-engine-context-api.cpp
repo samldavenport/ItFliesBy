@@ -30,13 +30,15 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->os         = os_context_alloc (ctx->stack);
-        ctx->devconsole = devconsole_alloc   (ctx->stack);
+        ctx->os               = os_context_alloc       (ctx->stack);
+        ctx->devconsole       = devconsole_alloc       (ctx->stack);
+        ctx->graphics_manager = graphics_manager_alloc (ctx->stack);
 
         assert(
             ctx->stack.is_valid() &&
-            ctx->os       != NULL &&
-            ctx->devconsole != NULL
+            ctx->os               != NULL &&
+            ctx->devconsole       != NULL &&
+            ctx->graphics_manager != NULL
         );
 
         return(ctx);        
@@ -68,8 +70,8 @@ namespace ifb::eng {
             IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT
         );
 
-        // hello triangle test program
-        gl_hello_quad_create(_hello_quad);
+        // graphics
+        graphics_manager_startup(ctx->graphics_manager);
 
         return(true);
     }
@@ -113,7 +115,7 @@ namespace ifb::eng {
         assert(ctx);
 
         devconsole_render(ctx->devconsole);
-        gl_hello_quad_render(_hello_quad);
+        graphics_manager_render_hello_quad(ctx->graphics_manager);
         os_window_render_frame(ctx->os);
 
         return(true);
