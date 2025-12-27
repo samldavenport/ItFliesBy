@@ -97,6 +97,9 @@ namespace ifb::eng {
     };
 
     struct graphics_vertex_buffer {
+
+        public:
+
         byte* data;
         u32   size;
 
@@ -110,6 +113,9 @@ namespace ifb::eng {
     };
     
     struct graphics_index_buffer {
+
+        public:
+        
         u32* array;
         u32  count;
 
