@@ -19,3 +19,5 @@
 #include "gl-pipeline.cpp"
 #include "gl-program.cpp"
 #include "gl-vertex.cpp"
+
+#include "quad-manager.cpp"
