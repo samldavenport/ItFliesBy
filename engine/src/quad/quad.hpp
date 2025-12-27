@@ -3,6 +3,7 @@
 
 #include "ifb-engine.hpp"
 #include <sld-stack.hpp>
+#include <math.hpp>
 
 namespace ifb::eng {
 
@@ -27,7 +28,17 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
+    struct quad {
+        vec3 position;
+        vec4 color;
+    };
 
+    struct quad_manager {
+        u32 capacity;
+        u32 count;
+        vec3* 
+        vec4*         
+    };
 };
 
 #endif //IFB_ENG_QUAD_HPP
