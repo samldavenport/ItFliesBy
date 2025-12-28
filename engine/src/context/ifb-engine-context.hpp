@@ -24,7 +24,17 @@ namespace ifb::eng {
 
     using context_keymap_flags = u32;
 
+    //-------------------------------------------------------------------
+    // METHODS
+    //-------------------------------------------------------------------
+
     IFB_ENG_INTERNAL void context_process_keycodes (context* ctx);
+
+    //-------------------------------------------------------------------
+    // GLOBAL
+    //-------------------------------------------------------------------
+
+    static context* _context;
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -41,6 +51,28 @@ namespace ifb::eng {
         graphics_manager*    graphics_manager;
         context_keymap_flags keymap_flags;
     };
+
+    template<typename t>
+    inline t*
+    context_stack_alloc(
+        const u32 count = 1) {
+
+        assert(_context);
+        t* mem = _context->stack.push_struct<t>();
+        return(mem);
+    }
+
+    inline os_context*
+    context_os(
+        void) {
+
+        assert(
+            _context     != NULL && 
+            _context->os != NULL
+        );
+
+        return(_context->os);
+    }
 
     //-------------------------------------------------------------------
     // ENUMS

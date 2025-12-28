@@ -29,15 +29,24 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     struct quad {
-        vec3 position;
-        vec4 color;
+        position  position;
+        color_u32 color;
+    };
+
+    struct quad_memory {
+        quad_memory* next;        
+        quad_memory* prev;
+        u32          start_index;        
+        
     };
 
     struct quad_manager {
         u32 capacity;
         u32 count;
-        vec3* 
-        vec4*         
+        struct {
+            vec3*      position; 
+            color_u32* color;
+        } array;
     };
 };
 

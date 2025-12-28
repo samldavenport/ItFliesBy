@@ -1,19 +1,21 @@
 #pragma once
 
 #include "ifb-engine-os.hpp"
+#include "ifb-engine-context.hpp"
 
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_window_create_and_show(
-        os_context* os) {
+        void) {
 
-        os_window* window = (os != NULL) ? os->window : NULL;
+        os_context* os     = context_os(); 
+        os_window*  window = (os != NULL) ? os->window : NULL;
         assert(window);
 
         // get monitor dimensions
-        const os_monitor             monitor          = os_monitor_get_primary    (os);
-        const os_monitor_dimensions& monitor_dims     = os_monitor_get_dimensions (os, monitor);
+        const os_monitor             monitor          = os_monitor_get_primary    ();
+        const os_monitor_dimensions& monitor_dims     = os_monitor_get_dimensions (monitor);
         const u32                    monitor_center_x = os_monitor_get_center_x   (monitor_dims);
         const u32                    monitor_center_y = os_monitor_get_center_y   (monitor_dims);
 
@@ -47,8 +49,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_window_start_frame_and_process_events(
-        os_context* os) {
+        void) {
 
+        os_context* os     = context_os(); 
         os_window* window = (os != NULL) ? os->window : NULL;
 
         bool is_valid = true;
@@ -166,8 +169,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_window_render_frame(
-        os_context* os) {
+        void) {
 
+        os_context* os    = context_os(); 
         os_window* window = (os != NULL) ? os->window : NULL;
         assert(window);
 
@@ -186,8 +190,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL bool
     os_window_should_quit(
-        os_context* os) {
+        void) {
 
+        os_context* os    = context_os(); 
         os_window* window = (os != NULL) ? os->window : NULL;
         assert(window);
 
@@ -197,8 +202,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_window_reset_events(
-        os_context* os) {
+        void) {
 
+        os_context* os    = context_os(); 
         os_window* window = (os != NULL) ? os->window : NULL;
 
         assert(
@@ -217,9 +223,10 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_window_reset_input(
-        os_context* os) {
-
-        os_window* window = (os != NULL) ? os->window : NULL;
+        void) {
+        
+        os_context* os     = context_os(); 
+        os_window*  window = (os != NULL) ? os->window : NULL;
 
         assert(
             window                            != NULL                       &&

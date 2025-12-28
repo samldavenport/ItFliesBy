@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include "ifb-engine-context.hpp"
 #include "gl.hpp"
@@ -30,7 +30,7 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->os               = os_context_alloc       (ctx->stack);
+        os_context_alloc       (ctx->stack);
         ctx->devconsole       = devconsole_alloc       (ctx->stack);
         ctx->graphics_manager = graphics_manager_alloc (ctx->stack);
 
@@ -51,10 +51,10 @@ namespace ifb::eng {
         assert(ctx);
 
         // os context        
-        os_system_refresh_info    (ctx->os);
-        os_memory_reserve         (ctx->os);
-        os_monitor_refresh_table  (ctx->os);
-        os_window_create_and_show (ctx->os);
+        os_system_refresh_info    ();
+        os_memory_reserve         ();
+        os_monitor_refresh_table  ();
+        os_window_create_and_show ();
 
         // devconsole
         devconsole_init(ctx->devconsole);
@@ -93,17 +93,17 @@ namespace ifb::eng {
         gl_context_clear_viewport();
 
         // check system resources
-        os_system_refresh_info   (ctx->os);
-        os_monitor_refresh_table (ctx->os);
-        os_memory_check_usage    (ctx->os);
+        os_system_refresh_info   ();
+        os_monitor_refresh_table ();
+        os_memory_check_usage    ();
 
         // process events and input
-        os_window_start_frame_and_process_events (ctx->os);
+        os_window_start_frame_and_process_events ();
         context_process_keycodes                 (ctx);
 
         // reset window events and input
-        os_window_reset_events (ctx->os);
-        os_window_reset_input  (ctx->os);
+        os_window_reset_events ();
+        os_window_reset_input  ();
 
         return(true);
     }
@@ -116,7 +116,7 @@ namespace ifb::eng {
 
         devconsole_render(ctx->devconsole);
         graphics_manager_render_hello_quad(ctx->graphics_manager);
-        os_window_render_frame(ctx->os);
+        os_window_render_frame();
 
         return(true);
     }
@@ -125,7 +125,7 @@ namespace ifb::eng {
     context_should_quit(
         context* ctx) {
 
-        const bool should_quit = os_window_should_quit(ctx->os);
+        const bool should_quit = os_window_should_quit();
 
         return(should_quit);
     }
