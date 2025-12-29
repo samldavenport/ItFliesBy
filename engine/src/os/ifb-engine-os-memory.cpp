@@ -21,7 +21,7 @@ namespace ifb::eng {
     os_memory_reserve(
         void) {
 
-        os_context*     os_mngr     = context_os();
+        os_manager*     os_mngr     = context_os_manager();
         os_memory*      os_mem      = os_mngr->memory;
         os_system_info* os_sys_info = os_mngr->system_info;
         
@@ -39,7 +39,7 @@ namespace ifb::eng {
     os_memory_release(
         void) {
 
-        os_context* os_mngr = context_os();
+        os_manager* os_mngr = context_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -60,7 +60,7 @@ namespace ifb::eng {
         const u64   offset,
         const u64   size) {
 
-        os_context* os_mngr = context_os();
+        os_manager* os_mngr = context_os_manager();
         os_memory* os_mem   = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -89,7 +89,7 @@ namespace ifb::eng {
         void*       start,
         const u64   size) {
 
-        os_context* os_mngr = context_os();
+        os_manager* os_mngr = context_os_manager();
         os_memory* os_mem   = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -114,7 +114,7 @@ namespace ifb::eng {
     os_memory_is_page_aligned(
         const u64 start) {
 
-        os_context* os_mngr = context_os();
+        os_manager* os_mngr = context_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -126,7 +126,7 @@ namespace ifb::eng {
     os_memory_check_usage(
         void) {
 
-        os_context* os_mngr = context_os();
+        os_manager* os_mngr = context_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -142,4 +142,14 @@ namespace ifb::eng {
         );
     }
 
+    IFB_ENG_INTERNAL const addr
+    os_memory_get_reservation_start(
+        void) {
+
+        os_manager* os_mngr = context_os_manager();
+        os_memory*  os_mem  = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
+
+        return(os_mem->reservation_start);
+    }
 };

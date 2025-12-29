@@ -8,7 +8,7 @@ namespace ifb::eng {
     context_process_keycodes(
         context* ctx) {
 
-        os_context* os = (ctx != NULL) ? ctx->os : NULL;
+        os_manager* os = (ctx != NULL) ? ctx->manager.os : NULL;
         assert(os != NULL && os->window != NULL);
 
         os_window* window = os->window;

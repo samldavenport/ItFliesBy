@@ -4,6 +4,7 @@
 #include "ifb-engine.hpp"
 #include "ifb-engine-os.hpp"
 #include "ifb-engine-devconsole.hpp"
+#include "memory.hpp"
 #include "graphics.hpp"
 
 #include <sld-stack.hpp>
@@ -46,10 +47,13 @@ namespace ifb::eng {
 
     struct context {
         stack                stack;
-        os_context*          os;
         devconsole*          devconsole;
-        graphics_manager*    graphics_manager;
         context_keymap_flags keymap_flags;
+        struct {
+            os_manager*       os;
+            graphics_manager* graphics;
+            memory_manager*   memory;
+        } manager;
     };
 
     template<typename t>
@@ -62,16 +66,38 @@ namespace ifb::eng {
         return(mem);
     }
 
-    inline os_context*
-    context_os(
+    inline os_manager*
+    context_os_manager(
         void) {
 
         assert(
-            _context     != NULL && 
-            _context->os != NULL
+            _context             != NULL && 
+            _context->manager.os != NULL
         );
 
-        return(_context->os);
+        return(_context->manager.os);
+    }
+
+    inline graphics_manager*
+    context_graphics_manager(
+        void) {
+
+        assert(
+            _context                   != NULL &&
+            _context->manager.graphics != NULL
+        );
+        return(_context->manager.graphics);
+    }
+
+    inline memory_manager*
+    context_memory_manager(
+        void) {
+
+        assert(
+            _context                 != NULL &&
+            _context->manager.memory != NULL
+        );
+        return(_context->manager.memory);
     }
 
     //-------------------------------------------------------------------

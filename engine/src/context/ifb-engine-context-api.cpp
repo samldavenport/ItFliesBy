@@ -9,8 +9,6 @@ namespace ifb::eng {
     constexpr u32 OS_WINDOW_DEFAULT_HEIGHT           = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_HEIGHT;
     constexpr u32 OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA = IFB_ENG_CONFIG_OS_WINDOW_DEFAULT_CLEAR_COLOR_RGBA;
 
-    static gl_hello_quad _hello_quad;
-
     IFB_ENG_API context*
     context_create(
         byte*     stack_data,
@@ -30,15 +28,15 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        os_context_alloc       (ctx->stack);
+        os_manager_alloc       (ctx->stack);
         ctx->devconsole       = devconsole_alloc       (ctx->stack);
-        ctx->graphics_manager = graphics_manager_alloc (ctx->stack);
+        ctx->manager.graphics = graphics_manager_alloc (ctx->stack);
 
         assert(
-            ctx->stack.is_valid() &&
-            ctx->os               != NULL &&
+            ctx->stack.is_valid()         &&
             ctx->devconsole       != NULL &&
-            ctx->graphics_manager != NULL
+            ctx->manager.os       != NULL &&
+            ctx->manager.graphics != NULL
         );
 
         return(ctx);        
@@ -71,7 +69,7 @@ namespace ifb::eng {
         );
 
         // graphics
-        graphics_manager_startup(ctx->graphics_manager);
+        graphics_manager_startup(ctx->manager.graphics);
 
         return(true);
     }
@@ -115,7 +113,7 @@ namespace ifb::eng {
         assert(ctx);
 
         devconsole_render(ctx->devconsole);
-        graphics_manager_render_hello_quad(ctx->graphics_manager);
+        graphics_manager_render_hello_quad(ctx->manager.graphics);
         os_window_render_frame();
 
         return(true);

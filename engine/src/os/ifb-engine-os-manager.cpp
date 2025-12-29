@@ -6,11 +6,11 @@
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
-    os_context_alloc(
+    os_manager_alloc(
         stack& stack) {
 
         // stack allocate
-        auto context              = context_stack_alloc<os_context>            ();
+        auto manager              = context_stack_alloc<os_manager>            ();
         auto window               = context_stack_alloc<os_window>             ();
         auto window_events        = context_stack_alloc<os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
         auto window_keycodes_up   = context_stack_alloc<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
@@ -26,7 +26,7 @@ namespace ifb::eng {
 
         // check allocations
         bool is_valid = true;
-        is_valid &= (context              != NULL);
+        is_valid &= (manager              != NULL);
         is_valid &= (window               != NULL);
         is_valid &= (window_events        != NULL);
         is_valid &= (window_keycodes_up   != NULL);
@@ -78,13 +78,14 @@ namespace ifb::eng {
             file_handle_array[file] = NULL;
         }
 
-        // context
-        context->window                                  = window; 
-        context->monitor_table                           = monitor_table;
-        context->file_table                              = file_table;
-        context->memory                                  = memory;
-        context->system_info                             = sys_info;
+        // manager
+        manager->window                                  = window; 
+        manager->monitor_table                           = monitor_table;
+        manager->file_table                              = file_table;
+        manager->memory                                  = memory;
+        manager->system_info                             = sys_info;
 
-        _context->os = context;
+        // context
+        _context->manager.os = manager;
     }
 };

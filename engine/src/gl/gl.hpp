@@ -26,7 +26,6 @@ namespace ifb::eng {
     struct gl_color;
     struct gl_draw_buffer;
     struct gl_viewport;
-    struct gl_hello_quad;
     
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -35,30 +34,6 @@ namespace ifb::eng {
     constexpr gl_error GL_ERROR_SUCCESS      = 0;
     constexpr gl_id    GL_ID_INVALID         = 0;
     constexpr f32      GL_NORMAL_FACTOR_BYTE = (1.0f / 255.0f);
-    constexpr cchar GL_HELLO_QUAD_SHADER_VERTEX[] = 
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
-    constexpr cchar GL_HELLO_QUAD_SHADER_FRAGMENT[] =
-        "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);\n"
-        "}\0";
-    constexpr f32 GL_HELLO_QUAD_VERTICES[] = {
-         0.5f,  0.5f, 0.0f, // top right
-         0.5f, -0.5f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f  // top left 
-    };
-    constexpr u32 GL_HELLO_QUAD_INDICES[] = {
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
 
     //-------------------------------------------------------------------
     // METHODS
@@ -110,11 +85,6 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL bool gl_vertex_attribute_set_f32  (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
     IFB_ENG_INTERNAL bool gl_vertex_attribute_set_vec2 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
     IFB_ENG_INTERNAL bool gl_vertex_attribute_set_vec3 (gl_vertex& vertex, const u32 vertex_size, const u32 attribute_index, const u32 attribute_offset);
-
-    // hello triangle
-    // IFB_ENG_INTERNAL void gl_hello_quad_create     (gl_hello_quad& hello_triangle);
-    // IFB_ENG_INTERNAL void gl_hello_quad_destroy    (gl_hello_quad& hello_triangle);
-    // IFB_ENG_INTERNAL void gl_hello_quad_render     (gl_hello_quad& hello_triangle);
 
     //-------------------------------------------------------------------
     // DEFINITIONS

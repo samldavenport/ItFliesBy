@@ -63,7 +63,7 @@ namespace ifb::eng {
     struct file_error       : error                     { };
     struct file_handle_list : array_list<file_handle> { };
 
-    struct file_os_context {
+    struct file_os_manager {
         os_file_handle     file_hnd;
         os_file_async      async;
         os_file_map_handle map_hnd;
@@ -75,7 +75,7 @@ namespace ifb::eng {
         file_handle     handle;
         file_flags      flags;
         file_error      error_t;
-        file_os_context os_context;
+        file_os_manager os_manager;
     };
 
     struct file_buffer {

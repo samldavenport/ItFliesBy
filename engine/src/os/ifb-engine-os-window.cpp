@@ -9,7 +9,7 @@ namespace ifb::eng {
     os_window_create_and_show(
         void) {
 
-        os_context* os     = context_os(); 
+        os_manager* os     = context_os_manager(); 
         os_window*  window = (os != NULL) ? os->window : NULL;
         assert(window);
 
@@ -51,7 +51,7 @@ namespace ifb::eng {
     os_window_start_frame_and_process_events(
         void) {
 
-        os_context* os     = context_os(); 
+        os_manager* os     = context_os_manager(); 
         os_window* window = (os != NULL) ? os->window : NULL;
 
         bool is_valid = true;
@@ -171,7 +171,7 @@ namespace ifb::eng {
     os_window_render_frame(
         void) {
 
-        os_context* os    = context_os(); 
+        os_manager* os    = context_os_manager(); 
         os_window* window = (os != NULL) ? os->window : NULL;
         assert(window);
 
@@ -192,7 +192,7 @@ namespace ifb::eng {
     os_window_should_quit(
         void) {
 
-        os_context* os    = context_os(); 
+        os_manager* os    = context_os_manager(); 
         os_window* window = (os != NULL) ? os->window : NULL;
         assert(window);
 
@@ -204,7 +204,7 @@ namespace ifb::eng {
     os_window_reset_events(
         void) {
 
-        os_context* os    = context_os(); 
+        os_manager* os    = context_os_manager(); 
         os_window* window = (os != NULL) ? os->window : NULL;
 
         assert(
@@ -225,7 +225,7 @@ namespace ifb::eng {
     os_window_reset_input(
         void) {
         
-        os_context* os     = context_os(); 
+        os_manager* os     = context_os_manager(); 
         os_window*  window = (os != NULL) ? os->window : NULL;
 
         assert(

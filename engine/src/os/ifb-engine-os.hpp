@@ -23,7 +23,7 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct os_context;
+    struct os_manager;
     struct os_memory;
     struct os_window;
     struct os_window_keycode_list;
@@ -41,15 +41,16 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // context
-    IFB_ENG_INTERNAL void  os_context_alloc          (stack& stack);
+    IFB_ENG_INTERNAL void  os_manager_alloc          (stack& stack);
 
     // memory
-    IFB_ENG_INTERNAL void  os_memory_reserve         (void);
-    IFB_ENG_INTERNAL void  os_memory_release         (void);
-    IFB_ENG_INTERNAL void* os_memory_commit          (const u64 start, const u64 size);
-    IFB_ENG_INTERNAL void  os_memory_decommit        (void*     start, const u64 size);
-    IFB_ENG_INTERNAL bool  os_memory_is_page_aligned (const u64 start);
-    IFB_ENG_INTERNAL void  os_memory_check_usage     (void);
+    IFB_ENG_INTERNAL void        os_memory_reserve               (void);
+    IFB_ENG_INTERNAL void        os_memory_release               (void);
+    IFB_ENG_INTERNAL void*       os_memory_commit                (const u64 start, const u64 size);
+    IFB_ENG_INTERNAL void        os_memory_decommit              (void*     start, const u64 size);
+    IFB_ENG_INTERNAL bool        os_memory_is_page_aligned       (const u64 start);
+    IFB_ENG_INTERNAL void        os_memory_check_usage           (void);
+    IFB_ENG_INTERNAL const addr  os_memory_get_reservation_start (void);
 
     // monitors
     IFB_ENG_INTERNAL void                         os_monitor_refresh_table  (void);
@@ -80,7 +81,7 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct os_context {
+    struct os_manager {
         os_system_info*   system_info;
         os_memory*        memory;
         os_file_table*    file_table;
