@@ -2,7 +2,7 @@
 #define GL_HPP
 
 #include "ifb-engine.hpp"
-#include "ifb-engine-os.hpp"
+#include "os.hpp"
 
 namespace ifb::eng {
 

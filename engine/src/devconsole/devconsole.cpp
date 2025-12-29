@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ifb-engine-devconsole.hpp"
-#include "ifb-engine-devconsole-font.hpp"
+#include "devconsole.hpp"
+#include "devconsole-font.hpp"
 
 namespace ifb::eng {
 

@@ -15,7 +15,7 @@ pushd ..
 @set lib_sld_out=    /OUT:build\debug\lib\SLD.Win32.lib
 @set lib_sld_flags=  /nologo
 
-@set cl_eng_in=      engine\src\ifb-engine.cpp
+@set cl_eng_in=      engine\src\engine.cpp
 @set cl_eng_out=     /Fo:build\debug\obj\ItFliesBy.Engine.obj
 @set cl_eng_include= /Iengine\include /Iengine\src /Iengine\src\context /Iengine\src\core /Iengine\src\file /Iengine\src\gl /Iengine\src\graphics /Iengine\src\math /Iengine\src\memory /Iengine\src\asset /Iengine\src\devconsole /Iengine\src\os /Iengine\src\quad /Iengine\src\tools /Isld\include /Isld\external /Isld\vcpkg_installed\x64-windows\include
 @set cl_eng_flags=   /nologo /c /MD /LD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
