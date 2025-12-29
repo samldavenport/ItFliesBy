@@ -29,7 +29,7 @@ namespace ifb::eng {
     struct os_window_keycode_list;
     struct os_monitor_table;
     struct os_file_table;
-    struct os_system_info;
+    struct os_system;
 
     using os_file                = u32;
     using os_monitor             = u32;
@@ -39,6 +39,11 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
+
+    // module
+    IFB_ENG_INTERNAL void os_module_init     (void);
+    IFB_ENG_INTERNAL void os_module_startup  (void);
+    IFB_ENG_INTERNAL void os_module_shutdown (void);
 
     // memory
     IFB_ENG_INTERNAL void        os_memory_reserve               (void);
@@ -78,15 +83,15 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct os_manager {
-        os_system_info*   system_info;
+    struct os_module {
+        os_system*        system;
         os_memory*        memory;
         os_file_table*    file_table;
         os_monitor_table* monitor_table;
         os_window*        window;
     };
 
-    struct os_system_info {
+    struct os_system {
         os_system_memory_info    memory;
         os_system_cpu_info       cpu;
         os_system_cpu_cache_info cpu_cache_l1;
@@ -99,9 +104,9 @@ namespace ifb::eng {
         os_monitor              primary; 
         os_monitor_working_area working_area;
         struct {
-            os_monitor_handle*      handles;
-            os_monitor_dimensions*  dimensions;
-            os_monitor_name*        names;
+            os_monitor_handle*     handles;
+            os_monitor_dimensions* dimensions;
+            os_monitor_name*       names;
         } array;
     };
 
@@ -139,6 +144,9 @@ namespace ifb::eng {
         u64  committed_size;
         u64  alignment;
     };
+
+
+
     
     //-------------------------------------------------------------------
     // ENUMS

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "os.hpp"
+#include "os-module.hpp"
 #include "context.hpp"
 
 namespace ifb::eng {
@@ -9,26 +9,21 @@ namespace ifb::eng {
     os_system_refresh_info(
         void) {
 
-        os_manager* os_mngr = context_get_os_manager();
-
-        assert(os_mngr);
-        os_system_info* sys_info = os_mngr->system_info;
+        os_system* sys = _os_module->system;
 
         // get system info
-        os_system_get_cpu_info       (sys_info->cpu);
-        os_system_get_memory_info    (sys_info->memory);
-        os_system_get_cpu_cache_info (sys_info->cpu_cache_l1);
-        os_system_get_cpu_cache_info (sys_info->cpu_cache_l2);
-        os_system_get_cpu_cache_info (sys_info->cpu_cache_l3);
+        os_system_get_cpu_info       (sys->cpu);
+        os_system_get_memory_info    (sys->memory);
+        os_system_get_cpu_cache_info (sys->cpu_cache_l1);
+        os_system_get_cpu_cache_info (sys->cpu_cache_l2);
+        os_system_get_cpu_cache_info (sys->cpu_cache_l3);
     }
 
     IFB_ENG_INTERNAL const os_system_memory_info&
     os_system_get_memory_info(
         void) {
 
-        os_manager* os = context_get_os_manager();
-
-        const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
+        os_system* sys = _os_module->system;
         assert(sys);
 
         const os_system_memory_info& mem = sys->memory;
@@ -39,9 +34,7 @@ namespace ifb::eng {
     os_system_get_cpu_info(
         void) {
 
-        os_manager* os = context_get_os_manager();
-
-        const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
+        os_system* sys = _os_module->system;
         assert(sys);
 
         const os_system_cpu_info& cpu = sys->cpu;
@@ -52,9 +45,7 @@ namespace ifb::eng {
     os_system_get_cpu_l1_cache_info(
         void) {
 
-        os_manager* os = context_get_os_manager();
-
-        const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
+        os_system* sys = _os_module->system;
         assert(sys);
 
         const os_system_cpu_cache_info& l1 = sys->cpu_cache_l1;
@@ -65,10 +56,8 @@ namespace ifb::eng {
     os_system_get_cpu_l2_cache_info(
         void) {
 
-        os_manager* os = context_get_os_manager();
-
-        const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
-        assert(sys);
+        os_system* sys = _os_module->system;
+        assert(sys); 
 
         const os_system_cpu_cache_info& l2 = sys->cpu_cache_l2;
         return(l2);
@@ -78,11 +67,8 @@ namespace ifb::eng {
     os_system_get_cpu_l3_cache_info(
         void) {
 
-        os_manager* os = context_get_os_manager();
-
-        const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
+        os_system* sys = _os_module->system;
         assert(sys);
-
 
         const os_system_cpu_cache_info& l3 = sys->cpu_cache_l3;
         return(l3);

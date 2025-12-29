@@ -5,7 +5,7 @@
 #include "context-internal.cpp"
 #include "context-stack.cpp"
 
-#include "os-manager.cpp"
+#include "os-module.cpp"
 #include "os-system.cpp"
 #include "os-memory.cpp"
 #include "os-monitor.cpp"
