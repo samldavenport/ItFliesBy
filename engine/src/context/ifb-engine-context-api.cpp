@@ -25,6 +25,7 @@ namespace ifb::eng {
         const u64  ctx_stack_size = stack_size - ctx_size;
         byte*      ctx_stack_data = stack_data + ctx_size;  
         context*   ctx            = (context*)stack_data; 
+        _context = ctx;
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
@@ -38,6 +39,7 @@ namespace ifb::eng {
             ctx->manager.os       != NULL &&
             ctx->manager.graphics != NULL
         );
+
 
         return(ctx);        
     }
