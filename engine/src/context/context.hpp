@@ -37,6 +37,11 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL memory_manager*   context_stack_alloc_memory_manager   (void);
     IFB_ENG_INTERNAL devconsole*       context_stack_alloc_devconsole       (void);
 
+    // managers
+    IFB_ENG_INLINE os_manager*       context_get_os_manager       (void);
+    IFB_ENG_INLINE graphics_manager* context_get_graphics_manager (void);
+    IFB_ENG_INLINE memory_manager*   context_get_memory_manager   (void);
+
     //-------------------------------------------------------------------
     // GLOBAL
     //-------------------------------------------------------------------
@@ -72,8 +77,8 @@ namespace ifb::eng {
         return(mem);
     }
 
-    inline os_manager*
-    context_os_manager(
+    IFB_ENG_INLINE os_manager*
+    context_get_os_manager(
         void) {
 
         assert(
@@ -84,8 +89,8 @@ namespace ifb::eng {
         return(_context->manager.os);
     }
 
-    inline graphics_manager*
-    context_graphics_manager(
+    IFB_ENG_INLINE graphics_manager*
+    context_get_graphics_manager(
         void) {
 
         assert(
@@ -95,8 +100,8 @@ namespace ifb::eng {
         return(_context->manager.graphics);
     }
 
-    inline memory_manager*
-    context_memory_manager(
+    IFB_ENG_INLINE memory_manager*
+    context_get_memory_manager(
         void) {
 
         assert(

@@ -9,7 +9,7 @@ namespace ifb::eng {
     os_system_refresh_info(
         void) {
 
-        os_manager* os_mngr = context_os_manager();
+        os_manager* os_mngr = context_get_os_manager();
 
         assert(os_mngr);
         os_system_info* sys_info = os_mngr->system_info;
@@ -26,7 +26,7 @@ namespace ifb::eng {
     os_system_get_memory_info(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
         assert(sys);
@@ -39,7 +39,7 @@ namespace ifb::eng {
     os_system_get_cpu_info(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
         assert(sys);
@@ -52,7 +52,7 @@ namespace ifb::eng {
     os_system_get_cpu_l1_cache_info(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
         assert(sys);
@@ -65,7 +65,7 @@ namespace ifb::eng {
     os_system_get_cpu_l2_cache_info(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
         assert(sys);
@@ -78,7 +78,7 @@ namespace ifb::eng {
     os_system_get_cpu_l3_cache_info(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_system_info* sys = (os != NULL) ? os->system_info : NULL;
         assert(sys);

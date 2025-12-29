@@ -21,7 +21,7 @@ namespace ifb::eng {
     os_memory_reserve(
         void) {
 
-        os_manager*     os_mngr     = context_os_manager();
+        os_manager*     os_mngr     = context_get_os_manager();
         os_memory*      os_mem      = os_mngr->memory;
         os_system_info* os_sys_info = os_mngr->system_info;
         
@@ -39,7 +39,7 @@ namespace ifb::eng {
     os_memory_release(
         void) {
 
-        os_manager* os_mngr = context_os_manager();
+        os_manager* os_mngr = context_get_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -57,11 +57,11 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void*
     os_memory_commit(
-        const u64   offset,
-        const u64   size) {
+        const u64 offset,
+        const u64 size) {
 
-        os_manager* os_mngr = context_os_manager();
-        os_memory* os_mem   = os_mngr->memory;
+        os_manager* os_mngr = context_get_os_manager();
+        os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
         const u64  commit_size     = size_align_pow_2(size, os_mem->alignment);
@@ -89,7 +89,7 @@ namespace ifb::eng {
         void*       start,
         const u64   size) {
 
-        os_manager* os_mngr = context_os_manager();
+        os_manager* os_mngr = context_get_os_manager();
         os_memory* os_mem   = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -114,7 +114,7 @@ namespace ifb::eng {
     os_memory_is_page_aligned(
         const u64 start) {
 
-        os_manager* os_mngr = context_os_manager();
+        os_manager* os_mngr = context_get_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -126,7 +126,7 @@ namespace ifb::eng {
     os_memory_check_usage(
         void) {
 
-        os_manager* os_mngr = context_os_manager();
+        os_manager* os_mngr = context_get_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
@@ -146,7 +146,7 @@ namespace ifb::eng {
     os_memory_get_reservation_start(
         void) {
 
-        os_manager* os_mngr = context_os_manager();
+        os_manager* os_mngr = context_get_os_manager();
         os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
