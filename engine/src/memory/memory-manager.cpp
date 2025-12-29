@@ -1,22 +1,13 @@
 #pragma once
 
 #include "memory.hpp"
-#include "ifb-engine-context.hpp"
+#include "context.hpp"
 
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
-    memory_manager_alloc(
-        void) {
-
-        _memory_manager = context_stack_alloc<memory_manager>();
-        assert(_memory_manager);
-    }
-
-    IFB_ENG_INTERNAL void
     memory_manager_startup(
         void) {
-
 
     } 
 
@@ -38,6 +29,4 @@ namespace ifb::eng {
         const void*             memory) {
 
     }
-
-
 };

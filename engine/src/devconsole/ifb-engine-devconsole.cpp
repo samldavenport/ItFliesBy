@@ -5,16 +5,6 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL devconsole*
-    devconsole_alloc(
-        stack& stack) {
-
-        devconsole* g = stack.push_struct<devconsole>();
-        assert(g);
-
-        return(g);
-    }
-
     IFB_ENG_INTERNAL void
     devconsole_init(
         devconsole* devconsole) {

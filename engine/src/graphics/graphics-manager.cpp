@@ -4,26 +4,6 @@
 
 namespace ifb::eng {
 
-
-    IFB_ENG_INTERNAL graphics_manager*
-    graphics_manager_alloc(
-        stack& stack) {
-
-        stack.assert_valid();
-
-        auto mngr       = stack.push_struct<graphics_manager>();
-        auto hello_quad = stack.push_struct<graphics_renderer>();
-    
-        bool did_alloc = true;
-        did_alloc &= (mngr       != NULL); 
-        did_alloc &= (hello_quad != NULL);
-        assert(did_alloc);
-
-        mngr->hello_quad_renderer = hello_quad;
-
-        return(mngr);         
-    }
-
     IFB_ENG_INTERNAL void
     graphics_manager_startup(
         graphics_manager* graphics) {

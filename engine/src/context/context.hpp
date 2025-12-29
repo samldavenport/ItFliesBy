@@ -31,6 +31,12 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void context_process_keycodes (context* ctx);
 
+    // stack
+    IFB_ENG_INTERNAL os_manager*       context_stack_alloc_os_manager       (void);
+    IFB_ENG_INTERNAL graphics_manager* context_stack_alloc_graphics_manager (void);
+    IFB_ENG_INTERNAL memory_manager*   context_stack_alloc_memory_manager   (void);
+    IFB_ENG_INTERNAL devconsole*       context_stack_alloc_devconsole       (void);
+
     //-------------------------------------------------------------------
     // GLOBAL
     //-------------------------------------------------------------------
