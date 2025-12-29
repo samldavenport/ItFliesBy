@@ -5,28 +5,28 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL os_context*
-    os_context_alloc(
+    IFB_ENG_INTERNAL void
+    os_manager_alloc(
         stack& stack) {
 
         // stack allocate
-        auto context              = stack.push_struct<os_context>            ();
-        auto window               = stack.push_struct<os_window>             ();
-        auto window_events        = stack.push_struct<os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
-        auto window_keycodes_up   = stack.push_struct<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
-        auto window_keycodes_down = stack.push_struct<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
-        auto monitor_table        = stack.push_struct<os_monitor_table>      ();
-        auto monitor_handles      = stack.push_struct<os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
-        auto monitor_dimensions   = stack.push_struct<os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
-        auto monitor_names        = stack.push_struct<os_monitor_name>       (OS_MONITOR_MAX_COUNT);
-        auto file_table           = stack.push_struct<os_file_table>         ();
-        auto file_handle_array    = stack.push_struct<os_file_handle>        (OS_FILE_MAX_COUNT); 
-        auto memory               = stack.push_struct<os_memory>             ();
-        auto sys_info             = stack.push_struct<os_system_info>        ();
+        auto manager              = context_stack_alloc<os_manager>            ();
+        auto window               = context_stack_alloc<os_window>             ();
+        auto window_events        = context_stack_alloc<os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
+        auto window_keycodes_up   = context_stack_alloc<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto window_keycodes_down = context_stack_alloc<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto monitor_table        = context_stack_alloc<os_monitor_table>      ();
+        auto monitor_handles      = context_stack_alloc<os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
+        auto monitor_dimensions   = context_stack_alloc<os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
+        auto monitor_names        = context_stack_alloc<os_monitor_name>       (OS_MONITOR_MAX_COUNT);
+        auto file_table           = context_stack_alloc<os_file_table>         ();
+        auto file_handle_array    = context_stack_alloc<os_file_handle>        (OS_FILE_MAX_COUNT); 
+        auto memory               = context_stack_alloc<os_memory>             ();
+        auto sys_info             = context_stack_alloc<os_system_info>        ();
 
         // check allocations
         bool is_valid = true;
-        is_valid &= (context              != NULL);
+        is_valid &= (manager              != NULL);
         is_valid &= (window               != NULL);
         is_valid &= (window_events        != NULL);
         is_valid &= (window_keycodes_up   != NULL);
@@ -78,13 +78,14 @@ namespace ifb::eng {
             file_handle_array[file] = NULL;
         }
 
-        // context
-        context->window                                  = window; 
-        context->monitor_table                           = monitor_table;
-        context->file_table                              = file_table;
-        context->memory                                  = memory;
-        context->system_info                             = sys_info;
+        // manager
+        manager->window                                  = window; 
+        manager->monitor_table                           = monitor_table;
+        manager->file_table                              = file_table;
+        manager->memory                                  = memory;
+        manager->system_info                             = sys_info;
 
-        return(context);
+        // context
+        _context->manager.os = manager;
     }
 };

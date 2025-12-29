@@ -5,5 +5,4 @@
 namespace ifb::eng {
 
 
-    IFB_ENG_API const cchar* core_get_working_directory(void);
 };

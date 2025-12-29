@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ifb-engine-os.hpp"
+#include "ifb-engine-context.hpp"
 
 namespace ifb::eng {
 
@@ -18,8 +19,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_memory_reserve(
-        os_context* os_mngr) {
+        void) {
 
+        os_manager*     os_mngr     = context_os_manager();
         os_memory*      os_mem      = os_mngr->memory;
         os_system_info* os_sys_info = os_mngr->system_info;
         
@@ -35,9 +37,10 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_memory_release(
-        os_context* os_mngr) {
+        void) {
 
-        os_memory* os_mem = os_mngr->memory;
+        os_manager* os_mngr = context_os_manager();
+        os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
         const bool did_release = sld::os_memory_release(
@@ -54,11 +57,11 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void*
     os_memory_commit(
-        os_context* os_mngr,
         const u64   offset,
         const u64   size) {
 
-        os_memory* os_mem = os_mngr->memory;
+        os_manager* os_mngr = context_os_manager();
+        os_memory* os_mem   = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
         const u64  commit_size     = size_align_pow_2(size, os_mem->alignment);
@@ -83,11 +86,11 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_memory_decommit(
-        os_context* os_mngr,
         void*       start,
         const u64   size) {
 
-        os_memory* os_mem = os_mngr->memory;
+        os_manager* os_mngr = context_os_manager();
+        os_memory* os_mem   = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
         const bool is_aligned   = (((addr)start) % os_mem->alignment == 0);
@@ -109,10 +112,10 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL bool
     os_memory_is_page_aligned(
-        os_context* os_mngr,
-        const u64   start) {
+        const u64 start) {
 
-        os_memory* os_mem = os_mngr->memory;
+        os_manager* os_mngr = context_os_manager();
+        os_memory*  os_mem  = os_mngr->memory;
         os_memory_assert_valid(os_mem);
 
         const bool is_aligned = (start % os_mem->alignment == 0);
@@ -121,10 +124,14 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_memory_check_usage(
-        os_context* os) {
+        void) {
 
-        os_memory* mem = (os != NULL)
-            ? os->memory
+        os_manager* os_mngr = context_os_manager();
+        os_memory*  os_mem  = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
+
+        os_memory* mem = (os_mngr != NULL)
+            ? os_mngr->memory
             : NULL;
 
         assert(
@@ -135,4 +142,14 @@ namespace ifb::eng {
         );
     }
 
+    IFB_ENG_INTERNAL const addr
+    os_memory_get_reservation_start(
+        void) {
+
+        os_manager* os_mngr = context_os_manager();
+        os_memory*  os_mem  = os_mngr->memory;
+        os_memory_assert_valid(os_mem);
+
+        return(os_mem->reservation_start);
+    }
 };

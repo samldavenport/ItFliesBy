@@ -4,6 +4,7 @@
 #include "ifb-engine.hpp"
 #include "ifb-engine-os.hpp"
 #include "ifb-engine-devconsole.hpp"
+#include "memory.hpp"
 #include "graphics.hpp"
 
 #include <sld-stack.hpp>
@@ -24,7 +25,17 @@ namespace ifb::eng {
 
     using context_keymap_flags = u32;
 
+    //-------------------------------------------------------------------
+    // METHODS
+    //-------------------------------------------------------------------
+
     IFB_ENG_INTERNAL void context_process_keycodes (context* ctx);
+
+    //-------------------------------------------------------------------
+    // GLOBAL
+    //-------------------------------------------------------------------
+
+    static context* _context;
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -36,11 +47,58 @@ namespace ifb::eng {
 
     struct context {
         stack                stack;
-        os_context*          os;
         devconsole*          devconsole;
-        graphics_manager*    graphics_manager;
         context_keymap_flags keymap_flags;
+        struct {
+            os_manager*       os;
+            graphics_manager* graphics;
+            memory_manager*   memory;
+        } manager;
     };
+
+    template<typename t>
+    inline t*
+    context_stack_alloc(
+        const u32 count = 1) {
+
+        assert(_context);
+        t* mem = _context->stack.push_struct<t>();
+        return(mem);
+    }
+
+    inline os_manager*
+    context_os_manager(
+        void) {
+
+        assert(
+            _context             != NULL && 
+            _context->manager.os != NULL
+        );
+
+        return(_context->manager.os);
+    }
+
+    inline graphics_manager*
+    context_graphics_manager(
+        void) {
+
+        assert(
+            _context                   != NULL &&
+            _context->manager.graphics != NULL
+        );
+        return(_context->manager.graphics);
+    }
+
+    inline memory_manager*
+    context_memory_manager(
+        void) {
+
+        assert(
+            _context                 != NULL &&
+            _context->manager.memory != NULL
+        );
+        return(_context->manager.memory);
+    }
 
     //-------------------------------------------------------------------
     // ENUMS

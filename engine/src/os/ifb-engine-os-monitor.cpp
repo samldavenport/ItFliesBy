@@ -1,13 +1,15 @@
 #pragma once
 
 #include "ifb-engine-os.hpp"
+#include "ifb-engine-context.hpp"
 
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     os_monitor_refresh_table(
-        os_context* os) {
+        void) {
 
+        os_manager* os = context_os_manager();
         os_monitor_table* monitor_table = (os != NULL)
             ? os->monitor_table
             : NULL;
@@ -40,8 +42,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL const os_monitor
     os_monitor_get_primary(
-        const os_context* os) {
+        void) {
 
+        os_manager* os = context_os_manager();
         os_monitor_table* tbl = (os != NULL) ? os->monitor_table : NULL;
         bool is_valid = (
             tbl          != NULL       &&
@@ -55,9 +58,10 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL const os_monitor_handle&
     os_monitor_get_handle(
-        const os_context* os,
-        const os_monitor  monitor) {
+        const os_monitor monitor) {
 
+        os_manager* os = context_os_manager();
+        
         const os_monitor_table* tbl = (os != NULL)
             ? os->monitor_table
             : NULL;
@@ -74,8 +78,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL const os_monitor_dimensions&
     os_monitor_get_dimensions(
-        const os_context* os,
-        const os_monitor  monitor) {
+        const os_monitor monitor) {
+
+        os_manager* os = context_os_manager();
 
         const os_monitor_table* tbl = (os != NULL)
             ? os->monitor_table
@@ -93,8 +98,9 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL const os_monitor_name&
     os_monitor_get_name(
-        const os_context* os,
-        const os_monitor  monitor) {
+        const os_monitor monitor) {
+
+        os_manager* os = context_os_manager();
 
         const os_monitor_table* tbl = (os != NULL)
             ? os->monitor_table
