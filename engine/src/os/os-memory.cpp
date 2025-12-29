@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ifb-engine-os.hpp"
+#include "os.hpp"
 #include "context.hpp"
 
 namespace ifb::eng {

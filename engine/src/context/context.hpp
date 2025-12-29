@@ -2,7 +2,7 @@
 #define   IFB_ENGINE_CONTEXT_HPP
 
 #include "ifb-engine.hpp"
-#include "ifb-engine-os.hpp"
+#include "os.hpp"
 #include "devconsole.hpp"
 #include "memory.hpp"
 #include "graphics.hpp"

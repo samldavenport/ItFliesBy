@@ -4,11 +4,11 @@
 #include "context-api.cpp"
 #include "context-internal.cpp"
 #include "context-stack.cpp"
-#include "ifb-engine-os-manager.cpp"
-#include "ifb-engine-os-system.cpp"
-#include "ifb-engine-os-memory.cpp"
-#include "ifb-engine-os-monitor.cpp"
-#include "ifb-engine-os-window.cpp"
+#include "os-manager.cpp"
+#include "os-system.cpp"
+#include "os-memory.cpp"
+#include "os-monitor.cpp"
+#include "os-window.cpp"
 
 #include "devconsole.cpp"
 

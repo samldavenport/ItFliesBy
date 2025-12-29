@@ -1,7 +1,7 @@
 #pragma once
 
 #include "context.hpp"
-#include "ifb-engine-os.hpp"
+#include "os.hpp"
 
 namespace ifb::eng {
 
