@@ -4,6 +4,7 @@
 #include "context-api.cpp"
 #include "context-internal.cpp"
 #include "context-stack.cpp"
+
 #include "os-manager.cpp"
 #include "os-system.cpp"
 #include "os-memory.cpp"
@@ -20,5 +21,7 @@
 #include "gl-pipeline.cpp"
 #include "gl-program.cpp"
 #include "gl-vertex.cpp"
+
+#include "memory-manager.cpp"
 
 #include "quad-manager.cpp"

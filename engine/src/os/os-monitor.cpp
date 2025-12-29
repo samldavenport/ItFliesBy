@@ -9,7 +9,7 @@ namespace ifb::eng {
     os_monitor_refresh_table(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
         os_monitor_table* monitor_table = (os != NULL)
             ? os->monitor_table
             : NULL;
@@ -44,7 +44,7 @@ namespace ifb::eng {
     os_monitor_get_primary(
         void) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
         os_monitor_table* tbl = (os != NULL) ? os->monitor_table : NULL;
         bool is_valid = (
             tbl          != NULL       &&
@@ -60,7 +60,7 @@ namespace ifb::eng {
     os_monitor_get_handle(
         const os_monitor monitor) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
         
         const os_monitor_table* tbl = (os != NULL)
             ? os->monitor_table
@@ -80,7 +80,7 @@ namespace ifb::eng {
     os_monitor_get_dimensions(
         const os_monitor monitor) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_monitor_table* tbl = (os != NULL)
             ? os->monitor_table
@@ -100,7 +100,7 @@ namespace ifb::eng {
     os_monitor_get_name(
         const os_monitor monitor) {
 
-        os_manager* os = context_os_manager();
+        os_manager* os = context_get_os_manager();
 
         const os_monitor_table* tbl = (os != NULL)
             ? os->monitor_table
