@@ -6,7 +6,7 @@
 namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
-    memory_manager_init(
+    memory_manager_alloc(
         void) {
 
         _memory_manager = context_stack_alloc<memory_manager>();
