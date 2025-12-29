@@ -3,7 +3,7 @@
 
 #include "ifb-engine.hpp"
 #include "ifb-engine-os.hpp"
-#include "ifb-engine-devconsole.hpp"
+#include "devconsole.hpp"
 #include "memory.hpp"
 #include "graphics.hpp"
 

@@ -10,7 +10,7 @@
 #include "ifb-engine-os-monitor.cpp"
 #include "ifb-engine-os-window.cpp"
 
-#include "ifb-engine-devconsole.cpp"
+#include "devconsole.cpp"
 
 #include "graphics-manager.cpp"
 #include "graphics-renderer.cpp"
