@@ -1,6 +1,6 @@
  #pragma once
 
-#include "ifb-engine-context.hpp"
+#include "context.hpp"
 #include "gl.hpp"
 namespace ifb::eng {
     
@@ -29,9 +29,10 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        os_manager_alloc       (ctx->stack);
-        ctx->devconsole       = devconsole_alloc       (ctx->stack);
-        ctx->manager.graphics = graphics_manager_alloc (ctx->stack);
+        ctx->manager.os       = context_stack_alloc_os_manager();
+        ctx->manager.graphics = context_stack_alloc_graphics_manager();
+        ctx->manager.memory   = context_stack_alloc_memory_manager();
+        ctx->devconsole       = context_stack_alloc_devconsole(); 
 
         assert(
             ctx->stack.is_valid()         &&

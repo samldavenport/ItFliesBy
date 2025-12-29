@@ -41,10 +41,9 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // manager
-    IFB_ENG_INTERNAL graphics_manager* graphics_manager_alloc              (stack& stack);
-    IFB_ENG_INTERNAL void              graphics_manager_startup            (graphics_manager* graphics);
-    IFB_ENG_INTERNAL void              graphics_manager_shutdown           (graphics_manager* graphics);
-    IFB_ENG_INTERNAL void              graphics_manager_render_hello_quad  (graphics_manager* graphics);
+    IFB_ENG_INTERNAL void graphics_manager_startup            (graphics_manager* graphics);
+    IFB_ENG_INTERNAL void graphics_manager_shutdown           (graphics_manager* graphics);
+    IFB_ENG_INTERNAL void graphics_manager_render_hello_quad  (graphics_manager* graphics);
 
     // renderer
     IFB_ENG_INTERNAL void
