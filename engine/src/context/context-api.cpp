@@ -32,7 +32,7 @@ namespace ifb::eng {
         ctx->module.os        = os_module_init();
         ctx->module.graphics  = graphics_module_init(); 
         ctx->module.memory    = memory_module_init();
-        ctx->devconsole       = context_stack_alloc_devconsole(); 
+        ctx->devconsole       = devconsole_init(); 
 
         assert(
             ctx->stack.is_valid()         &&
@@ -56,9 +56,6 @@ namespace ifb::eng {
         os_monitor_refresh_table  ();
         os_window_create_and_show ();
 
-        // devconsole
-        devconsole_init(ctx->devconsole);
-
         // initialize gl context
         gl_context_init();
         gl_context_enable_smoothing();
@@ -72,6 +69,9 @@ namespace ifb::eng {
 
         // graphics
         graphics_module_startup();
+
+        // start gui
+        devconsole_start_gui();
 
         return(true);
     }
@@ -114,7 +114,7 @@ namespace ifb::eng {
 
         assert(ctx);
 
-        devconsole_render(ctx->devconsole);
+        devconsole_render();
         graphics_module_render_hello_quad();
         os_window_render_frame();
 

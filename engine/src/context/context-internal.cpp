@@ -51,7 +51,7 @@ namespace ifb::eng {
                     
                     case (CONTEXT_KEYCODE_DEVTOOLS): {
                         if (ctx->keymap_flags & context_keymap_flag_e_devconsole) {
-                            devconsole_toggle(ctx->devconsole);
+                            devconsole_toggle();
                         }
                         ctx->keymap_flags &= ~context_keymap_flag_e_devconsole;                       
                     } break;

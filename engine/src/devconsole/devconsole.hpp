@@ -19,13 +19,13 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL devconsole* devconsole_alloc        (stack& stack);
-    IFB_ENG_INTERNAL void        devconsole_init         (devconsole* dt);
-    IFB_ENG_INTERNAL bool        devconsole_is_active    (devconsole* dt);
-    IFB_ENG_INTERNAL void        devconsole_set_active   (devconsole* dt);
-    IFB_ENG_INTERNAL void        devconsole_set_inactive (devconsole* dt);
-    IFB_ENG_INTERNAL void        devconsole_toggle       (devconsole* dt);
-    IFB_ENG_INTERNAL void        devconsole_render       (devconsole* dt);
+    IFB_ENG_INTERNAL devconsole* devconsole_init         (void);
+    IFB_ENG_INTERNAL void        devconsole_start_gui    (void);
+    IFB_ENG_INTERNAL bool        devconsole_is_active    (void);
+    IFB_ENG_INTERNAL void        devconsole_set_active   (void);
+    IFB_ENG_INTERNAL void        devconsole_set_inactive (void);
+    IFB_ENG_INTERNAL void        devconsole_toggle       (void);
+    IFB_ENG_INTERNAL void        devconsole_render       (void);
 
     //-------------------------------------------------------------------
     // DEFINITIONS

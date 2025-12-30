@@ -3,7 +3,6 @@
 
 #include "context-api.cpp"
 #include "context-internal.cpp"
-#include "context-stack.cpp"
 
 #include "os-module.cpp"
 #include "os-system.cpp"

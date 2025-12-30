@@ -5,13 +5,23 @@
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL void
+    static devconsole* _console;
+
+    IFB_ENG_INTERNAL devconsole*
     devconsole_init(
-        devconsole* devconsole) {
+        void) {
 
-        assert(devconsole);
+        _console = context_stack_alloc<devconsole>();
+        assert(_console);
 
-        devconsole->flags = devconsole_flag_e_none;
+        _console->flags = devconsole_flag_e_none;
+
+        return(_console);
+    }
+
+    IFB_ENG_INTERNAL void
+    devconsole_start_gui(
+        void) {
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -23,44 +33,45 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL bool
     devconsole_is_active(
-        devconsole* devconsole) {
+        void) {
 
-        assert(devconsole);
+        assert(_console);
 
-        const bool is_active = (devconsole->flags & devconsole_flag_e_active);
+        const bool is_active = (_console->flags & devconsole_flag_e_active);
         return(is_active);
     }
 
     IFB_ENG_INTERNAL void
-    devconsole_set_active(devconsole* devconsole) {
+    devconsole_set_active(
+        void) {
 
-        assert(devconsole);
-        devconsole->flags |= devconsole_flag_e_active;
+        assert(_console);
+        _console->flags |= devconsole_flag_e_active;
     }
     
     IFB_ENG_INTERNAL void
     devconsole_set_inactive(
-        devconsole* devconsole) {
+        void) {
 
-        assert(devconsole);
-        devconsole->flags &= ~devconsole_flag_e_active;
+        assert(_console);
+        _console->flags &= ~devconsole_flag_e_active;
     }
 
     IFB_ENG_INTERNAL void
     devconsole_toggle(
-        devconsole* dt) {
+        void) {
 
-        assert(dt);
-        dt->flags ^= devconsole_flag_e_active;
+        assert(_console);
+        _console->flags ^= devconsole_flag_e_active;
     }
 
     IFB_ENG_INTERNAL void
     devconsole_render(
-        devconsole* devconsole) {
+        void) {
 
-        assert(devconsole);
+        assert(_console);
 
-        const bool is_active = (devconsole->flags & devconsole_flag_e_active);
+        const bool is_active = (_console->flags & devconsole_flag_e_active);
         if (!is_active) return;
 
         constexpr ImGuiWindowFlags main_window_flags        = ImGuiWindowFlags_MenuBar;
