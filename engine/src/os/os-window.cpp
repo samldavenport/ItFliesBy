@@ -1,6 +1,6 @@
 #pragma once
 
-#include "os.hpp"
+#include "os-module.hpp"
 #include "context.hpp"
 
 namespace ifb::eng {
@@ -9,8 +9,9 @@ namespace ifb::eng {
     os_window_create_and_show(
         void) {
 
-        os_manager* os     = context_get_os_manager(); 
-        os_window*  window = (os != NULL) ? os->window : NULL;
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
         assert(window);
 
         // get monitor dimensions
@@ -51,8 +52,10 @@ namespace ifb::eng {
     os_window_start_frame_and_process_events(
         void) {
 
-        os_manager* os     = context_get_os_manager(); 
-        os_window* window = (os != NULL) ? os->window : NULL;
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
+        assert(window);
 
         bool is_valid = true;
         is_valid &= (window                  != NULL);
@@ -171,8 +174,9 @@ namespace ifb::eng {
     os_window_render_frame(
         void) {
 
-        os_manager* os    = context_get_os_manager(); 
-        os_window* window = (os != NULL) ? os->window : NULL;
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
         assert(window);
 
         bool can_render = true;
@@ -192,8 +196,9 @@ namespace ifb::eng {
     os_window_should_quit(
         void) {
 
-        os_manager* os    = context_get_os_manager(); 
-        os_window* window = (os != NULL) ? os->window : NULL;
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
         assert(window);
 
         const bool should_quit = (window->flags & os_window_flag_e_quit);
@@ -204,8 +209,10 @@ namespace ifb::eng {
     os_window_reset_events(
         void) {
 
-        os_manager* os    = context_get_os_manager(); 
-        os_window* window = (os != NULL) ? os->window : NULL;
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
+        assert(window);
 
         assert(
             window                      != NULL                        &&
@@ -225,8 +232,10 @@ namespace ifb::eng {
     os_window_reset_input(
         void) {
         
-        os_manager* os     = context_get_os_manager(); 
-        os_window*  window = (os != NULL) ? os->window : NULL;
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
+        assert(window);
 
         assert(
             window                            != NULL                       &&

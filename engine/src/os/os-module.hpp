@@ -23,7 +23,7 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct os_manager;
+    struct os_module;
     struct os_memory;
     struct os_window;
     struct os_window_keycode_list;
