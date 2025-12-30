@@ -23,13 +23,14 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct os_manager;
+    struct os_module;
     struct os_memory;
     struct os_window;
     struct os_window_keycode_list;
     struct os_monitor_table;
     struct os_file_table;
-    struct os_system_info;
+    struct os_system;
+    struct os_window_input;
 
     using os_file                = u32;
     using os_monitor             = u32;
@@ -39,6 +40,11 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
+
+    // module
+    IFB_ENG_INTERNAL os_module* os_module_init     (void);
+    IFB_ENG_INTERNAL void       os_module_startup  (void);
+    IFB_ENG_INTERNAL void       os_module_shutdown (void);
 
     // memory
     IFB_ENG_INTERNAL void        os_memory_reserve               (void);
@@ -67,26 +73,27 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l3_cache_info (void); 
 
     // window
-    IFB_ENG_INTERNAL void os_window_create_and_show                (void);
-    IFB_ENG_INTERNAL void os_window_start_frame_and_process_events (void);
-    IFB_ENG_INTERNAL void os_window_render_frame                   (void);
-    IFB_ENG_INTERNAL bool os_window_should_quit                    (void);
-    IFB_ENG_INTERNAL void os_window_reset_events                   (void);
-    IFB_ENG_INTERNAL void os_window_reset_input                    (void);
+    IFB_ENG_INTERNAL void                   os_window_create_and_show                (void);
+    IFB_ENG_INTERNAL void                   os_window_start_frame_and_process_events (void);
+    IFB_ENG_INTERNAL void                   os_window_render_frame                   (void);
+    IFB_ENG_INTERNAL bool                   os_window_should_quit                    (void);
+    IFB_ENG_INTERNAL void                   os_window_reset_events                   (void);
+    IFB_ENG_INTERNAL void                   os_window_reset_input                    (void);
+    IFB_ENG_INTERNAL const os_window_input& os_window_get_input                      (void);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct os_manager {
-        os_system_info*   system_info;
+    struct os_module {
+        os_system*        system;
         os_memory*        memory;
         os_file_table*    file_table;
         os_monitor_table* monitor_table;
         os_window*        window;
     };
 
-    struct os_system_info {
+    struct os_system {
         os_system_memory_info    memory;
         os_system_cpu_info       cpu;
         os_system_cpu_cache_info cpu_cache_l1;
@@ -99,9 +106,9 @@ namespace ifb::eng {
         os_monitor              primary; 
         os_monitor_working_area working_area;
         struct {
-            os_monitor_handle*      handles;
-            os_monitor_dimensions*  dimensions;
-            os_monitor_name*        names;
+            os_monitor_handle*     handles;
+            os_monitor_dimensions* dimensions;
+            os_monitor_name*       names;
         } array;
     };
 

@@ -2,10 +2,10 @@
 #define   IFB_ENGINE_CONTEXT_HPP
 
 #include "ifb-engine.hpp"
-#include "os.hpp"
+#include "os-module.hpp"
 #include "devconsole.hpp"
-#include "memory.hpp"
-#include "graphics.hpp"
+#include "memory-module.hpp"
+#include "graphics-module.hpp"
 
 #include <sld-stack.hpp>
 
@@ -32,15 +32,8 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void context_process_keycodes (context* ctx);
 
     // stack
-    IFB_ENG_INTERNAL os_manager*       context_stack_alloc_os_manager       (void);
-    IFB_ENG_INTERNAL graphics_manager* context_stack_alloc_graphics_manager (void);
-    IFB_ENG_INTERNAL memory_manager*   context_stack_alloc_memory_manager   (void);
     IFB_ENG_INTERNAL devconsole*       context_stack_alloc_devconsole       (void);
 
-    // managers
-    IFB_ENG_INLINE os_manager*       context_get_os_manager       (void);
-    IFB_ENG_INLINE graphics_manager* context_get_graphics_manager (void);
-    IFB_ENG_INLINE memory_manager*   context_get_memory_manager   (void);
 
     //-------------------------------------------------------------------
     // GLOBAL
@@ -61,10 +54,10 @@ namespace ifb::eng {
         devconsole*          devconsole;
         context_keymap_flags keymap_flags;
         struct {
-            os_manager*       os;
-            graphics_manager* graphics;
-            memory_manager*   memory;
-        } manager;
+            os_module*       os;
+            graphics_module* graphics;
+            memory_module*   memory;
+        } module;
     };
 
     template<typename t>
@@ -75,40 +68,6 @@ namespace ifb::eng {
         assert(_context);
         t* mem = _context->stack.push_struct<t>();
         return(mem);
-    }
-
-    IFB_ENG_INLINE os_manager*
-    context_get_os_manager(
-        void) {
-
-        assert(
-            _context             != NULL && 
-            _context->manager.os != NULL
-        );
-
-        return(_context->manager.os);
-    }
-
-    IFB_ENG_INLINE graphics_manager*
-    context_get_graphics_manager(
-        void) {
-
-        assert(
-            _context                   != NULL &&
-            _context->manager.graphics != NULL
-        );
-        return(_context->manager.graphics);
-    }
-
-    IFB_ENG_INLINE memory_manager*
-    context_get_memory_manager(
-        void) {
-
-        assert(
-            _context                 != NULL &&
-            _context->manager.memory != NULL
-        );
-        return(_context->manager.memory);
     }
 
     //-------------------------------------------------------------------

@@ -1,16 +1,18 @@
 #pragma once
 
 #include "context.hpp"
-#include "os.hpp"
+#include "os-module.hpp"
 
 namespace ifb::eng {
 
-    IFB_ENG_INTERNAL void
-    os_manager_alloc(
-        stack& stack) {
+    static os_module* _os_module;
+
+    IFB_ENG_INTERNAL os_module*
+    os_module_init(
+        void) {
 
         // stack allocate
-        auto manager              = context_stack_alloc<os_manager>            ();
+        auto module               = context_stack_alloc<os_module>             ();
         auto window               = context_stack_alloc<os_window>             ();
         auto window_events        = context_stack_alloc<os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
         auto window_keycodes_up   = context_stack_alloc<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
@@ -22,11 +24,11 @@ namespace ifb::eng {
         auto file_table           = context_stack_alloc<os_file_table>         ();
         auto file_handle_array    = context_stack_alloc<os_file_handle>        (OS_FILE_MAX_COUNT); 
         auto memory               = context_stack_alloc<os_memory>             ();
-        auto sys_info             = context_stack_alloc<os_system_info>        ();
+        auto sys_info             = context_stack_alloc<os_system>             ();
 
         // check allocations
         bool is_valid = true;
-        is_valid &= (manager              != NULL);
+        is_valid &= (module               != NULL);
         is_valid &= (window               != NULL);
         is_valid &= (window_events        != NULL);
         is_valid &= (window_keycodes_up   != NULL);
@@ -42,22 +44,22 @@ namespace ifb::eng {
         assert(is_valid);
 
         // window
-        window->handle                                   = NULL;
-        window->position.x                               = 0;
-        window->position.y                               = 0;
-        window->size.width                               = 0;
-        window->size.height                              = 0;
-        window->event_list.array                         = window_events;
-        window->event_list.capacity                      = OS_WINDOW_EVENT_CAPACITY;  
-        window->event_list.count                         = 0;
-        window->flags                                    = os_window_flag_e_none;
-        window->input.mouse.position.x                   = 0;
-        window->input.mouse.position.y                   = 0;
-        window->input.mouse.button                       = os_window_mouse_button_e_none;
-        window->input.keycodes.array_down                = window_keycodes_down;
-        window->input.keycodes.array_up                  = window_keycodes_up;
-        window->input.keycodes.count_down                = 0;
-        window->input.keycodes.count_up                  = 0;
+        window->handle                    = NULL;
+        window->position.x                = 0;
+        window->position.y                = 0;
+        window->size.width                = 0;
+        window->size.height               = 0;
+        window->event_list.array          = window_events;
+        window->event_list.capacity       = OS_WINDOW_EVENT_CAPACITY;  
+        window->event_list.count          = 0;
+        window->flags                     = os_window_flag_e_none;
+        window->input.mouse.position.x    = 0;
+        window->input.mouse.position.y    = 0;
+        window->input.mouse.button        = os_window_mouse_button_e_none;
+        window->input.keycodes.array_down = window_keycodes_down;
+        window->input.keycodes.array_up   = window_keycodes_up;
+        window->input.keycodes.count_down = 0;
+        window->input.keycodes.count_up   = 0;
 
         // monitors
         monitor_table->count                             = 0;
@@ -69,7 +71,7 @@ namespace ifb::eng {
         monitor_table->array.names                       = monitor_names;
 
         // files
-        file_table->handle_array                         = file_handle_array;
+        file_table->handle_array = file_handle_array;
         for (
             os_file file = 0;
             file < OS_FILE_MAX_COUNT;
@@ -78,14 +80,14 @@ namespace ifb::eng {
             file_handle_array[file] = NULL;
         }
 
-        // manager
-        manager->window                                  = window; 
-        manager->monitor_table                           = monitor_table;
-        manager->file_table                              = file_table;
-        manager->memory                                  = memory;
-        manager->system_info                             = sys_info;
+        // module
+        module->window        = window; 
+        module->monitor_table = monitor_table;
+        module->file_table    = file_table;
+        module->memory        = memory;
+        module->system        = sys_info;
 
-        // context
-        _context->manager.os = manager;
+        _os_module = module;
+        return(_os_module);
     }
 };

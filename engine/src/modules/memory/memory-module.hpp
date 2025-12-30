@@ -11,7 +11,7 @@ namespace ifb::eng {
     // TYPES
     //-------------------------------------------------------------------
 
-    struct memory_manager;
+    struct memory_module;
     struct memory_block;
 
     using memory_block_type = u32;
@@ -31,12 +31,13 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL void          memory_manager_startup  (void); 
-    IFB_ENG_INTERNAL void          memory_manager_shutdown (void); 
+    IFB_ENG_INTERNAL memory_module* memory_module_init     (void); 
+    IFB_ENG_INTERNAL void           memory_module_startup  (void); 
+    IFB_ENG_INTERNAL void           memory_module_shutdown (void); 
     
-    IFB_ENG_INTERNAL memory_block* memory_block_commit     (const memory_block_type block_type, const u32 size);
-    IFB_ENG_INTERNAL void          memory_block_decommit   (memory_block* block);
-    IFB_ENG_INTERNAL void          memory_block_reset      (memory_block* block);
+    IFB_ENG_INTERNAL memory_block*  memory_block_commit    (const memory_block_type block_type, const u32 size);
+    IFB_ENG_INTERNAL void           memory_block_decommit  (memory_block* block);
+    IFB_ENG_INTERNAL void           memory_block_reset     (memory_block* block);
 
     //-------------------------------------------------------------------
     // ENUMS
@@ -70,7 +71,7 @@ namespace ifb::eng {
     };
 
 
-    struct memory_manager {
+    struct memory_module {
         struct {
             u32 block;
             u32 map;

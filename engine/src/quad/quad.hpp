@@ -37,7 +37,6 @@ namespace ifb::eng {
         quad_memory* next;        
         quad_memory* prev;
         u32          start_index;        
-        
     };
 
     struct quad_manager {

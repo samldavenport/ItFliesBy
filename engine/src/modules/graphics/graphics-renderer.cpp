@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics.hpp"
+#include "graphics-module.hpp"
 
 namespace ifb::eng {
 
