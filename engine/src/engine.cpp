@@ -22,6 +22,6 @@
 #include "gl-program.cpp"
 #include "gl-vertex.cpp"
 
-#include "memory-manager.cpp"
+#include "memory-module.cpp"
 
 #include "quad-manager.cpp"

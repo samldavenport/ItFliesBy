@@ -31,7 +31,7 @@ namespace ifb::eng {
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
         ctx->module.os        = os_module_init();
         ctx->module.graphics  = graphics_module_init(); 
-        ctx->manager.memory   = context_stack_alloc_memory_manager();
+        ctx->module.memory    = memory_module_init();
         ctx->devconsole       = context_stack_alloc_devconsole(); 
 
         assert(
