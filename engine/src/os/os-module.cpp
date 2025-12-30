@@ -86,5 +86,7 @@ namespace ifb::eng {
         module->file_table    = file_table;
         module->memory        = memory;
         module->system        = sys_info;
+
+        _os_module = module;
     }
 };

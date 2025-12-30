@@ -30,6 +30,7 @@ namespace ifb::eng {
     struct os_monitor_table;
     struct os_file_table;
     struct os_system;
+    struct os_window_input;
 
     using os_file                = u32;
     using os_monitor             = u32;
@@ -72,12 +73,13 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l3_cache_info (void); 
 
     // window
-    IFB_ENG_INTERNAL void os_window_create_and_show                (void);
-    IFB_ENG_INTERNAL void os_window_start_frame_and_process_events (void);
-    IFB_ENG_INTERNAL void os_window_render_frame                   (void);
-    IFB_ENG_INTERNAL bool os_window_should_quit                    (void);
-    IFB_ENG_INTERNAL void os_window_reset_events                   (void);
-    IFB_ENG_INTERNAL void os_window_reset_input                    (void);
+    IFB_ENG_INTERNAL void                   os_window_create_and_show                (void);
+    IFB_ENG_INTERNAL void                   os_window_start_frame_and_process_events (void);
+    IFB_ENG_INTERNAL void                   os_window_render_frame                   (void);
+    IFB_ENG_INTERNAL bool                   os_window_should_quit                    (void);
+    IFB_ENG_INTERNAL void                   os_window_reset_events                   (void);
+    IFB_ENG_INTERNAL void                   os_window_reset_input                    (void);
+    IFB_ENG_INTERNAL const os_window_input& os_window_get_input                      (void);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -144,9 +146,6 @@ namespace ifb::eng {
         u64  committed_size;
         u64  alignment;
     };
-
-
-
     
     //-------------------------------------------------------------------
     // ENUMS

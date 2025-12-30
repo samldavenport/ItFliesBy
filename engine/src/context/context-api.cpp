@@ -29,7 +29,7 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->manager.os       = context_stack_alloc_os_manager();
+        os_module_init();
         ctx->manager.graphics = context_stack_alloc_graphics_manager();
         ctx->manager.memory   = context_stack_alloc_memory_manager();
         ctx->devconsole       = context_stack_alloc_devconsole(); 
@@ -37,7 +37,6 @@ namespace ifb::eng {
         assert(
             ctx->stack.is_valid()         &&
             ctx->devconsole       != NULL &&
-            ctx->manager.os       != NULL &&
             ctx->manager.graphics != NULL
         );
 

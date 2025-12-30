@@ -253,4 +253,17 @@ namespace ifb::eng {
         window->input.keycodes.count_down = 0;
         window->input.mouse.button        = os_window_mouse_button_e_none;
     }
+
+    IFB_ENG_INTERNAL const os_window_input&
+    os_window_get_input(
+        void) {
+
+        os_window*  window = (_os_module != NULL) 
+            ? _os_module->window
+            : NULL;
+        assert(window);
+
+        return(window->input);
+    }
+
 };
