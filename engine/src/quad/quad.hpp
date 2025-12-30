@@ -28,10 +28,7 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct quad {
-        position  position;
-        color_u32 color;
-    };
+
 
     struct quad_memory {
         quad_memory* next;        
