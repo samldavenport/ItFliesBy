@@ -24,3 +24,5 @@
 #include "memory-module.cpp"
 
 #include "quad-manager.cpp"
+
+#include "core.cpp"
