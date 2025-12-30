@@ -42,9 +42,9 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // module
-    IFB_ENG_INTERNAL void os_module_init     (void);
-    IFB_ENG_INTERNAL void os_module_startup  (void);
-    IFB_ENG_INTERNAL void os_module_shutdown (void);
+    IFB_ENG_INTERNAL os_module* os_module_init     (void);
+    IFB_ENG_INTERNAL void       os_module_startup  (void);
+    IFB_ENG_INTERNAL void       os_module_shutdown (void);
 
     // memory
     IFB_ENG_INTERNAL void        os_memory_reserve               (void);

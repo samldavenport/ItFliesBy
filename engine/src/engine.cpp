@@ -13,7 +13,7 @@
 
 #include "devconsole.cpp"
 
-#include "graphics-manager.cpp"
+#include "graphics-module.cpp"
 #include "graphics-renderer.cpp"
 
 #include "gl-buffer.cpp"

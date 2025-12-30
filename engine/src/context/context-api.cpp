@@ -29,15 +29,15 @@ namespace ifb::eng {
 
         // initialize the stack and allocate structures
         ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        os_module_init();
-        ctx->manager.graphics = context_stack_alloc_graphics_manager();
+        ctx->module.os        = os_module_init();
+        ctx->module.graphics  = graphics_module_init(); 
         ctx->manager.memory   = context_stack_alloc_memory_manager();
         ctx->devconsole       = context_stack_alloc_devconsole(); 
 
         assert(
             ctx->stack.is_valid()         &&
             ctx->devconsole       != NULL &&
-            ctx->manager.graphics != NULL
+            ctx->module.graphics != NULL
         );
 
 
@@ -71,7 +71,7 @@ namespace ifb::eng {
         );
 
         // graphics
-        graphics_manager_startup(ctx->manager.graphics);
+        graphics_module_startup();
 
         return(true);
     }
@@ -115,7 +115,7 @@ namespace ifb::eng {
         assert(ctx);
 
         devconsole_render(ctx->devconsole);
-        graphics_manager_render_hello_quad(ctx->manager.graphics);
+        graphics_module_render_hello_quad();
         os_window_render_frame();
 
         return(true);

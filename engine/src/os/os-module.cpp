@@ -7,7 +7,7 @@ namespace ifb::eng {
 
     static os_module* _os_module;
 
-    IFB_ENG_INTERNAL void
+    IFB_ENG_INTERNAL os_module*
     os_module_init(
         void) {
 
@@ -88,5 +88,6 @@ namespace ifb::eng {
         module->system        = sys_info;
 
         _os_module = module;
+        return(_os_module);
     }
 };

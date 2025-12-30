@@ -15,7 +15,7 @@ namespace ifb::eng {
 
     using graphics_vertex_property_type = u32;
     
-    struct graphics_manager;
+    struct graphics_module;
     struct graphics_renderer;
     struct graphics_vertex_buffer;
     struct graphics_index_buffer;
@@ -41,9 +41,10 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // manager
-    IFB_ENG_INTERNAL void graphics_manager_startup            (graphics_manager* graphics);
-    IFB_ENG_INTERNAL void graphics_manager_shutdown           (graphics_manager* graphics);
-    IFB_ENG_INTERNAL void graphics_manager_render_hello_quad  (graphics_manager* graphics);
+    IFB_ENG_INTERNAL graphics_module* graphics_module_init              (void);
+    IFB_ENG_INTERNAL void             graphics_module_startup           (void);
+    IFB_ENG_INTERNAL void             graphics_module_shutdown          (void);
+    IFB_ENG_INTERNAL void             graphics_module_render_hello_quad (void);
 
     // renderer
     IFB_ENG_INTERNAL void
@@ -82,7 +83,7 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct graphics_manager {
+    struct graphics_module {
         graphics_renderer* hello_quad_renderer;
     };
 

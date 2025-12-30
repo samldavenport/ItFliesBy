@@ -10,7 +10,6 @@ namespace ifb::eng {
 
         const os_window_input& input = os_window_get_input();
 
-
         if (input.keycodes.count_down > 0) {
 
             assert(
