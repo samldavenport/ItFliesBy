@@ -35,15 +35,14 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-
     struct entity_id {
         u32 val;
 
         constexpr explicit entity_id (const u32 v)           : val(v) { }
         constexpr          entity_id (void)                  : val(0) { }
 
-        inline bool operator== (const entity_id& other) { return(this->val == other.val); }
-        friend bool operator== (entity_id a, entity_id b) { return(a.val == b.val); }
+        inline bool operator== (const entity_id& other)   { return(this->val == other.val); }
+        friend bool operator== (entity_id a, entity_id b) { return(a.val == b.val);         }
 
         constexpr entity_id&
         operator=(
@@ -51,6 +50,14 @@ namespace ifb::eng {
             
             this->val = v;
             return(*this);
+        }
+
+        inline u32
+        mask(
+            const u32 m) {
+        
+            const u32 result = (this->val & (m - 1)); 
+            return(result);
         }
     };
 
@@ -84,7 +91,6 @@ namespace ifb::eng {
         }
     };
 
-
     struct entity_manager {
         u32 capacity;
         u32 count;
@@ -94,13 +100,20 @@ namespace ifb::eng {
         } data;
     };
 
+    struct entity {
+        entity_id   id;
+        entity_tag* tag;
+    };
 
-    inline void
+    inline bool
     entity_test(
         void) {
 
         entity_tag tag("TEST TAG");
         entity_id  id = tag.to_id();
+
+        const u32 index = id.mask(32);
+        return(true);
     }
 };
 
