@@ -23,11 +23,13 @@ namespace ifb::eng {
         } array;
 
         // methods
-        inline void init     (const void* memory_ptr, const u32 memory_size, const f32 max_load = 0.7);
-        inline void validate (void) const; 
-        inline u32  mask     (void) const;
-        inline bool lookup   (const entity_id id, u32& index) const;
-        inline bool insert   (const entity_id id, const u32 val);
+        inline void init      (const void* memory_ptr, const u32 memory_size, const f32 max_load = 0.7);
+        inline void validate  (void) const; 
+        inline u32  mask      (void) const;
+        inline bool lookup    (const entity_id id, u32& index) const;
+        inline bool insert    (const entity_id id, const u32 val);
+        inline void remove_at (const u32 index);
+        inline void update_at (const u32 index, const u32 val);
 
         // operators
         inline entity_sparse_entry operator[](u32 index);
@@ -143,6 +145,29 @@ namespace ifb::eng {
         }
 
         return(did_insert);
+    }
+
+    inline void
+    entity_sparse_array::remove_at(
+        const u32 index) {
+
+        this->validate();
+        assert(index <= this->capacity);
+        assert(this->array.id[index]);
+
+        this->array.id[index] = 0;
+        this->array.val       = 0;
+    }
+
+    inline void
+    entity_sparse_array::update_at(
+        const u32 index,
+        const u32 val) {
+
+        this->validate();
+        assert(index <= this->capacity);
+
+        this->array.val[index] = val;
     }
 
     inline entity_sparse_entry
