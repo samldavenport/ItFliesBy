@@ -113,6 +113,7 @@ namespace ifb::eng {
 
     struct entity_sparse_array {
         u32 capacity;
+        f32 load_factor;
         struct {
             entity_id* id;
             u32*       val;
@@ -121,18 +122,21 @@ namespace ifb::eng {
         explicit inline
         entity_sparse_array(
             const void* memory_ptr,
-            const u32   memory_size) {
+            const u32   memory_size,
+            const f32   load_factor = 0.7) {
 
             const u32 entity_size = sizeof(entity_id) + sizeof(u32);
 
             assert(
-                memory_ptr  != NULL &&
-                memory_size >  entity_size
+                memory_ptr  != NULL        &&
+                memory_size >  entity_size &&
+                load_factor <= 1.0f
             );
 
-            this->capacity  = (memory_size / entity_size);
-            this->array.id  = (entity_id*)memory_ptr;
-            this->array.val = (u32*)(((addr)memory_ptr) + (sizeof(entity_id) * capacity));
+            this->capacity    = (memory_size / entity_size);
+            this->load_factor = load_factor;
+            this->array.id    = (entity_id*)memory_ptr;
+            this->array.val   = (u32*)(((addr)memory_ptr) + (sizeof(entity_id) * capacity));
 
             assert(this->capacity != 0);
         }   
@@ -144,13 +148,16 @@ namespace ifb::eng {
 
             bool found = false;
 
+            index = id.mask(this->capacity - 1);
+
             for (
-                index = id.mask(this->capacity - 1);
-                index < this->capacity && !found;
-                ++index) {
+                u32 probe = 0;
+                probe < this->capacity && !found;
+                ++probe) {
 
                 const entity_id current_id = this->array.id[index];
                 found = (current_id == id);
+                ++index;
             }
             return(found);
         }
@@ -165,8 +172,6 @@ namespace ifb::eng {
 
         entity_tag tag("TEST TAG");
         entity_id  id = tag.to_id();
-
-        const u32 index = id.mask(32);
 
         entity_sparse_array sparse_array(entity_memory, ENTITY_MEMORY_SIZE);     
 
