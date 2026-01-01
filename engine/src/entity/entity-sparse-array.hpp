@@ -118,6 +118,9 @@ namespace ifb::eng {
         bool did_insert = false;
 
         this->validate();
+        if (this->count_current == this->count_max) {
+            return(false);
+        }
 
         u32 index;
         const bool exists = this->lookup(id, index); 
@@ -140,6 +143,7 @@ namespace ifb::eng {
             // found an unoccupied cell, insert the data
             this->array.id  [index] = id;
             this->array.val [index] = val;
+            ++this->count_current;
             did_insert = true;
             break;
         }
@@ -157,6 +161,10 @@ namespace ifb::eng {
 
         this->array.id[index] = 0;
         this->array.val       = 0;
+
+        this->count_current = (this->count_current == 0)
+            ? 0
+            : this->count_current - 1;
     }
 
     inline void
