@@ -48,11 +48,34 @@ namespace ifb::eng {
         entity_index index;
     };
 
-    struct entity_manager {
-        entity_sparse_array sparse_array;
-        struct {
-            entity_tag* tag;
-        } dense_array;
+    struct entity_dense_array {
+        u32         capacity;
+        u32         count;
+        entity_tag* tag;
+    };
+
+    class entity_manager {
+
+    private:
+
+        entity_sparse_array _sparse_array;
+        entity_dense_array  _dense_array;
+    
+    public:
+
+        // static 
+        static u32 calculate_memory_requirement (const u32 entity_count, const f32 max_load);
+
+        // constructor        
+        explicit   entity_manager (const void* memory_ptr, const u32 memory_size, const f32 max_load);
+
+        // methods
+        bool              create_entities  (entity_id* out_id,   const cchar** in_tag_cstr, const u32 count = 1);
+        bool              lookup_entities  (entity_id* out_id,   const cchar** in_tag_cstr, const u32 count = 1);
+        void              delete_entities  (const entity_id* id, const u32 count = 1);
+        const u32         get_entity_count (void);
+        const entity_tag* get_tag_array    (void);
+        const entity_id*  get_id_array     (void);
     };
 
     constexpr u32 ENTITY_MEMORY_SIZE = size_kilobytes(64); 
@@ -66,8 +89,7 @@ namespace ifb::eng {
         tag.init("TEST TAG");
         entity_id  id = tag.to_id();
 
-        entity_sparse_array sparse_array;
-        sparse_array.init(entity_memory, ENTITY_MEMORY_SIZE);
+        entity_sparse_array sparse_array(entity_memory, ENTITY_MEMORY_SIZE);
 
         
         bool result = false;
