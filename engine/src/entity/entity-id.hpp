@@ -12,7 +12,6 @@ namespace ifb::eng {
         constexpr          entity_id (void)        : val(0) { }
 
         inline bool operator== (const entity_id& other)   { return(this->val == other.val); }
-        inline bool operator== (const u32 other) {return(this->val == other);}
         friend bool operator== (entity_id a, entity_id b) { return(a.val == b.val);         }
 
         constexpr entity_id&
