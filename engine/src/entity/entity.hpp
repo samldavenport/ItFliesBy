@@ -43,6 +43,7 @@ namespace ifb::eng {
         constexpr          entity_id (void)                  : val(0) { }
 
         inline bool operator== (const entity_id& other)   { return(this->val == other.val); }
+        inline bool operator== (const u32 other) {return(this->val == other);}
         friend bool operator== (entity_id a, entity_id b) { return(a.val == b.val);         }
 
         constexpr entity_id&
@@ -56,14 +57,6 @@ namespace ifb::eng {
         explicit constexpr
         operator bool() const {
             return(this->val != 0);
-        }
-
-        constexpr inline u32
-        mask(
-            const u32 m) const {
-        
-            const u32 result = (this->val & m); 
-            return(result);
         }
     };
 
@@ -111,55 +104,142 @@ namespace ifb::eng {
         entity_tag* tag;
     };
 
+    struct entity_sparse_entry {
+        entity_id id;
+        u32       val;
+    };
+
     struct entity_sparse_array {
         u32 capacity;
-        f32 load_factor;
+        u32 count_current;
+        u32 count_max;
         struct {
             entity_id* id;
             u32*       val;
         } array;
 
-        explicit inline
-        entity_sparse_array(
+        void inline
+        init(
             const void* memory_ptr,
             const u32   memory_size,
-            const f32   load_factor = 0.7) {
+            const f32   max_load = 0.7) {
 
             const u32 entity_size = sizeof(entity_id) + sizeof(u32);
 
             assert(
                 memory_ptr  != NULL        &&
                 memory_size >  entity_size &&
-                load_factor <= 1.0f
+                max_load    <= 1.0f
             );
 
-            this->capacity    = (memory_size / entity_size);
-            this->load_factor = load_factor;
-            this->array.id    = (entity_id*)memory_ptr;
-            this->array.val   = (u32*)(((addr)memory_ptr) + (sizeof(entity_id) * capacity));
+            this->capacity      = (memory_size / entity_size);
+            this->count_current = 0;
+            this->count_max     = (u32)(((f32)this->capacity) * max_load);
+            this->array.id      = (entity_id*)memory_ptr;
+            this->array.val     = (u32*)(((addr)memory_ptr) + (sizeof(entity_id) * capacity));
 
             assert(this->capacity != 0);
         }   
 
+        void inline
+        validate(void) const {
+
+            bool is_valid = true;
+            is_valid &= (this->capacity      != 0);
+            is_valid &= (this->array.id      != NULL);
+            is_valid &= (this->array.val     != NULL);
+            is_valid &= (this->count_current <= this->count_max);
+            is_valid &= (this->count_max     != 0);
+            assert(is_valid);
+        }
+
+        inline u32
+        mask(void) const {
+
+            return(this->capacity - 1);
+        }
+
         inline bool
         lookup(
             const entity_id id,
-            u32&            index) {
+            u32&            index) const {
+
+            assert(id);
+            this->validate();
+
+            const u32 mask = (this->capacity - 1);
+
+            index = (id.val & mask);
 
             bool found = false;
 
-            index = id.mask(this->capacity - 1);
-
             for (
                 u32 probe = 0;
-                probe < this->capacity && !found;
+                probe < this->capacity;
                 ++probe) {
 
                 const entity_id current_id = this->array.id[index];
-                found = (current_id == id);
-                ++index;
+                
+                found = (current_id == id); 
+
+                if (!current_id) break; // slot is empty
+                if (found)       break; // found id
+
+                // not found yet, increase the index with wrapping
+                index = (index + 1) & mask; 
             }
+
             return(found);
+        }
+
+        inline bool
+        insert(
+            const entity_id id,
+            const u32       val) {
+
+            bool did_insert = false;
+
+            this->validate();
+
+            u32 index;
+            const bool exists = this->lookup(id, index); 
+            assert(id && !exists);
+
+            const u32 mask = this->mask();
+            index = (id.val & mask);
+            for (
+                u32 probe = 0;
+                probe < this->capacity;
+                ++probe) {
+
+                // if this slot is occupied, go to the next one
+                const entity_id current_id = this->array.id[index]; 
+                if (current_id) {
+                    index = (index + 1) & mask; 
+                    continue;
+                }
+
+                // found an unoccupied cell, insert the data
+                this->array.id  [index] = id;
+                this->array.val [index] = val;
+                did_insert = true;
+                break;
+            }
+
+            return(did_insert);
+        }
+
+        inline entity_sparse_entry
+        operator[](
+            u32 index) {
+
+            this->validate();
+            assert(index <= this->capacity);
+
+            entity_sparse_entry entry;
+            entry.id  = this->array.id  [index];
+            entry.val = this->array.val [index];
+            return(entry);
         }
     };
 
@@ -173,8 +253,27 @@ namespace ifb::eng {
         entity_tag tag("TEST TAG");
         entity_id  id = tag.to_id();
 
-        entity_sparse_array sparse_array(entity_memory, ENTITY_MEMORY_SIZE);     
+        entity_sparse_array sparse_array;
+        sparse_array.init(entity_memory, ENTITY_MEMORY_SIZE);
 
+        
+        bool result = false;
+
+        u32 index = 0;
+        result = sparse_array.lookup(id, index); 
+        assert(!result);
+
+        result = sparse_array.insert(id, 5);
+        assert(result);
+
+        result = sparse_array.lookup(id, index);
+        assert(result);
+
+        entity_sparse_entry entry = sparse_array[index];
+        assert(
+            entry.id.val == id.val &&
+            entry.val    == 5 
+        );
 
         return(true);
     }
