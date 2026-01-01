@@ -6,6 +6,10 @@
 
 namespace ifb::eng {
 
+    //-------------------------------------------------------------------
+    // DEFINITIONS
+    //-------------------------------------------------------------------
+
     struct entity_sparse_entry {
         entity_id id;
         u32       val;
@@ -35,6 +39,9 @@ namespace ifb::eng {
         inline entity_sparse_entry operator[](u32 index);
     };
 
+    //-------------------------------------------------------------------
+    // METHODS
+    //-------------------------------------------------------------------
 
     void inline
     entity_sparse_array::init(
@@ -177,6 +184,10 @@ namespace ifb::eng {
 
         this->array.val[index] = val;
     }
+
+    //-------------------------------------------------------------------
+    // OPERATORS
+    //-------------------------------------------------------------------
 
     inline entity_sparse_entry
     entity_sparse_array::operator[](
