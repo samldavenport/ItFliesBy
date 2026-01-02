@@ -25,13 +25,11 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL u32       entity_memory_size            (const u32 entity_count, const f32 max_load = 0.7);
-    IFB_ENG_INTERNAL void      entity_manager_init           (entity_manager* em, const void* memory, const u32 size, const f32 max_load = 0.7);
-    IFB_ENG_INTERNAL entity_id entity_create                 (entity_manager* em, const cchar* tag_cstr);
-    IFB_ENG_INTERNAL void      entity_delete                 (entity_manager* em, const entity_id id);
-    IFB_ENG_INTERNAL bool      entity_lookup_by_id           (entity_manager* em, entity& entity);
-    IFB_ENG_INTERNAL bool      entity_lookup_by_sparse_index (entity_manager* em, entity& entity);
-    IFB_ENG_INTERNAL bool      entity_lookup_by_dense_index  (entity_manager* em, entity& entity);
+    IFB_ENG_INTERNAL u32                 entity_memory_size  (const u32 entity_count, const f32 max_load = 0.7);
+    IFB_ENG_INTERNAL entity_manager*     entity_manager_init (const void* memory, const u32 size, const f32 max_load = 0.7);
+    IFB_ENG_INTERNAL bool                entity_create       (entity_manager* em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
+    IFB_ENG_INTERNAL bool                entity_delete       (entity_manager* em, const entity_id* id, const u32 count = 1);
+    IFB_ENG_INTERNAL const entity_table& entity_get_table    (entity_manager* em);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -48,10 +46,14 @@ namespace ifb::eng {
         entity_index index;
     };
 
-    struct entity_dense_array {
+    struct entity_table {
         u32         capacity;
         u32         count;
-        entity_tag* tag;
+        struct {
+            entity_id*  id;
+            entity_tag* tag;
+            u32*        sparse_index;
+        } data;
     };
 
     class entity_manager {
