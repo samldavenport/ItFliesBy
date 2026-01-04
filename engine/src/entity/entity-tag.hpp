@@ -17,13 +17,13 @@ namespace ifb::eng {
         cchar val[ENTITY_TAG_SIZE];
 
         // methods
-        inline void      init  (const cchar* cstr);
+        inline entity_tag  (const cchar* cstr);
         inline entity_id to_id (void);
 
     };
 
-    inline void
-    entity_tag::init(
+    inline
+    entity_tag::entity_tag(
         const cchar* cstr) {
         
         assert(cstr != NULL);

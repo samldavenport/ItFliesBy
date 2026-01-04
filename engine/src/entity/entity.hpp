@@ -24,7 +24,7 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    entity_manager*
+    IFB_ENG_INTERNAL entity_manager*
     entity_manager_init(
         const void* memory_start,
         const u32   memory_size, 
@@ -32,13 +32,14 @@ namespace ifb::eng {
         const f32   max_load_p100
     );
 
-    u32  entity_calculate_memory_size (const u32 capacity, const f32 max_load_p100);
-    u32  entity_capacity              (entity_manager* em const);
-    u32  entity_count                 (entity_manager* em const);
-    u32  entity_max_count             (entity_manager* em const);
-    bool entity_create                (entity_manager* em const, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
-    bool entity_lookup                (entity_manager* em const, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
-    bool entity_delete                (entity_manager* em const, const entity_id* id, const u32 count = 1);
+    IFB_ENG_INTERNAL u32  entity_calculate_memory_size (const u32 capacity, const f32 max_load_p100);
+    IFB_ENG_INTERNAL void entity_manager_validate      (const entity_manager* em);
+    IFB_ENG_INTERNAL u32  entity_capacity              (const entity_manager* em);
+    IFB_ENG_INTERNAL u32  entity_count                 (const entity_manager* em);
+    IFB_ENG_INTERNAL u32  entity_max_count             (const entity_manager* em);
+    IFB_ENG_INTERNAL bool entity_create                (const entity_manager* em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
+    IFB_ENG_INTERNAL bool entity_lookup                (const entity_manager* em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
+    IFB_ENG_INTERNAL bool entity_delete                (const entity_manager* em, const entity_id* id, const u32 count = 1);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -55,35 +56,7 @@ namespace ifb::eng {
         entity_id    id;
     };
         
-    class entity_manager {
-    
-    private:
 
-        sparse_array<u32> _sparse_data_index_array;
-        struct {
-            entity_id*  id;
-            entity_tag* tag;
-            u32*        sparse_array_index;
-        } _data;
-
-    public:
-
-        void init(
-            const void* memory_start,
-            const u32   memory_size, 
-            const u32   capacity,
-            const f32   max_load_p100
-        );
-        
-        u32  calculate_memory_size (const u32 capacity, const f32 max_load_p100) const;
-        u32  capacity              (void) const;
-        u32  count                 (void) const;
-        u32  max_count             (void) const;
-
-        bool create_entities (entity_id* out_id, const cchar** in_tag_cstr, const u32 count = 1);
-        bool lookup_entities (entity_id* out_id, const cchar** in_tag_cstr, const u32 count = 1);
-        bool delete_entities (const entity_id* id, const u32 count = 1);
-    };
 
     constexpr u32 ENTITY_MEMORY_SIZE = size_kilobytes(64); 
     static byte entity_memory[ENTITY_MEMORY_SIZE];
