@@ -71,8 +71,41 @@ namespace ifb::eng {
     entity_test(
         void) {
 
-        
+        // calculate memory requirements
+        const u32 capacity    = 65536;
+        const f32 max_load    = 0.7f;
+        const u32 memory_size = entity_calculate_memory_size(
+            capacity, 
+            max_load);
 
+        // allocate memory
+        void* entity_memory = malloc(memory_size);
+        assert(entity_memory);
+
+
+        entity_manager* mngr = entity_manager_init(
+            entity_memory,
+            memory_size,
+            capacity,
+            max_load
+        );
+
+        entity_id entity_array[5];
+        const cchar* entity_tag_array[5] = {
+            (cchar*)"one",
+            (cchar*)"two",
+            (cchar*)"three",
+            (cchar*)"four",
+            (cchar*)"five"
+        };
+        entity_create(
+            mngr,
+            entity_array,
+            (const cchar**)entity_tag_array,
+            5
+        );
+
+        free(entity_memory);
         return(true);
     }
 };
