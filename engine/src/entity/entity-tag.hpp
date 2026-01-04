@@ -18,7 +18,7 @@ namespace ifb::eng {
 
         // methods
         inline entity_tag  (const cchar* cstr);
-        inline entity_id to_id (void);
+        inline entity_id to_id (void) const;
 
     };
 
@@ -38,7 +38,7 @@ namespace ifb::eng {
 
     inline entity_id
     entity_tag::to_id(
-        void) {
+        void) const {
 
         const u32 hash = hash_string(
             (char*)&this->val[0], // cstr

@@ -21,6 +21,12 @@ namespace ifb::eng {
     struct entity_manager;
 
     //-------------------------------------------------------------------
+    // CONSTANTS
+    //-------------------------------------------------------------------
+
+    constexpr u32 ENTITY_ID_INVALID = 0;
+
+    //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
 
@@ -33,13 +39,13 @@ namespace ifb::eng {
     );
 
     IFB_ENG_INTERNAL u32  entity_calculate_memory_size (const u32 capacity, const f32 max_load_p100);
-    IFB_ENG_INTERNAL void entity_manager_validate      (const entity_manager* em);
-    IFB_ENG_INTERNAL u32  entity_capacity              (const entity_manager* em);
-    IFB_ENG_INTERNAL u32  entity_count                 (const entity_manager* em);
-    IFB_ENG_INTERNAL u32  entity_max_count             (const entity_manager* em);
-    IFB_ENG_INTERNAL bool entity_create                (const entity_manager* em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
-    IFB_ENG_INTERNAL bool entity_lookup                (const entity_manager* em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
-    IFB_ENG_INTERNAL bool entity_delete                (const entity_manager* em, const entity_id* id, const u32 count = 1);
+    IFB_ENG_INTERNAL void entity_manager_validate      (entity_manager* const em);
+    IFB_ENG_INTERNAL u32  entity_capacity              (entity_manager* const em);
+    IFB_ENG_INTERNAL u32  entity_count                 (entity_manager* const em);
+    IFB_ENG_INTERNAL u32  entity_max_count             (entity_manager* const em);
+    IFB_ENG_INTERNAL bool entity_create                (entity_manager* const em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
+    IFB_ENG_INTERNAL void entity_lookup                (entity_manager* const em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
+    IFB_ENG_INTERNAL bool entity_delete                (entity_manager* const em, const entity_id* id, const u32 count = 1);
 
     //-------------------------------------------------------------------
     // DEFINITIONS

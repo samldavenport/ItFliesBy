@@ -90,7 +90,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL void
     entity_manager_validate(
-        const entity_manager* em) {
+        entity_manager* const em) {
 
         bool is_valid = (em != NULL);
         if (is_valid) {
@@ -106,7 +106,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL u32
     entity_capacity(
-        const entity_manager* em) {
+        entity_manager* const em) {
 
         entity_manager_validate(em);
         return(em->index_array.capacity());
@@ -114,7 +114,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL u32
     entity_count(
-        const entity_manager* em) {
+        entity_manager* const em) {
 
         entity_manager_validate(em);
         return(em->index_array.count());
@@ -122,7 +122,7 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL u32 
     entity_max_count(
-        const entity_manager* em) {
+        entity_manager* const em) {
 
         entity_manager_validate(em);
         return(em->index_array.max_count());
@@ -130,7 +130,60 @@ namespace ifb::eng {
 
     IFB_ENG_INTERNAL bool
     entity_create(
-        const entity_manager* em,
+        entity_manager* const em,
+        entity_id*            out_id,
+        const cchar**         in_tag_cstr,
+        const u32             in_count) {
+
+        entity_manager_validate(em);
+        assert(
+            out_id      != NULL &&
+            in_tag_cstr != NULL &&
+            in_count    != 0
+        );
+
+        bool did_create = true;
+
+        for (
+            u32 entity = 0;
+                entity < in_count;
+              ++entity) {
+
+            // get the data
+            const u32    dense_index = em->index_array.count();
+            entity_tag&  tag         = em->data.tag [dense_index];
+            const cchar* tag_cstr    = in_tag_cstr  [entity];
+            entity_id&   id          = out_id       [entity];
+
+            // create the tag and id
+            tag = entity_tag(tag_cstr);
+            id  = tag.to_id();
+
+            // add the id and dense index to the sparse array
+            const u32 sparse_index = em->index_array.insert(
+                id.val,     // key
+                dense_index // value
+            );
+
+            // if we didn't add the id, we're done
+            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
+                did_create = false;
+                id         = ENTITY_ID_INVALID;
+                break;
+            }
+
+            // update the dense arrays
+            em->data.id           [dense_index] = id;
+            em->data.tag          [dense_index] = tag;
+            em->data.sparse_index [dense_index] = sparse_index;
+        }
+
+        return(did_create);
+    }
+
+    IFB_ENG_INTERNAL void
+    entity_lookup(
+        entity_manager* const em,
         entity_id*            out_id,
         const cchar**         in_tag_cstr,
         const u32             in_count) {
@@ -147,15 +200,26 @@ namespace ifb::eng {
                 entity < in_count;
               ++entity) {
 
-            const entity_tag tag(in_tag_cstr[entity]);
-            const entity_id  id = tag.to_id();
+            entity_id&   id       = out_id      [entity];
+            const cchar* tag_cstr = in_tag_cstr [entity];
 
+            const entity_tag tag(tag_cstr);
+            const entity_id  tmp_id = tag.to_id();
+
+            const u32 dense_index = em->index_array.lookup(tmp_id.val);
+
+            id = (dense_index != SPARSE_ARRAY_INVALID_INDEX)
+                ? tmp_id
+                : ENTITY_ID_INVALID;
         }
 
     }
 
-    IFB_ENG_INTERNAL bool entity_lookup                (const entity_manager* em, entity_id* out_id, const cchar** in_tag_cstr, const u32 in_count);
-    IFB_ENG_INTERNAL bool entity_delete                (const entity_manager* em, const entity_id* id, const u32 count);
+    IFB_ENG_INTERNAL bool
+    entity_delete(
+        entity_manager* const em,
+        const entity_id*      id,
+        const u32             count) {
 
-
+    }
 };
