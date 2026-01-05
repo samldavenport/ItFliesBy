@@ -2,7 +2,6 @@
 
 #include "context.hpp"
 #include "gl.hpp"
-#include "entity.hpp"
 namespace ifb::eng {
     
     constexpr u32 OS_WINDOW_KEYCODE_CAPACITY         = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
@@ -40,8 +39,6 @@ namespace ifb::eng {
             ctx->devconsole       != NULL &&
             ctx->module.graphics != NULL
         );
-
-        entity_test();        
 
         return(ctx);        
     }

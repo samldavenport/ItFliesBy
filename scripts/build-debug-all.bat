@@ -17,7 +17,7 @@ pushd ..
 
 @set cl_eng_in=      engine\src\engine.cpp
 @set cl_eng_out=     /Fo:build\debug\obj\ItFliesBy.Engine.obj
-@set cl_eng_include= /Iengine\include /Iengine\src /Iengine\src\context /Iengine\src\core /Iengine\src\entity /Iengine\src\file /Iengine\src\gl /Iengine\src\modules\graphics /Iengine\src\math /Iengine\src\modules\memory /Iengine\src\asset /Iengine\src\devconsole /Iengine\src\modules\os /Iengine\src\quad /Iengine\src\tools /Isld\include /Isld\external /Isld\vcpkg_installed\x64-windows\include
+@set cl_eng_include= /Iengine\include /Iengine\src /Iengine\src\context /Iengine\src\core /Iengine\src\managers /Iengine\src\file /Iengine\src\gl /Iengine\src\modules\graphics /Iengine\src\math /Iengine\src\modules\memory /Iengine\src\asset /Iengine\src\devconsole /Iengine\src\modules\os /Iengine\src\quad /Iengine\src\tools /Isld\include /Isld\external /Isld\vcpkg_installed\x64-windows\include
 @set cl_eng_flags=   /nologo /c /MD /LD /Z7 /EHs- /std:c++17 /Od /D_HAS_EXCEPTIONS=0
 
 @set cl_tools_in=      tools\src\binary-to-compressed-c.cpp
