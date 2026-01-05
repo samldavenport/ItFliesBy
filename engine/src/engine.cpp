@@ -26,3 +26,5 @@
 #include "quad-manager.cpp"
 
 #include "core.cpp"
+
+#include "entity.cpp"
