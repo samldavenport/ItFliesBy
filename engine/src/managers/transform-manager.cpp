@@ -157,4 +157,140 @@ namespace ifb::eng {
         info.count_current = tm->sparse_indexes.count();
         info.count_max     = tm->sparse_indexes.max_count();
     }
+
+    IFB_ENG_INTERNAL void
+    transform_create(
+        transform_manager* const tm,
+        transform_id*            out_id,
+        const cchar**            in_tag_cstr,
+        const u32                in_count) {
+
+        transform_manager_validate(tm);
+
+        bool is_valid = true;
+        is_valid &= (out_id      != NULL);
+        is_valid &= (in_tag_cstr != NULL);
+        is_valid &= (in_count    != 0);
+        assert(is_valid);
+
+        for (
+            u32 index = 0;
+                index < in_count;
+              ++index) {
+
+            const auto tag          = entity_tag(in_tag_cstr[index]);
+            const auto id           = tag.to_id();
+            const u32  dense_index  = tm->sparse_indexes.count();
+            const u32  sparse_index = tm->sparse_indexes.insert(id.val, dense_index);
+            
+            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) break;
+
+            tm->dense_data.translation.x [dense_index] = 0.0f;
+            tm->dense_data.translation.y [dense_index] = 0.0f;
+            tm->dense_data.translation.z [dense_index] = 0.0f;
+            tm->dense_data.scale.x       [dense_index] = 1.0f;
+            tm->dense_data.scale.y       [dense_index] = 1.0f;
+            tm->dense_data.scale.z       [dense_index] = 1.0f;
+            tm->dense_data.rotation.x    [dense_index] = 0.0f;
+            tm->dense_data.rotation.y    [dense_index] = 0.0f;
+            tm->dense_data.rotation.z    [dense_index] = 0.0f;
+            tm->dense_data.sparse_index  [dense_index] = sparse_index;
+        }
+    }
+
+    IFB_ENG_INTERNAL void
+    transform_lookup_translation(
+        transform_manager* const tm,
+        translation*             out_translation,
+        const transform_id*      in_id,
+        const u32                in_count) {
+
+        transform_manager_validate(tm);
+
+        bool is_valid = true;
+        is_valid &= (out_translation != NULL);
+        is_valid &= (in_id           != NULL);
+        is_valid &= (in_count        != 0);
+        assert(is_valid);
+    }
+
+    IFB_ENG_INTERNAL void
+    transform_lookup_scale(
+        transform_manager* const tm,
+        scale*                   out_scale,
+        const transform_id*      in_id,
+        const u32                in_count) {
+
+        transform_manager_validate(tm);
+
+        bool is_valid = true;
+        is_valid &= (out_scale != NULL);
+        is_valid &= (in_id     != NULL);
+        is_valid &= (in_count  != 0);
+        assert(is_valid);
+    }
+
+    IFB_ENG_INTERNAL void
+    transform_lookup_rotation(
+        transform_manager* const tm,
+        rotation*                out_rotation,
+        const transform_id*      in_id,
+        const u32                in_count) {
+
+        transform_manager_validate(tm);
+
+        bool is_valid = true;
+        is_valid &= (out_rotation != NULL);
+        is_valid &= (in_id        != NULL);
+        is_valid &= (in_count     != 0);
+        assert(is_valid);
+    }
+
+    IFB_ENG_INTERNAL void
+    transform_update_translation(
+        transform_manager* const tm,
+        const translation*       translation,
+        const transform_id*      id,
+        const u32                count) {
+
+        transform_manager_validate(tm);
+
+        bool is_valid = true;
+        is_valid &= (translation != NULL);
+        is_valid &= (id          != NULL);
+        is_valid &= (count       != 0);
+        assert(is_valid);
+    }
+
+    IFB_ENG_INTERNAL void
+    transform_update_scale(
+        transform_manager* const tm,
+        const scale*             scale,
+        const transform_id*      id,
+        const u32                count) {
+
+        transform_manager_validate(tm);
+
+        bool is_valid = true;
+        is_valid &= (scale != NULL);
+        is_valid &= (id    != NULL);
+        is_valid &= (count != 0);
+        assert(is_valid);
+    }
+
+    IFB_ENG_INTERNAL void
+    transform_update_rotation(
+        transform_manager* const tm,
+        const rotation*          rotation,
+        const transform_id*      id,
+        const u32                count) {
+
+        transform_manager_validate(tm);
+        
+        bool is_valid = true;
+        is_valid &= (rotation != NULL);
+        is_valid &= (id       != NULL);
+        is_valid &= (count    != 0);
+        assert(is_valid);
+    }
 };
