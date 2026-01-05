@@ -7,8 +7,6 @@
 
 namespace ifb::eng {
 
-    using sparse_index_array = sparse_array<u32>; 
-
     struct entity_manager {
         sparse_index_array index_array;
         struct {

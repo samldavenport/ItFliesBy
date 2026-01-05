@@ -57,7 +57,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL transform_manager*
     transform_manager_init(
         const void* memory_start,
-        const u32   memory_size, 
+        const u32   memory_size,
         const u32   capacity,
         const f32   max_load_p100
     );
