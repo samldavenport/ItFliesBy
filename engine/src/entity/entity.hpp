@@ -6,7 +6,7 @@
 #include "entity-id.hpp"
 #include "entity-tag.hpp"
 #include "entity-sparse-array.hpp"
-#include <sld-sparse-set.hpp>
+#include <sld-sparse-array.hpp>
 #include <sld-array-list.hpp>
 namespace ifb::eng {
 
