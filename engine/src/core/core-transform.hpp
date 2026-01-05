@@ -45,10 +45,23 @@ namespace ifb::eng {
             f32*          y;
             f32*          z;        
         } data;
+
+        
+        inline void
+        validate(
+            void) {
+
+            bool is_valid = true; 
+            is_valid &= (this->data.id != NULL);
+            is_valid &= (this->data.x  != NULL);
+            is_valid &= (this->data.y  != NULL);
+            is_valid &= (this->data.z  != NULL);
+            assert(is_valid);
+        }
     };
 
     struct translation_table : transform_table {
-        
+
         inline void
         read(
             const u32     in_index,

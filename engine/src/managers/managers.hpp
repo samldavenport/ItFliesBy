@@ -67,9 +67,9 @@ namespace ifb::eng {
     
     IFB_ENG_INTERNAL void transform_create                (transform_manager* const tm, transform_id* out_id, const cchar** in_tag_cstr, const u32 in_count = 1);
     
-    IFB_ENG_INTERNAL void transform_lookup_translation    (transform_manager* const tm, transform_id* out_id, translation* out_translation, const transform_id* in_id, const u32 in_count = 1);
-    IFB_ENG_INTERNAL void transform_lookup_scale          (transform_manager* const tm, transform_id* out_id, scale*       out_scale,       const transform_id* in_id, const u32 in_count = 1);
-    IFB_ENG_INTERNAL void transform_lookup_rotation       (transform_manager* const tm, transform_id* out_id, rotation*    out_rotation,    const transform_id* in_id, const u32 in_count = 1);
+    IFB_ENG_INTERNAL void transform_lookup_translation    (transform_manager* const tm, translation_table& t_tbl);
+    IFB_ENG_INTERNAL void transform_lookup_scale          (transform_manager* const tm, scale_table&       s_tbl);
+    IFB_ENG_INTERNAL void transform_lookup_rotation       (transform_manager* const tm, rotation_table&    r_tbl);
     
     IFB_ENG_INTERNAL void transform_update_translation    (transform_manager* const tm, const translation*  translation, const transform_id* id, const u32 in_count = 1);
     IFB_ENG_INTERNAL void transform_update_scale          (transform_manager* const tm, const scale*        scale,       const transform_id* id, const u32 in_count = 1);

@@ -204,31 +204,17 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void
     transform_lookup_translation(
         transform_manager* const tm,
-        transform_id*            out_id,
-        translation*             out_translation,
-        const transform_id*      in_id,
-        const u32                in_count) {
+        translation_table&       t_tbl) {
 
         transform_manager_validate(tm);
-
-        bool is_valid = true;
-        is_valid &= (out_id          != NULL);
-        is_valid &= (out_translation != NULL);
-        is_valid &= (in_id           != NULL);
-        is_valid &= (in_count        != 0);
-        assert(is_valid);
+        t_tbl.validate();
     
-        for_count_u32(in_index, in_count) {
+        for_count_u32(row, t_tbl.count) {
 
             // look up the sparse index for the transform
-            const transform_id id           = in_id           [in_index];
+            const transform_id id           = t_tbl.data.id[row];
             const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
-
-            // if we didn't find it, go to the next one
-            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
-                out_id[in_index] = ENTITY_ID_INVALID;
-                continue;
-            }
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);
 
             // get the dense index
             // it should always be less than the current count
@@ -236,40 +222,26 @@ namespace ifb::eng {
             assert(dense_index < tm->sparse_indexes.count());
 
             // get the dense data
-            out_id         [in_index]   = tm->dense_data.sparse_index  [dense_index];
-            out_translation[in_index].x = tm->dense_data.translation.x [dense_index];
-            out_translation[in_index].y = tm->dense_data.translation.y [dense_index];
-            out_translation[in_index].z = tm->dense_data.translation.z [dense_index];
+            t_tbl.data.x [row] = tm->dense_data.translation.x [dense_index];
+            t_tbl.data.y [row] = tm->dense_data.translation.y [dense_index];
+            t_tbl.data.z [row] = tm->dense_data.translation.z [dense_index];
         }
     }
 
     IFB_ENG_INTERNAL void
     transform_lookup_scale(
         transform_manager* const tm,
-        transform_id*            out_id,
-        scale*                   out_scale,
-        const transform_id*      in_id,
-        const u32                in_count) {
+        scale_table&             s_tbl) {
 
         transform_manager_validate(tm);
-
-        bool is_valid = true;
-        is_valid &= (out_scale != NULL);
-        is_valid &= (in_id     != NULL);
-        is_valid &= (in_count  != 0);
-        assert(is_valid);
+        s_tbl.validate();
         
-        for_count_u32(in_index, in_count) {
+        for_count_u32(row, s_tbl.count) {
 
             // look up the sparse index for the transform
-            const transform_id id           = in_id [in_index];
+            const transform_id id           = s_tbl.data.id[row];
             const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
-
-            // if we didn't find it, go to the next one
-            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
-                out_id[in_index] = ENTITY_ID_INVALID;
-                continue;
-            }
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);
 
             // get the dense index
             // it should always be less than the current count
@@ -277,40 +249,26 @@ namespace ifb::eng {
             assert(dense_index < tm->sparse_indexes.count());
 
             // get the dense data
-            out_id   [in_index]   = tm->dense_data.sparse_index [dense_index];
-            out_scale[in_index].x = tm->dense_data.scale.x      [dense_index];
-            out_scale[in_index].y = tm->dense_data.scale.y      [dense_index];
-            out_scale[in_index].z = tm->dense_data.scale.z      [dense_index];
+            s_tbl.data.x[row] = tm->dense_data.scale.x [dense_index];
+            s_tbl.data.y[row] = tm->dense_data.scale.y [dense_index];
+            s_tbl.data.z[row] = tm->dense_data.scale.z [dense_index];
         }
     }
 
     IFB_ENG_INTERNAL void
     transform_lookup_rotation(
         transform_manager* const tm,
-        transform_id*            out_id,
-        rotation*                out_rotation,
-        const transform_id*      in_id,
-        const u32                in_count) {
+        rotation_table&          r_tbl) {
 
         transform_manager_validate(tm);
-
-        bool is_valid = true;
-        is_valid &= (out_rotation != NULL);
-        is_valid &= (in_id        != NULL);
-        is_valid &= (in_count     != 0);
-        assert(is_valid);
+        r_tbl.validate();
         
-        for_count_u32(in_index, in_count) {
+        for_count_u32(row, r_tbl.count) {
 
             // look up the sparse index for the transform
-            const transform_id id           = in_id [in_index];
+            const transform_id id           = r_tbl.data.id[row];
             const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
-
-            // if we didn't find it, go to the next one
-            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
-                out_id[in_index] = ENTITY_ID_INVALID;
-                continue;
-            }
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);
 
             // get the dense index
             // it should always be less than the current count
@@ -318,58 +276,90 @@ namespace ifb::eng {
             assert(dense_index < tm->sparse_indexes.count());
 
             // get the dense data
-            out_id      [in_index]   = tm->dense_data.sparse_index [dense_index];
-            out_rotation[in_index].x = tm->dense_data.rotation.x   [dense_index];
-            out_rotation[in_index].y = tm->dense_data.rotation.y   [dense_index];
-            out_rotation[in_index].z = tm->dense_data.rotation.z   [dense_index];
+            r_tbl.data.x[row] = tm->dense_data.rotation.x [dense_index];
+            r_tbl.data.y[row] = tm->dense_data.rotation.y [dense_index];
+            r_tbl.data.z[row] = tm->dense_data.rotation.z [dense_index];
         }
     }
 
     IFB_ENG_INTERNAL void
     transform_update_translation(
         transform_manager* const tm,
-        const translation*       translation,
-        const transform_id*      id,
-        const u32                count) {
+        translation_table&       t_tbl) {
 
         transform_manager_validate(tm);
+        t_tbl.validate();
 
-        bool is_valid = true;
-        is_valid &= (translation != NULL);
-        is_valid &= (id          != NULL);
-        is_valid &= (count       != 0);
-        assert(is_valid);
+        for_count_u32(row, t_tbl.count) {
+
+            // look up the sparse index for the transform
+            const transform_id id           = t_tbl.data.id[row];
+            const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);
+
+            // get the dense index
+            // it should always be less than the current count
+            const u32 dense_index = tm->sparse_indexes[sparse_index];
+            assert(dense_index < tm->sparse_indexes.count());
+
+            // update the dense data
+            tm->dense_data.rotation.x [dense_index] = t_tbl.data.x[row];
+            tm->dense_data.rotation.y [dense_index] = t_tbl.data.y[row];
+            tm->dense_data.rotation.z [dense_index] = t_tbl.data.z[row];
+        }
     }
 
     IFB_ENG_INTERNAL void
     transform_update_scale(
         transform_manager* const tm,
-        const scale*             scale,
-        const transform_id*      id,
-        const u32                count) {
+        scale_table&             s_tbl) {
 
         transform_manager_validate(tm);
+        s_tbl.validate();
 
-        bool is_valid = true;
-        is_valid &= (scale != NULL);
-        is_valid &= (id    != NULL);
-        is_valid &= (count != 0);
-        assert(is_valid);
+        for_count_u32(row, s_tbl.count) {
+
+            // look up the sparse index for the transform
+            const transform_id id           = s_tbl.data.id[row];
+            const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);
+
+            // get the dense index
+            // it should always be less than the current count
+            const u32 dense_index = tm->sparse_indexes[sparse_index];
+            assert(dense_index < tm->sparse_indexes.count());
+
+            // update the dense data
+            tm->dense_data.scale.x [dense_index] = s_tbl.data.x[row];
+            tm->dense_data.scale.y [dense_index] = s_tbl.data.y[row];
+            tm->dense_data.scale.z [dense_index] = s_tbl.data.z[row];
+        }
     }
 
     IFB_ENG_INTERNAL void
     transform_update_rotation(
         transform_manager* const tm,
-        const rotation*          rotation,
-        const transform_id*      id,
-        const u32                count) {
+        rotation_table&          r_tbl) {
 
         transform_manager_validate(tm);
-        
-        bool is_valid = true;
-        is_valid &= (rotation != NULL);
-        is_valid &= (id       != NULL);
-        is_valid &= (count    != 0);
-        assert(is_valid);
+        r_tbl.validate();
+
+        for_count_u32(row, r_tbl.count) {
+
+            // look up the sparse index for the transform
+            const transform_id id           = r_tbl.data.id[row];
+            const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);
+
+            // get the dense index
+            // it should always be less than the current count
+            const u32 dense_index = tm->sparse_indexes[sparse_index];
+            assert(dense_index < tm->sparse_indexes.count());
+
+            // update the dense data
+            tm->dense_data.rotation.x [dense_index] = r_tbl.data.x[row];
+            tm->dense_data.rotation.y [dense_index] = r_tbl.data.y[row];
+            tm->dense_data.rotation.z [dense_index] = r_tbl.data.z[row];
+        }
     }
 };
