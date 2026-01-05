@@ -206,10 +206,10 @@ namespace ifb::eng {
             const entity_tag tag(tag_cstr);
             const entity_id  tmp_id = tag.to_id();
 
-            const u32 dense_index = em->index_array.lookup(tmp_id.val);
+            const u32 sparse_index = em->index_array.lookup_sparse_index(tmp_id.val);
 
-            id.val = (dense_index != SPARSE_ARRAY_INVALID_INDEX)
-                ? tmp_id.val
+            id.val = (sparse_index != SPARSE_ARRAY_INVALID_INDEX)
+                ? em->index_array[sparse_index]
                 : ENTITY_ID_INVALID;
         }
 
@@ -239,26 +239,27 @@ namespace ifb::eng {
             const entity_id   last_entity_id    = em->data.id           [last_index_dense];
             const entity_tag& last_tag          = em->data.tag          [last_index_dense];
 
-            // lookup the dense index of the entity to delete
-            const u32 dense_key       = id[delete_index].val;  
-            const u32 dense_to_sparse = em->data.sparse_index[delete_index]; 
-            const u32 dense_index     = em->index_array.lookup(dense_key);
+            // lookup the sparse index of the entity to delete
+            // it should always exist
+            const u32 sparse_index = em->index_array.lookup_sparse_index(id[delete_index].val);
+            assert(sparse_index != SPARSE_ARRAY_INVALID_INDEX);            
 
-            // we always need to have a valid id for this operation
-            assert(dense_index);
+            // get the dense index info
+            const u32 dense_index     = em->index_array[sparse_index]; 
+            const u32 dense_to_sparse = em->data.sparse_index[delete_index]; 
 
             // we can safely remove the sparse data
-            em->index_array.remove(dense_to_sparse);
+            em->index_array.remove(sparse_index);
 
             // if the delete element is the last one, nothing else to do
             if (last_index_dense == dense_index) continue;
 
-            // swap the dense data
+            // copy dense data
             em->data.id           [dense_index] = last_entity_id;
             em->data.tag          [dense_index] = last_tag;
             em->data.sparse_index [dense_index] = last_index_sparse;
-            
-            // swap the sparse data
+
+            // copy sparse data
             em->index_array[last_index_sparse] = dense_index;
         }
     }

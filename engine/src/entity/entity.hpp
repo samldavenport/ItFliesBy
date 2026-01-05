@@ -82,7 +82,7 @@ namespace ifb::eng {
         void* entity_memory = malloc(memory_size);
         assert(entity_memory);
 
-
+        // initialize entity manager
         entity_manager* mngr = entity_manager_init(
             entity_memory,
             memory_size,
@@ -90,6 +90,7 @@ namespace ifb::eng {
             max_load
         );
 
+        // create entities
         entity_id entity_array[5];
         const cchar* entity_tag_array[5] = {
             (cchar*)"one",
@@ -105,6 +106,10 @@ namespace ifb::eng {
             5
         );
 
+        // remove entity
+        entity_delete(mngr, &entity_array[2], 1);
+
+        // free memory
         free(entity_memory);
         return(true);
     }
