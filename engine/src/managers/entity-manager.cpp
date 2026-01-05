@@ -1,7 +1,9 @@
 #pragma once
 
-#include "entity.hpp"
+#include "managers.hpp"
+#include "core-entity.hpp"
 #include <sld-stack.hpp>
+#include <sld-sparse-array.hpp>
 
 namespace ifb::eng {
 

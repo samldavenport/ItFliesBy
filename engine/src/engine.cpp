@@ -23,8 +23,6 @@
 
 #include "memory-module.cpp"
 
-#include "quad-manager.cpp"
+#include "managers.cpp"
 
 #include "core.cpp"
-
-#include "entity.cpp"
