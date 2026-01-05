@@ -14,6 +14,8 @@
 
 using namespace sld;
 
+#define for_count_u32(index, count) for (u32 index = 0; index < count; ++index)
+
 namespace ifb::eng {
 
     //-------------------------------------------------------------------

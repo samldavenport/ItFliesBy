@@ -10,19 +10,22 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct transform_table {
+    struct transform_data {
         f32* x;
         f32* y;
         f32* z;
     };
+    struct translation_data : transform_data { };
+    struct scale_data       : transform_data { };
+    struct roation_data     : transform_data { };
 
     struct transform_manager {
         sparse_index_array sparse_indexes;
         struct {
-            transform_table translation;
-            transform_table scale;
-            transform_table rotation;
-            u32*            sparse_index;
+            translation_data translation;
+            scale_data       scale;
+            roation_data     rotation;
+            u32*             sparse_index;
         } dense_data;
     };
 
@@ -51,7 +54,7 @@ namespace ifb::eng {
 
         // calculate sizes
         constexpr u32 size_manager       = sizeof(transform_manager);
-        constexpr u32 size_table         = sizeof(transform_table);
+        constexpr u32 size_table         = sizeof(transform_data);
         const     u32 size_sparse_memory = sparse_index_array::calculate_memory_size(capacity);
         const     u32 max_count          = (u32)((f32)capacity * max_load_p100); 
 
@@ -109,7 +112,7 @@ namespace ifb::eng {
 
         const u32 size_mngr        = sizeof(transform_manager);
         const u32 size_sparse_data = sparse_index_array::calculate_memory_size(capacity);
-        const u32 size_dense_data  = ((sizeof(transform_table) * 3) + sizeof(u32)) * dense_count;
+        const u32 size_dense_data  = ((sizeof(transform_data) * 3) + sizeof(u32)) * dense_count;
         
         const u32 size_total = (
             size_mngr        +
@@ -201,6 +204,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void
     transform_lookup_translation(
         transform_manager* const tm,
+        transform_id*            out_id,
         translation*             out_translation,
         const transform_id*      in_id,
         const u32                in_count) {
@@ -208,15 +212,41 @@ namespace ifb::eng {
         transform_manager_validate(tm);
 
         bool is_valid = true;
+        is_valid &= (out_id          != NULL);
         is_valid &= (out_translation != NULL);
         is_valid &= (in_id           != NULL);
         is_valid &= (in_count        != 0);
         assert(is_valid);
+    
+        for_count_u32(in_index, in_count) {
+
+            // look up the sparse index for the transform
+            const transform_id id           = in_id           [in_index];
+            const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
+
+            // if we didn't find it, go to the next one
+            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
+                out_id[in_index] = ENTITY_ID_INVALID;
+                continue;
+            }
+
+            // get the dense index
+            // it should always be less than the current count
+            const u32 dense_index = tm->sparse_indexes[sparse_index];
+            assert(dense_index < tm->sparse_indexes.count());
+
+            // get the dense data
+            out_id         [in_index]   = tm->dense_data.sparse_index  [dense_index];
+            out_translation[in_index].x = tm->dense_data.translation.x [dense_index];
+            out_translation[in_index].y = tm->dense_data.translation.y [dense_index];
+            out_translation[in_index].z = tm->dense_data.translation.z [dense_index];
+        }
     }
 
     IFB_ENG_INTERNAL void
     transform_lookup_scale(
         transform_manager* const tm,
+        transform_id*            out_id,
         scale*                   out_scale,
         const transform_id*      in_id,
         const u32                in_count) {
@@ -228,11 +258,36 @@ namespace ifb::eng {
         is_valid &= (in_id     != NULL);
         is_valid &= (in_count  != 0);
         assert(is_valid);
+        
+        for_count_u32(in_index, in_count) {
+
+            // look up the sparse index for the transform
+            const transform_id id           = in_id [in_index];
+            const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
+
+            // if we didn't find it, go to the next one
+            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
+                out_id[in_index] = ENTITY_ID_INVALID;
+                continue;
+            }
+
+            // get the dense index
+            // it should always be less than the current count
+            const u32 dense_index = tm->sparse_indexes[sparse_index];
+            assert(dense_index < tm->sparse_indexes.count());
+
+            // get the dense data
+            out_id   [in_index]   = tm->dense_data.sparse_index [dense_index];
+            out_scale[in_index].x = tm->dense_data.scale.x      [dense_index];
+            out_scale[in_index].y = tm->dense_data.scale.y      [dense_index];
+            out_scale[in_index].z = tm->dense_data.scale.z      [dense_index];
+        }
     }
 
     IFB_ENG_INTERNAL void
     transform_lookup_rotation(
         transform_manager* const tm,
+        transform_id*            out_id,
         rotation*                out_rotation,
         const transform_id*      in_id,
         const u32                in_count) {
@@ -244,6 +299,30 @@ namespace ifb::eng {
         is_valid &= (in_id        != NULL);
         is_valid &= (in_count     != 0);
         assert(is_valid);
+        
+        for_count_u32(in_index, in_count) {
+
+            // look up the sparse index for the transform
+            const transform_id id           = in_id [in_index];
+            const u32          sparse_index = tm->sparse_indexes.lookup_sparse_index(id.val);
+
+            // if we didn't find it, go to the next one
+            if (sparse_index == SPARSE_ARRAY_INVALID_INDEX) {
+                out_id[in_index] = ENTITY_ID_INVALID;
+                continue;
+            }
+
+            // get the dense index
+            // it should always be less than the current count
+            const u32 dense_index = tm->sparse_indexes[sparse_index];
+            assert(dense_index < tm->sparse_indexes.count());
+
+            // get the dense data
+            out_id      [in_index]   = tm->dense_data.sparse_index [dense_index];
+            out_rotation[in_index].x = tm->dense_data.rotation.x   [dense_index];
+            out_rotation[in_index].y = tm->dense_data.rotation.y   [dense_index];
+            out_rotation[in_index].z = tm->dense_data.rotation.z   [dense_index];
+        }
     }
 
     IFB_ENG_INTERNAL void
