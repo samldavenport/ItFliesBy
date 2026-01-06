@@ -25,4 +25,6 @@
 
 #include "managers.cpp"
 
+#include "memory.cpp"
+
 #include "core.cpp"
