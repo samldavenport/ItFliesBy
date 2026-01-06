@@ -10,15 +10,6 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct transform_data {
-        f32* x;
-        f32* y;
-        f32* z;
-    };
-    struct translation_data : transform_data { };
-    struct scale_data       : transform_data { };
-    struct roation_data     : transform_data { };
-
     struct transform_manager {
         sparse_index_array sparse_indexes;
         struct {
