@@ -6,7 +6,6 @@
 namespace ifb::eng {
 
     const cchar* util_get_working_directory (void);
-    
 }
 
 #endif //IFB_ENGINE_UTIL_HPP
