@@ -2,6 +2,7 @@
 
 #include "context.hpp"
 #include "gl.hpp"
+#include "system.hpp"
 namespace ifb::eng {
     
     constexpr u32 OS_WINDOW_KEYCODE_CAPACITY         = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
@@ -50,7 +51,7 @@ namespace ifb::eng {
         assert(ctx);
 
         // os context        
-        os_system_refresh_info    ();
+        system_refresh_info();
         os_memory_reserve         ();
         os_monitor_refresh_table  ();
         os_window_create_and_show ();
@@ -92,7 +93,7 @@ namespace ifb::eng {
         gl_context_clear_viewport();
 
         // check system resources
-        os_system_refresh_info   ();
+        system_refresh_info();
         os_monitor_refresh_table ();
         os_memory_check_usage    ();
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "memory.hpp"
+#include "memory-map.cpp"
 
 namespace ifb::eng {
 
@@ -15,11 +16,21 @@ namespace ifb::eng {
         u32           save;
     };
 
+    struct memory_arena_list {
+        memory_arena* first;
+    };
+
     //-------------------------------------------------------------------
     // CONSTANTS
     //-------------------------------------------------------------------
 
     constexpr u32 MEMORY_ARENA_SIZE_ACTUAL = (MEMORY_ARENA_SIZE - sizeof(memory_arena));
+    
+    //-------------------------------------------------------------------
+    // GLOBAL
+    //-------------------------------------------------------------------
+
+    static memory_arena_list _arena_list;    
 
     //-------------------------------------------------------------------
     // METHODS
@@ -29,7 +40,35 @@ namespace ifb::eng {
     memory_arena_alloc(
         void) {
 
-        assert(false);
+        assert(_map);
+
+        const u32     arena_count  = _map->region.arenas.commit_count;
+        const u32     arena_stride = _map->region.arenas.commit_granularity;
+        const addr    arena_region = _map->region.arenas.as_addr; 
+        memory_arena* arena        = NULL;
+
+        for_count_u32(arena_index, arena_count) {
+
+            const u32  arena_offset = (arena_stride * arena_count);
+            void*      arena_start  = (void*)(arena_region + arena_offset); 
+            const bool is_free      = !os_memory_is_committed(arena_start); 
+
+            if(is_free) {
+
+                arena = (memory_arena*)sld::os_memory_commit(arena_start, arena_stride);
+                assert((void*)arena == arena_start);
+
+                ++_map->region.arenas.commit_count;
+
+                arena->position   = 0;
+                arena->save       = 0;
+                arena->prev       = NULL;
+                arena->next       = _arena_list.first;
+                _arena_list.first = arena;
+            }
+        }
+
+        return(arena);
     }
 
     IFB_ENG_INTERNAL void
@@ -38,6 +77,19 @@ namespace ifb::eng {
 
         bool is_valid = (arena != NULL);
         if (is_valid) {
+
+            // get arena info
+            const u32  arena_stride = _map->region.arenas.commit_granularity;
+            const addr arena_min    = _map->region.arenas.as_addr;
+            const addr arena_max    = (arena_min + _map->region.arenas.size) - arena_stride;
+            const addr arena_start  = (addr)arena;
+            const addr arena_offset = (arena_start - _map->os_reservation.as_addr);
+
+            // ensure the arena is within the region
+            // and aligned by granularity
+            is_valid &= (arena_start  >= arena_min);
+            is_valid &= (arena_start  <= arena_max);
+            is_valid &= (arena_offset %  arena_stride == 0);
             is_valid &= (arena->position < MEMORY_ARENA_SIZE_ACTUAL);
             is_valid &= (arena->save     < arena->position);
         }
@@ -48,7 +100,29 @@ namespace ifb::eng {
     memory_arena_free(
         memory_arena* const arena) {
 
-        assert(false);
+        memory_arena_validate(arena);
+
+        // remove from the list
+        memory_arena* arena_next = arena->next;
+        memory_arena* arena_prev = arena->prev;
+        if (arena_prev == NULL) {
+            _arena_list.first = arena_next;
+            arena_next->prev  = NULL;
+        }
+        else {
+            arena_prev->next = arena_next;
+        }
+        if (arena_next) {
+            arena_next->prev = arena_prev;
+        }
+
+        // decommit and adjust the count
+        const bool did_decommit = sld::os_memory_decommit(
+            (void*)arena,
+            _map->region.arenas.commit_granularity
+        );
+        assert(did_decommit);
+        _map->region.arenas.commit_count--;
     }
 
     IFB_ENG_INTERNAL void

@@ -61,7 +61,7 @@ namespace ifb::eng {
         u32               size;
     };
 
-    struct memory_map {
+    struct memory_map_ {
         u64 start;
         u32 size_total;
         u32 size_commit;
@@ -78,10 +78,10 @@ namespace ifb::eng {
         } granularity;
         union {
             struct {
-                memory_map os_resources;
-                memory_map graphics;
+                memory_map_ os_resources;
+                memory_map_ graphics;
             };
-            memory_map array[memory_block_type_count];
+            memory_map_ array[memory_block_type_count];
         } map;
     };
 };

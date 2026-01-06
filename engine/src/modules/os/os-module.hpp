@@ -64,14 +64,6 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL const u32                    os_monitor_get_center_x   (const os_monitor_dimensions& dimensions);
     IFB_ENG_INTERNAL const u32                    os_monitor_get_center_y   (const os_monitor_dimensions& dimensions);
 
-    // system
-    IFB_ENG_INTERNAL void                            os_system_refresh_info          (void);
-    IFB_ENG_INTERNAL const os_system_memory_info&    os_system_get_memory_info       (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_info&       os_system_get_cpu_info          (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l1_cache_info (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l2_cache_info (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l3_cache_info (void); 
-
     // window
     IFB_ENG_INTERNAL void                   os_window_create_and_show                (void);
     IFB_ENG_INTERNAL void                   os_window_start_frame_and_process_events (void);
