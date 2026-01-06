@@ -2,6 +2,7 @@
 
 #include "context.hpp"
 #include "os-module.hpp"
+#include "memory.hpp"
 
 namespace ifb::eng {
 
@@ -12,19 +13,19 @@ namespace ifb::eng {
         void) {
 
         // stack allocate
-        auto module               = context_stack_alloc<os_module>             ();
-        auto window               = context_stack_alloc<os_window>             ();
-        auto window_events        = context_stack_alloc<os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
-        auto window_keycodes_up   = context_stack_alloc<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
-        auto window_keycodes_down = context_stack_alloc<os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
-        auto monitor_table        = context_stack_alloc<os_monitor_table>      ();
-        auto monitor_handles      = context_stack_alloc<os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
-        auto monitor_dimensions   = context_stack_alloc<os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
-        auto monitor_names        = context_stack_alloc<os_monitor_name>       (OS_MONITOR_MAX_COUNT);
-        auto file_table           = context_stack_alloc<os_file_table>         ();
-        auto file_handle_array    = context_stack_alloc<os_file_handle>        (OS_FILE_MAX_COUNT); 
-        auto memory               = context_stack_alloc<os_memory>             ();
-        auto sys_info             = context_stack_alloc<os_system>             ();
+        auto module               = memory_stack_alloc_struct <os_module>             ();
+        auto window               = memory_stack_alloc_struct <os_window>             ();
+        auto window_events        = memory_stack_alloc_struct <os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
+        auto window_keycodes_up   = memory_stack_alloc_struct <os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto window_keycodes_down = memory_stack_alloc_struct <os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto monitor_table        = memory_stack_alloc_struct <os_monitor_table>      ();
+        auto monitor_handles      = memory_stack_alloc_struct <os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
+        auto monitor_dimensions   = memory_stack_alloc_struct <os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
+        auto monitor_names        = memory_stack_alloc_struct <os_monitor_name>       (OS_MONITOR_MAX_COUNT);
+        auto file_table           = memory_stack_alloc_struct <os_file_table>         ();
+        auto file_handle_array    = memory_stack_alloc_struct <os_file_handle>        (OS_FILE_MAX_COUNT); 
+        auto memory               = memory_stack_alloc_struct <os_memory>             ();
+        auto sys_info             = memory_stack_alloc_struct <os_system>             ();
 
         // check allocations
         bool is_valid = true;

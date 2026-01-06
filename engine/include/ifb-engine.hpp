@@ -32,7 +32,7 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
     
-    IFB_ENG_API context* context_create      (byte* stack_data, const u64 stack_size);
+    IFB_ENG_API context* context_create      (void);
     IFB_ENG_API bool     context_startup     (context* ctx);
     IFB_ENG_API bool     context_shutdown    (context* ctx);
     IFB_ENG_API bool     context_update      (context* ctx);

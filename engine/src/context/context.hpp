@@ -4,8 +4,8 @@
 #include "ifb-engine.hpp"
 #include "os-module.hpp"
 #include "devconsole.hpp"
-#include "memory-module.hpp"
 #include "graphics-module.hpp"
+#include "memory.hpp"
 
 #include <sld-stack.hpp>
 
@@ -50,25 +50,14 @@ namespace ifb::eng {
     };
 
     struct context {
-        stack                stack;
         devconsole*          devconsole;
+        memory_map*          mem_map;
         context_keymap_flags keymap_flags;
         struct {
             os_module*       os;
             graphics_module* graphics;
-            memory_module*   memory;
         } module;
     };
-
-    template<typename t>
-    inline t*
-    context_stack_alloc(
-        const u32 count = 1) {
-
-        assert(_context);
-        t* mem = _context->stack.push_struct<t>();
-        return(mem);
-    }
 
     //-------------------------------------------------------------------
     // ENUMS

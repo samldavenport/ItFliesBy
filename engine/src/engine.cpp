@@ -6,7 +6,6 @@
 
 #include "os-module.cpp"
 #include "os-system.cpp"
-#include "os-memory.cpp"
 #include "os-monitor.cpp"
 #include "os-window.cpp"
 
@@ -21,12 +20,8 @@
 #include "gl-program.cpp"
 #include "gl-vertex.cpp"
 
-#include "memory-module.cpp"
 
 #include "managers.cpp"
-
 #include "memory.cpp"
-
 #include "core.cpp"
-
 #include "system.cpp"

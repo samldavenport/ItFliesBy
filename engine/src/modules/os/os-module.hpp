@@ -47,13 +47,13 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void       os_module_shutdown (void);
 
     // memory
-    IFB_ENG_INTERNAL void        os_memory_reserve               (void);
-    IFB_ENG_INTERNAL void        os_memory_release               (void);
-    IFB_ENG_INTERNAL void*       os_memory_commit                (const u64 offset, const u64 size);
-    IFB_ENG_INTERNAL void        os_memory_decommit              (void*     memory, const u64 size);
-    IFB_ENG_INTERNAL bool        os_memory_is_page_aligned       (const u64 start);
-    IFB_ENG_INTERNAL void        os_memory_check_usage           (void);
-    IFB_ENG_INTERNAL const addr  os_memory_get_reservation_start (void);
+    // IFB_ENG_INTERNAL void        os_memory_reserve               (void);
+    // IFB_ENG_INTERNAL void        os_memory_release               (void);
+    // IFB_ENG_INTERNAL void*       os_memory_commit                (const u64 offset, const u64 size);
+    // IFB_ENG_INTERNAL void        os_memory_decommit              (void*     memory, const u64 size);
+    // IFB_ENG_INTERNAL bool        os_memory_is_page_aligned       (const u64 start);
+    // IFB_ENG_INTERNAL void        os_memory_check_usage           (void);
+    // IFB_ENG_INTERNAL const addr  os_memory_get_reservation_start (void);
 
     // monitors
     IFB_ENG_INTERNAL void                         os_monitor_refresh_table  (void);
