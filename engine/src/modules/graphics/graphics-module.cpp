@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics-module.hpp"
+#include "memory.hpp"
 
 namespace ifb::eng {
 
@@ -10,8 +11,9 @@ namespace ifb::eng {
     graphics_module_init(
         void) {
 
-        _graphics       = context_stack_alloc<graphics_module>();
-        auto hello_quad = context_stack_alloc<graphics_renderer>();
+        
+        _graphics       = memory_stack_alloc_struct<graphics_module>();
+        auto hello_quad = memory_stack_alloc_struct<graphics_renderer>();
     
         bool did_alloc = true;
         did_alloc &= (_graphics  != NULL); 

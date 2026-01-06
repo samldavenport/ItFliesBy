@@ -2,6 +2,9 @@
 
 #include "context.hpp"
 #include "gl.hpp"
+#include "system.hpp"
+#include "memory.hpp"
+
 namespace ifb::eng {
     
     constexpr u32 OS_WINDOW_KEYCODE_CAPACITY         = IFB_ENG_CONFIG_OS_WINDOW_KEYCODE_CAPACITY;
@@ -11,36 +14,26 @@ namespace ifb::eng {
 
     IFB_ENG_API context*
     context_create(
-        byte*     stack_data,
-        const u64 stack_size) {
+        void) {
 
-        assert(
-            stack_data != NULL &&
-            stack_size != 0
-        );
+        system_refresh_info();
+        memory_map* map = memory_map_create();
 
-        // cast context     
-        memset(stack_data, 0, stack_size);
-        const u64  ctx_size       = sizeof(context);
-        const u64  ctx_stack_size = stack_size - ctx_size;
-        byte*      ctx_stack_data = stack_data + ctx_size;  
-        context*   ctx            = (context*)stack_data; 
-        _context = ctx;
+        _context = memory_stack_alloc_struct<context>();
+        assert(_context);
 
         // initialize the stack and allocate structures
-        ctx->stack.init(ctx_stack_data, ctx_stack_size);
-        ctx->module.os        = os_module_init();
-        ctx->module.graphics  = graphics_module_init(); 
-        ctx->module.memory    = memory_module_init();
-        ctx->devconsole       = devconsole_init(); 
+        _context->module.os        = os_module_init();
+        _context->module.graphics  = graphics_module_init(); 
+        _context->devconsole       = devconsole_init(); 
+        _context->mem_map          = map;
 
         assert(
-            ctx->stack.is_valid()         &&
-            ctx->devconsole       != NULL &&
-            ctx->module.graphics != NULL
+            _context->devconsole       != NULL &&
+            _context->module.graphics != NULL
         );
 
-        return(ctx);        
+        return(_context);        
     }
 
     IFB_ENG_API bool
@@ -50,8 +43,7 @@ namespace ifb::eng {
         assert(ctx);
 
         // os context        
-        os_system_refresh_info    ();
-        os_memory_reserve         ();
+        system_refresh_info();
         os_monitor_refresh_table  ();
         os_window_create_and_show ();
 
@@ -71,6 +63,15 @@ namespace ifb::eng {
 
         // start gui
         devconsole_start_gui();
+
+        // arena test
+        memory_arena* arena_0 = memory_arena_alloc();
+        memory_arena* arena_1 = memory_arena_alloc();
+        memory_arena* arena_2 = memory_arena_alloc();
+
+        memory_arena_free(arena_1);
+        memory_arena_free(arena_0);
+        memory_arena_free(arena_2);
 
         return(true);
     }
@@ -92,9 +93,8 @@ namespace ifb::eng {
         gl_context_clear_viewport();
 
         // check system resources
-        os_system_refresh_info   ();
+        system_refresh_info      ();
         os_monitor_refresh_table ();
-        os_memory_check_usage    ();
 
         // process events and input
         os_window_start_frame_and_process_events ();

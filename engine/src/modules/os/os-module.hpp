@@ -47,13 +47,13 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void       os_module_shutdown (void);
 
     // memory
-    IFB_ENG_INTERNAL void        os_memory_reserve               (void);
-    IFB_ENG_INTERNAL void        os_memory_release               (void);
-    IFB_ENG_INTERNAL void*       os_memory_commit                (const u64 offset, const u64 size);
-    IFB_ENG_INTERNAL void        os_memory_decommit              (void*     memory, const u64 size);
-    IFB_ENG_INTERNAL bool        os_memory_is_page_aligned       (const u64 start);
-    IFB_ENG_INTERNAL void        os_memory_check_usage           (void);
-    IFB_ENG_INTERNAL const addr  os_memory_get_reservation_start (void);
+    // IFB_ENG_INTERNAL void        os_memory_reserve               (void);
+    // IFB_ENG_INTERNAL void        os_memory_release               (void);
+    // IFB_ENG_INTERNAL void*       os_memory_commit                (const u64 offset, const u64 size);
+    // IFB_ENG_INTERNAL void        os_memory_decommit              (void*     memory, const u64 size);
+    // IFB_ENG_INTERNAL bool        os_memory_is_page_aligned       (const u64 start);
+    // IFB_ENG_INTERNAL void        os_memory_check_usage           (void);
+    // IFB_ENG_INTERNAL const addr  os_memory_get_reservation_start (void);
 
     // monitors
     IFB_ENG_INTERNAL void                         os_monitor_refresh_table  (void);
@@ -63,14 +63,6 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL const os_monitor_name&       os_monitor_get_name       (const os_monitor monitor);
     IFB_ENG_INTERNAL const u32                    os_monitor_get_center_x   (const os_monitor_dimensions& dimensions);
     IFB_ENG_INTERNAL const u32                    os_monitor_get_center_y   (const os_monitor_dimensions& dimensions);
-
-    // system
-    IFB_ENG_INTERNAL void                            os_system_refresh_info          (void);
-    IFB_ENG_INTERNAL const os_system_memory_info&    os_system_get_memory_info       (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_info&       os_system_get_cpu_info          (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l1_cache_info (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l2_cache_info (void); 
-    IFB_ENG_INTERNAL const os_system_cpu_cache_info& os_system_get_cpu_l3_cache_info (void); 
 
     // window
     IFB_ENG_INTERNAL void                   os_window_create_and_show                (void);

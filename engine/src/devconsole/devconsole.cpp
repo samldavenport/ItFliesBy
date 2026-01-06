@@ -2,6 +2,7 @@
 
 #include "devconsole.hpp"
 #include "devconsole-font.hpp"
+#include "memory.hpp"
 
 namespace ifb::eng {
 
@@ -11,7 +12,7 @@ namespace ifb::eng {
     devconsole_init(
         void) {
 
-        _console = context_stack_alloc<devconsole>();
+        _console = memory_stack_alloc_struct<devconsole>();
         assert(_console);
 
         _console->flags = devconsole_flag_e_none;
