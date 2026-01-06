@@ -64,6 +64,15 @@ namespace ifb::eng {
         // start gui
         devconsole_start_gui();
 
+        // arena test
+        memory_arena* arena_0 = memory_arena_alloc();
+        memory_arena* arena_1 = memory_arena_alloc();
+        memory_arena* arena_2 = memory_arena_alloc();
+
+        memory_arena_free(arena_1);
+        memory_arena_free(arena_0);
+        memory_arena_free(arena_2);
+
         return(true);
     }
 

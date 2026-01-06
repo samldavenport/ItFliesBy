@@ -42,21 +42,22 @@ namespace ifb::eng {
 
         assert(_map);
 
-        const u32     arena_count  = _map->region.arenas.commit_count;
         const u32     arena_stride = _map->region.arenas.commit_granularity;
+        const u32     arena_count  = _map->region.arenas.size / arena_stride;
         const addr    arena_region = _map->region.arenas.as_addr; 
         memory_arena* arena        = NULL;
 
         for_count_u32(arena_index, arena_count) {
 
-            const u32  arena_offset = (arena_stride * arena_count);
-            void*      arena_start  = (void*)(arena_region + arena_offset); 
-            const bool is_free      = !os_memory_is_committed(arena_start); 
+            const u32  arena_offset = (arena_stride * arena_index);
+            const addr arena_addr   = (arena_region + arena_offset); 
+            void*      arena_commit = (void*)arena_addr;
+            const bool is_committed = os_memory_is_committed(arena_commit); 
 
-            if(is_free) {
+            if(!is_committed) {
 
-                arena = (memory_arena*)sld::os_memory_commit(arena_start, arena_stride);
-                assert((void*)arena == arena_start);
+                arena = (memory_arena*)sld::os_memory_commit(arena_commit, arena_stride);
+                assert((void*)arena == arena_commit);
 
                 ++_map->region.arenas.commit_count;
 
@@ -64,7 +65,11 @@ namespace ifb::eng {
                 arena->save       = 0;
                 arena->prev       = NULL;
                 arena->next       = _arena_list.first;
+                if (_arena_list.first) {
+                    _arena_list.first->prev = arena;
+                }
                 _arena_list.first = arena;
+                break;
             }
         }
 
@@ -87,11 +92,11 @@ namespace ifb::eng {
 
             // ensure the arena is within the region
             // and aligned by granularity
-            is_valid &= (arena_start  >= arena_min);
-            is_valid &= (arena_start  <= arena_max);
-            is_valid &= (arena_offset %  arena_stride == 0);
+            is_valid &= (arena_start     >= arena_min);
+            is_valid &= (arena_start     <= arena_max);
+            is_valid &= (arena_offset    %  arena_stride == 0);
             is_valid &= (arena->position < MEMORY_ARENA_SIZE_ACTUAL);
-            is_valid &= (arena->save     < arena->position);
+            is_valid &= (arena->save     <= arena->position);
         }
         assert(is_valid);
     }
@@ -105,16 +110,9 @@ namespace ifb::eng {
         // remove from the list
         memory_arena* arena_next = arena->next;
         memory_arena* arena_prev = arena->prev;
-        if (arena_prev == NULL) {
-            _arena_list.first = arena_next;
-            arena_next->prev  = NULL;
-        }
-        else {
-            arena_prev->next = arena_next;
-        }
-        if (arena_next) {
-            arena_next->prev = arena_prev;
-        }
+        if (arena_next)         arena_next->prev  = arena_prev;
+        if (arena_prev == NULL) _arena_list.first = arena_next;
+        else                    arena_prev->next  = arena_next;
 
         // decommit and adjust the count
         const bool did_decommit = sld::os_memory_decommit(
