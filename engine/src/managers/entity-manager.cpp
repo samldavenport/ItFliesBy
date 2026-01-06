@@ -7,8 +7,6 @@
 
 namespace ifb::eng {
 
-    using sparse_index_array = sparse_array<u32>; 
-
     struct entity_manager {
         sparse_index_array index_array;
         struct {
@@ -106,28 +104,23 @@ namespace ifb::eng {
         assert(is_valid);
     }
 
-    IFB_ENG_INTERNAL u32
-    entity_capacity(
-        entity_manager* const em) {
+    IFB_ENG_INTERNAL void
+    entity_manager_info(
+        entity_manager* const em,
+        manager_info&         info) {
 
         entity_manager_validate(em);
-        return(em->index_array.capacity());
-    }
 
-    IFB_ENG_INTERNAL u32
-    entity_count(
-        entity_manager* const em) {
+        constexpr u32 entry_size = (
+            sizeof(entity_id)  +
+            sizeof(entity_tag) +
+            sizeof(u32)
+        );
 
-        entity_manager_validate(em);
-        return(em->index_array.count());
-    }
-
-    IFB_ENG_INTERNAL u32 
-    entity_max_count(
-        entity_manager* const em) {
-
-        entity_manager_validate(em);
-        return(em->index_array.max_count());
+        info.size          = (entry_size * em->index_array.capacity()) + em->index_array.size();
+        info.capacity      = em->index_array.capacity();
+        info.count_current = em->index_array.count();
+        info.count_max     = em->index_array.max_count();
     }
 
     IFB_ENG_INTERNAL bool
