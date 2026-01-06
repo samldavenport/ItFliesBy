@@ -8,94 +8,94 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct arena {
-        arena* next;
-        arena* prev;
-        u32    position;
-        u32    save;
+    struct memory_arena {
+        memory_arena* next;
+        memory_arena* prev;
+        u32           position;
+        u32           save;
     };
 
     //-------------------------------------------------------------------
     // CONSTANTS
     //-------------------------------------------------------------------
 
-    constexpr u32 MEMORY_ARENA_SIZE_ACTUAL = (MEMORY_ARENA_SIZE - sizeof(arena));
+    constexpr u32 MEMORY_ARENA_SIZE_ACTUAL = (MEMORY_ARENA_SIZE - sizeof(memory_arena));
 
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL arena*
-    arena_alloc(
+    IFB_ENG_INTERNAL memory_arena*
+    memory_arena_alloc(
         void) {
 
         assert(false);
     }
 
     IFB_ENG_INTERNAL void
-    arena_validate(
-        arena* const a) {
+    memory_arena_validate(
+        memory_arena* const arena) {
 
-        bool is_valid = (a != NULL);
+        bool is_valid = (arena != NULL);
         if (is_valid) {
-            is_valid &= (a->position < MEMORY_ARENA_SIZE_ACTUAL);
-            is_valid &= (a->save     < a->position);
+            is_valid &= (arena->position < MEMORY_ARENA_SIZE_ACTUAL);
+            is_valid &= (arena->save     < arena->position);
         }
         assert(is_valid);
     }
 
     IFB_ENG_INTERNAL void
-    arena_free(
-        arena* const a) {
+    memory_arena_free(
+        memory_arena* const arena) {
 
         assert(false);
     }
 
     IFB_ENG_INTERNAL void
-    arena_reset(
-        arena* const a) {
+    memory_arena_reset(
+        memory_arena* const arena) {
 
-        arena_validate(a);
+        memory_arena_validate(arena);
 
-        a->position = 0;
-        a->save     = 0;
+        arena->position = 0;
+        arena->save     = 0;
     }
 
     IFB_ENG_INTERNAL u32
-    arena_save(
-        arena* const a) {
+    memory_arena_save(
+        memory_arena* const arena) {
 
-        arena_validate(a);
-        assert(a->save == 0);
+        memory_arena_validate(arena);
+        assert(arena->save == 0);
 
-        a->save = a->position;
-        return(a->save);
+        arena->save = arena->position;
+        return(arena->save);
     }
 
     IFB_ENG_INTERNAL void
-    arena_revert(
-        arena* const a,
-        const u32    save) {
+    memory_arena_revert(
+        memory_arena* const arena,
+        const u32           save) {
 
-        arena_validate(a);
+        memory_arena_validate(arena);
         assert(
-            a->save == save &&
-            a->save != 0    &&
+            arena->save == save &&
+            arena->save != 0    &&
             save    != 0
         );
 
-        a->position = a->save;
-        a->save     = 0;
+        arena->position = arena->save;
+        arena->save     = 0;
     }
 
     IFB_ENG_INTERNAL void*
-    arena_push(
-        arena* const a,
-        const u32    size,
-        const u32    alignment) {
+    memory_arena_push(
+        memory_arena* const arena,
+        const u32           size,
+        const u32           alignment) {
 
         // check args
-        arena_validate(a);
+        memory_arena_validate(arena);
         assert(size != 0);
 
         // align the size
@@ -104,34 +104,34 @@ namespace ifb::eng {
             : size_align       (size, alignment);
 
         // check if we can fit the push
-        const u32  new_position = (a->position  + size_aligned);
+        const u32  new_position = (arena->position  + size_aligned);
         const bool can_push     = (new_position < MEMORY_ARENA_SIZE_ACTUAL); 
         if (!can_push) return(NULL);
 
         // calculate the pointer
-        const addr start = (addr)a;
-        void*      ptr   = (void*)(start + a->position);
+        const addr start = (addr)arena;
+        void*      ptr   = (void*)(start + arena->position);
 
         // update the position and return
-        a->position = new_position;
+        arena->position = new_position;
         return(ptr);
     }
 
     template<typename t>
     IFB_ENG_INTERNAL t*
-    arena_push_struct(
-        arena* const a,
-        const u32    count) {
+    memory_arena_push_struct(
+        memory_arena* const arena,
+        const u32           count) {
 
         // check args
-        arena_validate(a);
+        memory_arena_validate(arena);
         assert(count != 0);
 
         // calculate the size
         const u32 size = (sizeof(t) * count);
 
         // do the push and return
-        t* ptr = (t*)arena_push(a, size);
+        t* ptr = (t*)memory_arena_push(a, size);
         return(ptr);        
     }
 };

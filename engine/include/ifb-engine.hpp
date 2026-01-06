@@ -4,13 +4,14 @@
 #include <sld.hpp>
 #include "ifb-engine-config.hpp"
 
-#define IFB_ENG_API             __declspec(dllexport)
-#define IFB_ENG_API_INLINE      inline
-#define IFB_ENG_INLINE          inline
-#define IFB_ENG_GLOBAL          static
-#define IFB_ENG_LOCAL           static
-#define IFB_ENG_INTERNAL        static
-#define IFB_ENG_INTERNAL_INLINE static inline
+#define IFB_ENG_API                  __declspec(dllexport)
+#define IFB_ENG_API_INLINE           inline
+#define IFB_ENG_INLINE               inline
+#define IFB_ENG_GLOBAL               static
+#define IFB_ENG_LOCAL                static
+#define IFB_ENG_INTERNAL             static
+#define IFB_ENG_INTERNAL_TEMPLATE(t) template<typename t> static
+#define IFB_ENG_INTERNAL_INLINE      static inline
 
 using namespace sld;
 

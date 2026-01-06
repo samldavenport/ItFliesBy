@@ -5,20 +5,18 @@
 
 namespace ifb::eng {
 
-    struct arena;
+    struct memory_arena;
 
     constexpr u32 MEMORY_ARENA_SIZE = size_kilobytes(64);
 
-    IFB_ENG_INTERNAL arena* arena_alloc    (void);
-    IFB_ENG_INTERNAL void   arena_validate (arena* const a);
-    IFB_ENG_INTERNAL void   arena_free     (arena* const a);
-    IFB_ENG_INTERNAL void   arena_reset    (arena* const a);
-    IFB_ENG_INTERNAL u32    arena_save     (arena* const a);
-    IFB_ENG_INTERNAL void   arena_revert   (arena* const a, const u32 save);
-    IFB_ENG_INTERNAL void*  arena_push     (arena* const a, const u32 size, const u32 alignment = 0);
-
-    template<typename t>
-    IFB_ENG_INTERNAL t* arena_push_struct(arena* const a, const u32 count = 1);
+    IFB_ENG_INTERNAL  memory_arena* memory_arena_alloc       (void);
+    IFB_ENG_INTERNAL           void memory_arena_validate    (memory_arena* const arena);
+    IFB_ENG_INTERNAL           void memory_arena_free        (memory_arena* const arena);
+    IFB_ENG_INTERNAL           void memory_arena_reset       (memory_arena* const arena);
+    IFB_ENG_INTERNAL            u32 memory_arena_save        (memory_arena* const arena);
+    IFB_ENG_INTERNAL           void memory_arena_revert      (memory_arena* const arena, const u32 save);
+    IFB_ENG_INTERNAL          void* memory_arena_push        (memory_arena* const arena, const u32 size, const u32 alignment = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* memory_arena_push_struct (memory_arena* const a, const u32 count = 1);
 };
 
 #endif //MEMORY_HPP
