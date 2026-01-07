@@ -13,7 +13,6 @@ namespace ifb::eng {
     struct transform_data_page {
         transform_data_page* next;
         transform_data_page* prev;
-        sparse_index_array   sparse_index_array;
         struct {
             u32*         sparse_index;
             translation* translation;
@@ -26,9 +25,9 @@ namespace ifb::eng {
         struct {
             transform_data_page* first;            
         } page_list;
-        u32 records_per_page;
+        sparse_index_array sparse_index_array;
+        u32                records_per_page;
     };
-
 
     struct transform_manager {
         sparse_index_array sparse_indexes;
@@ -51,10 +50,6 @@ namespace ifb::eng {
             vec3 rotation;            
         } col;
     }
-    struct transform_table {
-        u32                   rows_per_page;
-        transform_table_page* pages;
-    };
 
     //-------------------------------------------------------------------
     // METHODS

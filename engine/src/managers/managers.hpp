@@ -53,14 +53,14 @@ namespace ifb::eng {
             size_page     != 0    &&
             size_record   != 0    &&
             max_load_p100 >  0.0f &&
-            max_load      <  1.0f            
+            max_load_p100 <  1.0f            
         );
- 
+
         const u32 size_page_header  = sizeof(data_page_header);
         const u32 size_page_data    = (size_page - size_page_header);
-        const u32 size_sparse_entry = sizeof(u32) * 2 // one for index, one for key
+        const u32 size_sparse_entry = sparse_index_array::key_value_size(); 
         const u32 size_sparse_data  = (size_sparse_entry / max_load_p100); 
-        const u32 size_page_entry   = (row + size_sparse_data);  
+        const u32 size_page_entry   = (size_record + size_sparse_data);  
         const u32 count_per_page    = floor(size_page_data / size_page_entry); 
 
         return(count_per_page);
