@@ -26,8 +26,6 @@ namespace ifb::eng {
             u32 entity_index = 0;
                 entity_index < in_count;
               ++entity_index) {
-
-            
             
         }
     }

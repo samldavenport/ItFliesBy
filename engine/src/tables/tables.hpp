@@ -43,7 +43,7 @@ namespace ifb::eng {
     static void transform_table_insert (transform_table* const in_table, const u32 in_count, const entity_id* in_id, transform* in_transform);
     static void transform_table_lookup (transform_table* const in_table, const u32 in_count, const entity_id* in_id, transform* out_transform);
     static void transform_table_update (transform_table* const in_table, const u32 in_count, const entity_id* in_id, transform* in_transform);
-    static void transform_table_delete (transform_table* const in_table, const u32 in_count, const entity_ud* in_id);
+    static void transform_table_delete (transform_table* const in_table, const u32 in_count, const entity_id* in_id);
 
     //-------------------------------------------------------------------
     // DEFINITIONS

@@ -19,6 +19,8 @@ namespace ifb::eng {
     struct memory_os_reservation_info;
     struct memory_region_info;
     struct memory_commit;
+    struct memory_stack_allocator;
+    struct memory_virtual_block_allocator;
 
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -74,6 +76,9 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL          void* memory_arena_push                (memory_arena* const arena, const u32 size, const u32 alignment = 0);
     IFB_ENG_INTERNAL_TEMPLATE(t) t* memory_arena_push_struct         (memory_arena* const a, const u32 count = 1);
 
+    // stack allocator
+    memory_stack_allocator memory_virtual_stack_allocator
+
     //-------------------------------------------------------------------
     // DEFINITIONS
     //-------------------------------------------------------------------
@@ -114,6 +119,37 @@ namespace ifb::eng {
         } region;
     };
 
+    struct memory_stack_allocator {
+
+    private:
+
+        addr start;
+        u32  granularity;
+        u32  page_capacity;
+        u32  page_size;
+        u32  page_count;
+        u32  page_position;
+        u32  page_alignment;
+        u32  saved_page_number;
+        u32  saved_page_position;
+
+    public:
+
+        explicit memory_virtual_stack_allocator(
+            u32 granularity_min,
+            u32 page_size_min
+        );
+
+        void  validate  (void) const;
+        void  reset     (void);
+        void* push      (const u32 size, const u32 alignment = 0);
+        void  pull      (const u32 size, const u32 alignment = 0);
+        void  save      (void);
+        void  roll_back (void);
+
+        template<typename t> void* push_struct(const u32 count = 1);
+        template<typename t> void* pull_struct(const u32 count = 1);
+    };
 };
 
 #endif //MEMORY_HPP
