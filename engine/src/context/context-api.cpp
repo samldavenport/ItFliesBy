@@ -19,7 +19,7 @@ namespace ifb::eng {
         system_refresh_info();
         memory_map* map = memory_map_create();
 
-        _context = memory_stack_alloc_struct<context>();
+        _context = singleton_stack_alloc_struct<context>();
         assert(_context);
 
         // initialize the stack and allocate structures

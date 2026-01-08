@@ -12,8 +12,8 @@ namespace ifb::eng {
         void) {
 
         
-        _graphics       = memory_stack_alloc_struct<graphics_module>();
-        auto hello_quad = memory_stack_alloc_struct<graphics_renderer>();
+        _graphics       = singleton_stack_alloc_struct<graphics_module>();
+        auto hello_quad = singleton_stack_alloc_struct<graphics_renderer>();
     
         bool did_alloc = true;
         did_alloc &= (_graphics  != NULL); 

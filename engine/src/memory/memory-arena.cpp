@@ -44,7 +44,7 @@ namespace ifb::eng {
 
         const u32     arena_stride = _map->region.arenas.commit_granularity;
         const u32     arena_count  = _map->region.arenas.size / arena_stride;
-        const addr    arena_region = _map->region.arenas.as_addr; 
+        const addr    arena_region = _map->region.arenas.start.as_addr; 
         memory_arena* arena        = NULL;
 
         for_count_u32(arena_index, arena_count) {
@@ -85,10 +85,10 @@ namespace ifb::eng {
 
             // get arena info
             const u32  arena_stride = _map->region.arenas.commit_granularity;
-            const addr arena_min    = _map->region.arenas.as_addr;
+            const addr arena_min    = _map->region.arenas.start.as_addr;
             const addr arena_max    = (arena_min + _map->region.arenas.size) - arena_stride;
             const addr arena_start  = (addr)arena;
-            const addr arena_offset = (arena_start - _map->os_reservation.as_addr);
+            const addr arena_offset = (arena_start - _map->os_reservation.start.as_addr);
 
             // ensure the arena is within the region
             // and aligned by granularity

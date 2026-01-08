@@ -62,9 +62,9 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL void           memory_region_get_info           (memory_region* const region, memory_region_info& info);
 
     // stack
-    IFB_ENG_INTERNAL          void* memory_stack_alloc               (const u32 size, const u32 alignment = 0);
-    IFB_ENG_INTERNAL_TEMPLATE(t) t* memory_stack_alloc_struct        (const u32 count = 1);
-    IFB_ENG_INTERNAL           void memory_stack_get_info            (memory_stack_info& info);
+    IFB_ENG_INTERNAL          void* singleton_stack_alloc               (const u32 size, const u32 alignment = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* singleton_stack_alloc_struct        (const u32 count = 1);
+    IFB_ENG_INTERNAL           void singleton_stack_get_info            (memory_stack_info& info);
 
     // arena
     IFB_ENG_INTERNAL  memory_arena* memory_arena_alloc               (void);
@@ -77,7 +77,7 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL_TEMPLATE(t) t* memory_arena_push_struct         (memory_arena* const a, const u32 count = 1);
 
     // stack allocator
-    memory_stack_allocator memory_virtual_stack_allocator
+
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -88,8 +88,28 @@ namespace ifb::eng {
             void* as_ptr;
             byte* as_bytes;
             addr  as_addr;
-        };
+        } start;
         u64  size;
+    };
+
+    struct memory_reservation : memory {
+        u32 granularity;
+        u32 page_size;
+    };
+
+    struct memory_region : memory {
+        u32 commit_granularity;
+        u32 commit_count;
+    };
+
+    struct memory_map {
+        stack              singleton_stack;
+        memory_reservation os_reservation;
+        struct {
+            memory_region arenas;
+            memory_region graphics;
+            memory_region entities;
+        } region;
     };
 
     struct memory_region_info {
@@ -104,13 +124,13 @@ namespace ifb::eng {
         u32 page_size;
     };
 
-    struct memory_stack_info {
+    struct singleton_stack_info {
         u32 size_total;
         u32 size_used;
     };
 
     struct memory_map_info {
-        memory_stack_info          stack;
+        singleton_stack_info       singleton_stack;
         memory_os_reservation_info os_reservation;
         struct {
             memory_region_info arenas;
@@ -135,9 +155,10 @@ namespace ifb::eng {
 
     public:
 
-        explicit memory_virtual_stack_allocator(
-            u32 granularity_min,
-            u32 page_size_min
+        explicit memory_stack_allocator(
+            memory_region* region,
+            u32            granularity_min,
+            u32            page_size_min
         );
 
         void  validate  (void) const;
@@ -147,8 +168,8 @@ namespace ifb::eng {
         void  save      (void);
         void  roll_back (void);
 
-        template<typename t> void* push_struct(const u32 count = 1);
-        template<typename t> void* pull_struct(const u32 count = 1);
+        template<typename t> t*   push_struct (const u32 count = 1);
+        template<typename t> void pull_struct (const u32 count = 1);
     };
 };
 
