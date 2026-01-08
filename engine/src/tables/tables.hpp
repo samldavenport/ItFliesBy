@@ -19,6 +19,7 @@ namespace ifb::eng {
     using entity_index_cache = array_list<u32>;
 
     // base
+    struct tables;
     struct table_base;
     struct table_page;
 
@@ -32,25 +33,26 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
-    static void entity_table_validate  (void);
-    static void entity_table_insert    (const u32 in_count, const entity_tag* in_tag, entity_id* out_id);
-    static void entity_table_lookup    (const u32 in_count, const entity_id*  in_id,  entity*    out_entity);
-    static void entity_table_delete    (const u32 in_count, const entity_id*  in_id);
+    static void table_base_validate    (table_base* const table);
 
-    static void transform_table_insert (const u32 in_count, const entity_id* in_id, transform* in_transform);
-    static void transform_table_lookup (const u32 in_count, const entity_id* in_id, transform* out_transform);
-    static void transform_table_update (const u32 in_count, const entity_id* in_id, transform* in_transform);
-    static void transform_table_delete (const u32 in_count, const entity_ud* in_id);
+    static void entity_table_validate  (entity_table* const in_table);
+    static void entity_table_insert    (entity_table* const in_table, const u32 in_count, const cchar**     in_tag_cstr, entity_id* out_id);
+    static void entity_table_lookup    (entity_table* const in_table, const u32 in_count, const entity_id*  in_id,       entity*    out_entity);
+    static void entity_table_delete    (entity_table* const in_table, const u32 in_count, const entity_id*  in_id);
 
-    //-------------------------------------------------------------------
-    // DEFINITIONS
-    //-------------------------------------------------------------------
-
-
+    static void transform_table_insert (transform_table* const in_table, const u32 in_count, const entity_id* in_id, transform* in_transform);
+    static void transform_table_lookup (transform_table* const in_table, const u32 in_count, const entity_id* in_id, transform* out_transform);
+    static void transform_table_update (transform_table* const in_table, const u32 in_count, const entity_id* in_id, transform* in_transform);
+    static void transform_table_delete (transform_table* const in_table, const u32 in_count, const entity_ud* in_id);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
     //-------------------------------------------------------------------
+
+    struct tables {
+        entity_table*    entity;
+        transform_table* transform;
+    };
 
     struct table_page_base {
         table_page* next;
@@ -80,6 +82,11 @@ namespace ifb::eng {
         } pages;
     };
 
+    //-------------------------------------------------------------------
+    // GLOBALS
+    //-------------------------------------------------------------------
+
+    static tables _tables;
 };
 
 #endif //CORE_TRANSFORM_HPP

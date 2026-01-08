@@ -5,16 +5,18 @@
 
 namespace ifb::eng {
 
-    struct tables {
-        entity_table*    entity;
-        transform_table* transform;
-    } static _tables;
-
     static void
-    tables_init(
-        void) {
+    table_base_validate(
+        table_base* const table) {
 
-        _tables.entity    = memory_stack_alloc_struct<entity_table>();
-        _tables.transform = memory_stack_alloc_struct<transform_table>();
+        bool is_valid = (table != NULL);
+        if (is_valid) {
+
+            table->index_array.validate();
+            table->index_cache.validate();
+            is_valid &= (table->count_per_page != 0);
+        }
+        assert(is_valid);
     }
+
 };
