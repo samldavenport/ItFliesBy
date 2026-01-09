@@ -9,35 +9,19 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct memory_arena {
-        memory_arena* next;
-        memory_arena* prev;
-        u32           position;
-        u32           save;
-    };
-
-    struct memory_arena_list {
-        memory_arena* first;
-    };
 
     //-------------------------------------------------------------------
     // CONSTANTS
     //-------------------------------------------------------------------
 
-    constexpr u32 MEMORY_ARENA_SIZE_ACTUAL = (MEMORY_ARENA_SIZE - sizeof(memory_arena));
+    constexpr u32 MEMORY_ARENA_SIZE_ACTUAL = (MEMORY_ARENA_SIZE - sizeof(arena));
     
-    //-------------------------------------------------------------------
-    // GLOBAL
-    //-------------------------------------------------------------------
-
-    static memory_arena_list _arena_list;    
-
     //-------------------------------------------------------------------
     // METHODS
     //-------------------------------------------------------------------
 
-    IFB_ENG_INTERNAL memory_arena*
-    memory_arena_alloc(
+    IFB_ENG_INTERNAL arena*
+    arena_alloc(
         void) {
 
         assert(_map);
@@ -45,7 +29,7 @@ namespace ifb::eng {
         const u32     arena_stride = _map->region.arenas.commit_granularity;
         const u32     arena_count  = _map->region.arenas.size / arena_stride;
         const addr    arena_region = _map->region.arenas.start.as_addr; 
-        memory_arena* arena        = NULL;
+        arena* arena        = NULL;
 
         for_count_u32(arena_index, arena_count) {
 
@@ -56,7 +40,7 @@ namespace ifb::eng {
 
             if(!is_committed) {
 
-                arena = (memory_arena*)sld::os_memory_commit(arena_commit, arena_stride);
+                arena = (arena*)sld::os_memory_commit(arena_commit, arena_stride);
                 assert((void*)arena == arena_commit);
 
                 ++_map->region.arenas.commit_count;
@@ -77,8 +61,8 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    memory_arena_validate(
-        memory_arena* const arena) {
+    arena_validate(
+        arena* const arena) {
 
         bool is_valid = (arena != NULL);
         if (is_valid) {
@@ -102,14 +86,14 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    memory_arena_free(
-        memory_arena* const arena) {
+    arena_free(
+        arena* const arena) {
 
-        memory_arena_validate(arena);
+        arena_validate(arena);
 
         // remove from the list
-        memory_arena* arena_next = arena->next;
-        memory_arena* arena_prev = arena->prev;
+        arena* arena_next = arena->next;
+        arena* arena_prev = arena->prev;
         if (arena_next)         arena_next->prev  = arena_prev;
         if (arena_prev == NULL) _arena_list.first = arena_next;
         else                    arena_prev->next  = arena_next;
@@ -124,20 +108,20 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    memory_arena_reset(
-        memory_arena* const arena) {
+    arena_reset(
+        arena* const arena) {
 
-        memory_arena_validate(arena);
+        arena_validate(arena);
 
         arena->position = 0;
         arena->save     = 0;
     }
 
     IFB_ENG_INTERNAL u32
-    memory_arena_save(
-        memory_arena* const arena) {
+    arena_save(
+        arena* const arena) {
 
-        memory_arena_validate(arena);
+        arena_validate(arena);
         assert(arena->save == 0);
 
         arena->save = arena->position;
@@ -145,11 +129,11 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void
-    memory_arena_revert(
-        memory_arena* const arena,
+    arena_revert(
+        arena* const arena,
         const u32           save) {
 
-        memory_arena_validate(arena);
+        arena_validate(arena);
         assert(
             arena->save == save &&
             arena->save != 0    &&
@@ -161,13 +145,13 @@ namespace ifb::eng {
     }
 
     IFB_ENG_INTERNAL void*
-    memory_arena_push(
-        memory_arena* const arena,
+    arena_push(
+        arena* const arena,
         const u32           size,
         const u32           alignment) {
 
         // check args
-        memory_arena_validate(arena);
+        arena_validate(arena);
         assert(size != 0);
 
         // align the size
@@ -191,19 +175,19 @@ namespace ifb::eng {
 
     template<typename t>
     IFB_ENG_INTERNAL t*
-    memory_arena_push_struct(
-        memory_arena* const arena,
+    arena_push_struct(
+        arena* const arena,
         const u32           count) {
 
         // check args
-        memory_arena_validate(arena);
+        arena_validate(arena);
         assert(count != 0);
 
         // calculate the size
         const u32 size = (sizeof(t) * count);
 
         // do the push and return
-        t* ptr = (t*)memory_arena_push(a, size);
+        t* ptr = (t*)arena_push(a, size);
         return(ptr);        
     }
 };
