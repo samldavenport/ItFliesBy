@@ -26,10 +26,11 @@ namespace ifb::eng {
 
         assert(_map);
 
-        const u32     arena_stride = _map->region.arenas.commit_granularity;
-        const u32     arena_count  = _map->region.arenas.size / arena_stride;
-        const addr    arena_region = _map->region.arenas.start.as_addr; 
-        arena* arena        = NULL;
+        arena_allocator& arena_allocator = _map->os_reservation.arena_allocator; 
+        const u32        arena_stride    = arena_allocator.arena_size;
+        const u32        arena_count     = arena_allocator.arena_count;
+        const addr       arena_region    = arena_allocator.start.as_addr; 
+        arena*           arena_new       = NULL;
 
         for_count_u32(arena_index, arena_count) {
 
@@ -40,118 +41,120 @@ namespace ifb::eng {
 
             if(!is_committed) {
 
-                arena = (arena*)sld::os_memory_commit(arena_commit, arena_stride);
-                assert((void*)arena == arena_commit);
+                arena_new = (arena*)sld::os_memory_commit(arena_commit, arena_stride);
+                assert((void*)arena_new == arena_commit);
 
-                ++_map->region.arenas.commit_count;
+                ++_map->os_reservation.arena_allocator.arena_count;
 
-                arena->position   = 0;
-                arena->save       = 0;
-                arena->prev       = NULL;
-                arena->next       = _arena_list.first;
-                if (_arena_list.first) {
-                    _arena_list.first->prev = arena;
+                arena_new->position   = 0;
+                arena_new->save       = 0;
+                arena_new->prev       = NULL;
+                arena_new->next       = arena_allocator.first;
+                if ( arena_allocator.first) {
+                    arena_allocator.first->prev = arena_new;
                 }
-                _arena_list.first = arena;
+                arena_allocator.first = arena_new;
                 break;
             }
         }
 
-        return(arena);
+        return(arena_new);
     }
 
     IFB_ENG_INTERNAL void
     arena_validate(
-        arena* const arena) {
+        arena* const a) {
 
-        bool is_valid = (arena != NULL);
+        bool is_valid = (a != NULL);
         if (is_valid) {
 
             // get arena info
-            const u32  arena_stride = _map->region.arenas.commit_granularity;
-            const addr arena_min    = _map->region.arenas.start.as_addr;
-            const addr arena_max    = (arena_min + _map->region.arenas.size) - arena_stride;
-            const addr arena_start  = (addr)arena;
-            const addr arena_offset = (arena_start - _map->os_reservation.start.as_addr);
+            const arena_allocator& arena_alctr = _map->os_reservation.arena_allocator;
+            const u32              arena_stride = arena_alctr.arena_size;
+            const addr             arena_min    = arena_alctr.start.as_addr;
+            const addr             arena_max    = (arena_min + arena_alctr.size) - arena_stride;
+            const addr             arena_start  = (addr)a;
+            const addr             arena_offset = (arena_start - _map->os_reservation.start.as_addr);
 
             // ensure the arena is within the region
             // and aligned by granularity
-            is_valid &= (arena_start     >= arena_min);
-            is_valid &= (arena_start     <= arena_max);
-            is_valid &= (arena_offset    %  arena_stride == 0);
-            is_valid &= (arena->position < MEMORY_ARENA_SIZE_ACTUAL);
-            is_valid &= (arena->save     <= arena->position);
+            is_valid &= (arena_start  >= arena_min);
+            is_valid &= (arena_start  <= arena_max);
+            is_valid &= (arena_offset %  arena_stride == 0);
+            is_valid &= (a->position  < MEMORY_ARENA_SIZE_ACTUAL);
+            is_valid &= (a->save      <= a->position);
         }
         assert(is_valid);
     }
 
     IFB_ENG_INTERNAL void
     arena_free(
-        arena* const arena) {
+        arena* const a) {
 
-        arena_validate(arena);
+        arena_validate(a);
 
         // remove from the list
-        arena* arena_next = arena->next;
-        arena* arena_prev = arena->prev;
+        arena_allocator& arena_alctr = _map->os_reservation.arena_allocator;
+        arena*           arena_next  = a->next;
+        arena*           arena_prev  = a->prev;
         if (arena_next)         arena_next->prev  = arena_prev;
-        if (arena_prev == NULL) _arena_list.first = arena_next;
+        if (arena_prev == NULL) arena_alctr.first = arena_next;
         else                    arena_prev->next  = arena_next;
 
         // decommit and adjust the count
         const bool did_decommit = sld::os_memory_decommit(
-            (void*)arena,
-            _map->region.arenas.commit_granularity
+            (void*)a,
+            arena_alctr.arena_size
         );
         assert(did_decommit);
-        _map->region.arenas.commit_count--;
+        arena_alctr.arena_count--;
     }
 
     IFB_ENG_INTERNAL void
     arena_reset(
-        arena* const arena) {
+        arena* const a) {
 
-        arena_validate(arena);
+        arena_validate(a);
 
-        arena->position = 0;
-        arena->save     = 0;
+        a->position = 0;
+        a->save     = 0;
     }
 
     IFB_ENG_INTERNAL u32
     arena_save(
-        arena* const arena) {
+        arena* const a) {
 
-        arena_validate(arena);
-        assert(arena->save == 0);
+        arena_validate(a);
+        assert(a->save == 0);
 
-        arena->save = arena->position;
-        return(arena->save);
+        a->save = a->position;
+        return(a->save);
     }
 
     IFB_ENG_INTERNAL void
     arena_revert(
-        arena* const arena,
-        const u32           save) {
+        arena* const a,
+        const u32    save) {
 
-        arena_validate(arena);
+        arena_validate(a);
         assert(
-            arena->save == save &&
-            arena->save != 0    &&
+            a->save == save &&
+            a->save != 0    &&
             save    != 0
         );
 
-        arena->position = arena->save;
-        arena->save     = 0;
+        a->position = a->save;
+        a->save     = 0;
     }
 
     IFB_ENG_INTERNAL void*
     arena_push(
-        arena* const arena,
+        arena* const a,
         const u32           size,
         const u32           alignment) {
 
         // check args
-        arena_validate(arena);
+        arena_validate(a);
         assert(size != 0);
 
         // align the size
@@ -160,27 +163,27 @@ namespace ifb::eng {
             : size_align       (size, alignment);
 
         // check if we can fit the push
-        const u32  new_position = (arena->position  + size_aligned);
+        const u32  new_position = (a->position  + size_aligned);
         const bool can_push     = (new_position < MEMORY_ARENA_SIZE_ACTUAL); 
         if (!can_push) return(NULL);
 
         // calculate the pointer
-        const addr start = (addr)arena;
-        void*      ptr   = (void*)(start + arena->position);
+        const addr start = (addr)a;
+        void*      ptr   = (void*)(start + a->position);
 
         // update the position and return
-        arena->position = new_position;
+        a->position = new_position;
         return(ptr);
     }
 
     template<typename t>
     IFB_ENG_INTERNAL t*
     arena_push_struct(
-        arena* const arena,
+        arena* const a,
         const u32           count) {
 
         // check args
-        arena_validate(arena);
+        arena_validate(a);
         assert(count != 0);
 
         // calculate the size

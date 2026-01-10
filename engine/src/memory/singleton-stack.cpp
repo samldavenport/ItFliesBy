@@ -28,13 +28,4 @@ namespace ifb::eng {
         
         return(mem);
     }
-
-    IFB_ENG_INTERNAL void
-    singleton_stack_get_info(
-        singleton_stack_info& info) {
-
-        assert(_map);
-        info.size_total = _map->singleton_stack.capacity;
-        info.size_used  = _map->singleton_stack.position; 
-    }
 };
