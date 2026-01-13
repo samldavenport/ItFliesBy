@@ -18,7 +18,7 @@ namespace ifb::eng {
     }
     
     IFB_ENG_INTERNAL_TEMPLATE(t) t*
-    singleton_stack_alloc_struct(
+    singleton_alloc_struct(
         const u32 count) {
 
         assert(_map);

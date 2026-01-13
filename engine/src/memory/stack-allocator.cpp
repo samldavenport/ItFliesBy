@@ -79,12 +79,11 @@ namespace ifb::eng {
             const addr page_start  = (vmem->start.as_addr + page_offset);
             const addr mem_start   = (page_start + alctr->page_position);
             void*      mem_ptr     = (void*)mem_start;
-            c 
         }
 
         // make sure this allocation doesn't exceed the last page
         if (alctr->page_count == alctr->page_capacity) {
-            assert( < alctr->granularity);
+            assert(alctr->page_position < alctr->granularity);
         }
 
 

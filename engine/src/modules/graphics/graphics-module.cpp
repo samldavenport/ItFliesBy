@@ -10,10 +10,9 @@ namespace ifb::eng {
     IFB_ENG_INTERNAL graphics_module*
     graphics_module_init(
         void) {
-
         
-        _graphics       = singleton_stack_alloc_struct<graphics_module>();
-        auto hello_quad = singleton_stack_alloc_struct<graphics_renderer>();
+        _graphics       = singleton_alloc_struct<graphics_module>();
+        auto hello_quad = singleton_alloc_struct<graphics_renderer>();
     
         bool did_alloc = true;
         did_alloc &= (_graphics  != NULL); 

@@ -13,19 +13,19 @@ namespace ifb::eng {
         void) {
 
         // stack allocate
-        auto module               = singleton_stack_alloc_struct <os_module>             ();
-        auto window               = singleton_stack_alloc_struct <os_window>             ();
-        auto window_events        = singleton_stack_alloc_struct <os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
-        auto window_keycodes_up   = singleton_stack_alloc_struct <os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
-        auto window_keycodes_down = singleton_stack_alloc_struct <os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
-        auto monitor_table        = singleton_stack_alloc_struct <os_monitor_table>      ();
-        auto monitor_handles      = singleton_stack_alloc_struct <os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
-        auto monitor_dimensions   = singleton_stack_alloc_struct <os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
-        auto monitor_names        = singleton_stack_alloc_struct <os_monitor_name>       (OS_MONITOR_MAX_COUNT);
-        auto file_table           = singleton_stack_alloc_struct <os_file_table>         ();
-        auto file_handle_array    = singleton_stack_alloc_struct <os_file_handle>        (OS_FILE_MAX_COUNT); 
-        auto memory               = singleton_stack_alloc_struct <os_memory>             ();
-        auto sys_info             = singleton_stack_alloc_struct <os_system>             ();
+        auto module               = singleton_alloc_struct <os_module>             ();
+        auto window               = singleton_alloc_struct <os_window>             ();
+        auto window_events        = singleton_alloc_struct <os_window_event>       (OS_WINDOW_EVENT_CAPACITY);
+        auto window_keycodes_up   = singleton_alloc_struct <os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto window_keycodes_down = singleton_alloc_struct <os_window_keycode>     (OS_WINDOW_KEYCODE_CAPACITY);
+        auto monitor_table        = singleton_alloc_struct <os_monitor_table>      ();
+        auto monitor_handles      = singleton_alloc_struct <os_monitor_handle>     (OS_MONITOR_MAX_COUNT);
+        auto monitor_dimensions   = singleton_alloc_struct <os_monitor_dimensions> (OS_MONITOR_MAX_COUNT);
+        auto monitor_names        = singleton_alloc_struct <os_monitor_name>       (OS_MONITOR_MAX_COUNT);
+        auto file_table           = singleton_alloc_struct <os_file_table>         ();
+        auto file_handle_array    = singleton_alloc_struct <os_file_handle>        (OS_FILE_MAX_COUNT); 
+        auto memory               = singleton_alloc_struct <os_memory>             ();
+        auto sys_info             = singleton_alloc_struct <os_system>             ();
 
         // check allocations
         bool is_valid = true;

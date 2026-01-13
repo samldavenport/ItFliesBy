@@ -19,7 +19,7 @@ namespace ifb::eng {
         system_refresh_info();
         memory_map* map = memory_map_create();
 
-        _context = singleton_stack_alloc_struct<context>();
+        _context = singleton_alloc_struct<context>();
         assert(_context);
 
         // initialize the stack and allocate structures
@@ -65,13 +65,13 @@ namespace ifb::eng {
         devconsole_start_gui();
 
         // arena test
-        memory_arena* arena_0 = memory_arena_alloc();
-        memory_arena* arena_1 = memory_arena_alloc();
-        memory_arena* arena_2 = memory_arena_alloc();
+        arena* arena_0 = arena_alloc();
+        arena* arena_1 = arena_alloc();
+        arena* arena_2 = arena_alloc();
 
-        memory_arena_free(arena_1);
-        memory_arena_free(arena_0);
-        memory_arena_free(arena_2);
+        arena_free(arena_1);
+        arena_free(arena_0);
+        arena_free(arena_2);
 
         return(true);
     }
