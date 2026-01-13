@@ -33,6 +33,7 @@ namespace ifb::eng {
     // METHODS
     //-------------------------------------------------------------------
 
+    static void table_base_init        (table_base* const table, virtual_memory* const vmem);
     static void table_base_validate    (table_base* const table);
 
     static void entity_table_validate  (entity_table* const in_table);
@@ -54,6 +55,7 @@ namespace ifb::eng {
         transform_table* transform;
     };
 
+
     struct table_page_base {
         table_page* next;
         table_page* prev;
@@ -65,6 +67,7 @@ namespace ifb::eng {
         u32                count_total;
         u32                count_per_page;
         table_page*        page_list;
+        stack_allocator*   page_allocator;
     };
 
     struct entity_table : table_base {
