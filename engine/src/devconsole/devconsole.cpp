@@ -12,7 +12,7 @@ namespace ifb::eng {
     devconsole_init(
         void) {
 
-        _console = memory_stack_alloc_struct<devconsole>();
+        _console = singleton_alloc_struct<devconsole>();
         assert(_console);
 
         _console->flags = devconsole_flag_e_none;

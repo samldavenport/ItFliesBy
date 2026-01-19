@@ -11,14 +11,14 @@ namespace ifb::eng {
 
     struct memory;
     struct memory_map;
-    struct memory_arena;
-    struct memory_region;
-    struct memory_reservation;
-    struct memory_map_info;
-    struct memory_stack_info;
-    struct memory_os_reservation_info;
-    struct memory_region_info;
+    struct singleton_stack;
+    struct arena;
+    struct virtual_memory;
+    struct reserved_memory;
     struct memory_commit;
+    struct stack_allocator;
+    struct block_allocator;
+    struct arena_allocator;
 
     //-------------------------------------------------------------------
     // CONSTANTS
@@ -47,32 +47,44 @@ namespace ifb::eng {
     //-------------------------------------------------------------------
 
     // map
-    IFB_ENG_INTERNAL memory_map*    memory_map_create                (void);
-    IFB_ENG_INTERNAL void           memory_map_destroy               (void);
-    IFB_ENG_INTERNAL void           memory_map_get_info              (memory_map_info& info);
-
-    // region
-    IFB_ENG_INTERNAL void*          memory_region_commit             (memory_region* const region);
-    IFB_ENG_INTERNAL void           memory_region_decommit           (memory_region* const region, void* memory);
-    IFB_ENG_INTERNAL u32            memory_region_commit_granularity (memory_region* const region);
-    IFB_ENG_INTERNAL u32            memory_region_size_committed     (memory_region* const region);
-    IFB_ENG_INTERNAL u32            memory_region_size_total         (memory_region* const region);
-    IFB_ENG_INTERNAL void           memory_region_get_info           (memory_region* const region, memory_region_info& info);
+    IFB_ENG_INTERNAL    memory_map* memory_map_create               (void);
+    IFB_ENG_INTERNAL           void memory_map_destroy              (void);
+    IFB_ENG_INTERNAL            u32 memory_map_align_to_page        (const u32 size);
+    IFB_ENG_INTERNAL            u32 memory_map_align_to_granularity (const u32 size);
 
     // stack
-    IFB_ENG_INTERNAL          void* memory_stack_alloc               (const u32 size, const u32 alignment = 0);
-    IFB_ENG_INTERNAL_TEMPLATE(t) t* memory_stack_alloc_struct        (const u32 count = 1);
-    IFB_ENG_INTERNAL           void memory_stack_get_info            (memory_stack_info& info);
+    IFB_ENG_INTERNAL          void* singleton_alloc                 (const u32 size, const u32 alignment = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* singleton_alloc_struct          (const u32 count = 1);
+
+    // virtual memory
+    IFB_ENG_INTERNAL           void virtual_memory_acquire          (virtual_memory*  const vmem, reserved_memory* const rmem, const u32 size);
+    IFB_ENG_INTERNAL          void* virtual_memory_commit           (virtual_memory*  const vmem, const u32 size, const u32 offset);
+    IFB_ENG_INTERNAL           void virtual_memory_decommit         (virtual_memory*  const vmem);
+    IFB_ENG_INTERNAL           void virtual_memory_validate         (virtual_memory*  const vmem);
 
     // arena
-    IFB_ENG_INTERNAL  memory_arena* memory_arena_alloc               (void);
-    IFB_ENG_INTERNAL           void memory_arena_validate            (memory_arena* const arena);
-    IFB_ENG_INTERNAL           void memory_arena_free                (memory_arena* const arena);
-    IFB_ENG_INTERNAL           void memory_arena_reset               (memory_arena* const arena);
-    IFB_ENG_INTERNAL            u32 memory_arena_save                (memory_arena* const arena);
-    IFB_ENG_INTERNAL           void memory_arena_revert              (memory_arena* const arena, const u32 save);
-    IFB_ENG_INTERNAL          void* memory_arena_push                (memory_arena* const arena, const u32 size, const u32 alignment = 0);
-    IFB_ENG_INTERNAL_TEMPLATE(t) t* memory_arena_push_struct         (memory_arena* const a, const u32 count = 1);
+    IFB_ENG_INTERNAL         arena* arena_alloc                     (void);
+    IFB_ENG_INTERNAL           void arena_validate                  (arena* const a);
+    IFB_ENG_INTERNAL           void arena_free                      (arena* const a);
+    IFB_ENG_INTERNAL           void arena_reset                     (arena* const a);
+    IFB_ENG_INTERNAL            u32 arena_save                      (arena* const a);
+    IFB_ENG_INTERNAL           void arena_revert                    (arena* const a, const u32 save);
+    IFB_ENG_INTERNAL          void* arena_push                      (arena* const a, const u32 size, const u32 alignment = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* arena_push_struct               (arena* const a, const u32 count = 1);
+
+    // stack allocator
+    IFB_ENG_INTERNAL          void  stack_memory_allocator_init     (stack_allocator* const alctr, reserved_memory* const rmem, const u32 size, const u32 granularity = 0);
+    IFB_ENG_INTERNAL          void  stack_memory_validate           (stack_allocator* const alctr);
+    IFB_ENG_INTERNAL          void  stack_memory_reset              (stack_allocator* const alctr);
+    IFB_ENG_INTERNAL          void* stack_memory_alloc              (stack_allocator* const alctr, const u32 size, const u32 alignment   = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* stack_memory_alloc_struct       (stack_allocator* const alctr, const u32 count = 1);
+    IFB_ENG_INTERNAL          void  stack_memory_free               (stack_allocator* const alctr, void* memory);
+
+    // block allocator
+    IFB_ENG_INTERNAL          void  block_memory_allocator_init     (block_allocator* const alctr, reserved_memory const vmem, const u32 size_total, const u32 block_size);
+    IFB_ENG_INTERNAL          void* block_memory_alloc              (block_allocator* const alctr);
+    IFB_ENG_INTERNAL           void block_memory_free               (block_allocator* const alctr, void* block);
+    IFB_ENG_INTERNAL           void block_memory_reset              (block_allocator* const alctr, void* block);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
@@ -83,37 +95,72 @@ namespace ifb::eng {
             void* as_ptr;
             byte* as_bytes;
             addr  as_addr;
-        };
+        } start;
         u64  size;
     };
 
-    struct memory_region_info {
-        u32 size_total;
-        u32 size_committed;
-    };
-
-    struct memory_os_reservation_info {
-        u32 size_kb_total;
-        u32 size_kb_committed;
-        u32 granularity;
-        u32 page_size;
-    };
-
-    struct memory_stack_info {
-        u32 size_total;
-        u32 size_used;
-    };
-
-    struct memory_map_info {
-        memory_stack_info          stack;
-        memory_os_reservation_info os_reservation;
+    struct reserved_memory : memory {
+        u64             position;
+        u64             committed;
         struct {
-            memory_region_info arenas;
-            memory_region_info graphics;
-            memory_region_info entities;
-        } region;
+            virtual_memory* first;
+            virtual_memory* last;
+        } vmem;
+
     };
 
+    struct singleton_stack : stack { };
+
+    struct arena {
+        arena* next;
+        arena* prev;
+        u32    position;
+        u32    save;
+    };
+
+    struct arena_allocator : memory {
+        arena* first;
+        u32    arena_size;
+        u32    arena_capacity;
+        u32    arena_count;
+    };
+
+    struct virtual_memory : memory {
+        virtual_memory*  next;
+        reserved_memory* rmem;
+        u64              position;
+    };
+
+    struct os_reservation : memory {
+        u32             granularity;
+        u32             page_size;
+        arena_allocator arena_allocator;
+        struct {
+            reserved_memory entities;
+            reserved_memory graphics;
+        } reserved_memory;
+    };
+
+    struct memory_map {
+        singleton_stack singleton_stack;
+        os_reservation  os_reservation;
+    };
+
+    struct block_allocator : memory {
+        u32 block_capacity;
+        u32 block_count;
+        u32 block_size;
+    };
+
+    struct stack_allocator {
+        virtual_memory* vmem;
+        u32             offset;
+        u32             size;
+        u32             granularity;
+        u32             page_capacity;
+        u32             page_count;
+        u32             page_position;
+    };
 };
 
 #endif //MEMORY_HPP

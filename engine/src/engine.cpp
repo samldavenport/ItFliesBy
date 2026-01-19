@@ -20,8 +20,9 @@
 #include "gl-program.cpp"
 #include "gl-vertex.cpp"
 
-
 #include "managers.cpp"
 #include "memory.cpp"
 #include "core.cpp"
 #include "system.cpp"
+
+#include "tables.hpp"

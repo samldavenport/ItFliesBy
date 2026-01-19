@@ -10,14 +10,24 @@ namespace ifb::eng {
     // DEFINITIONS
     //-------------------------------------------------------------------
 
-    struct transform_data {
-        f32* x;
-        f32* y;
-        f32* z;
+    struct transform_data_page {
+        transform_data_page* next;
+        transform_data_page* prev;
+        struct {
+            u32*         sparse_index;
+            translation* translation;
+            scale*       scale;
+            rotation*    rotation;
+        } col;
     };
-    struct translation_data : transform_data { };
-    struct scale_data       : transform_data { };
-    struct roation_data     : transform_data { };
+
+    struct transform_table {
+        struct {
+            transform_data_page* first;            
+        } page_list;
+        sparse_index_array sparse_index_array;
+        u32                records_per_page;
+    };
 
     struct transform_manager {
         sparse_index_array sparse_indexes;
@@ -28,6 +38,18 @@ namespace ifb::eng {
             u32*             sparse_index;
         } dense_data;
     };
+
+    struct transform_table_page {
+        transform_table_page* next;
+        transform_table_page* prev;
+        u32                   row_count;
+        sparse_index_array    sparse_indexes;
+        struct {
+            vec3 translation;
+            vec3 scale;
+            vec3 rotation;            
+        } col;
+    }
 
     //-------------------------------------------------------------------
     // METHODS
