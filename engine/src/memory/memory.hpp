@@ -59,32 +59,32 @@ namespace ifb::eng {
     // virtual memory
     IFB_ENG_INTERNAL           void virtual_memory_acquire          (virtual_memory*  const vmem, reserved_memory* const rmem, const u32 size);
     IFB_ENG_INTERNAL          void* virtual_memory_commit           (virtual_memory*  const vmem, const u32 size, const u32 offset);
-    IFB_ENG_INTERNAL           void virtual_memory_decommit         (virtual_memory*  const vmem, const );
+    IFB_ENG_INTERNAL           void virtual_memory_decommit         (virtual_memory*  const vmem);
     IFB_ENG_INTERNAL           void virtual_memory_validate         (virtual_memory*  const vmem);
 
     // arena
-    IFB_ENG_INTERNAL         arena* arena_alloc                      (void);
-    IFB_ENG_INTERNAL           void arena_validate                   (arena* const a);
-    IFB_ENG_INTERNAL           void arena_free                       (arena* const a);
-    IFB_ENG_INTERNAL           void arena_reset                      (arena* const a);
-    IFB_ENG_INTERNAL            u32 arena_save                       (arena* const a);
-    IFB_ENG_INTERNAL           void arena_revert                     (arena* const a, const u32 save);
-    IFB_ENG_INTERNAL          void* arena_push                       (arena* const a, const u32 size, const u32 alignment = 0);
-    IFB_ENG_INTERNAL_TEMPLATE(t) t* arena_push_struct                (arena* const a, const u32 count = 1);
+    IFB_ENG_INTERNAL         arena* arena_alloc                     (void);
+    IFB_ENG_INTERNAL           void arena_validate                  (arena* const a);
+    IFB_ENG_INTERNAL           void arena_free                      (arena* const a);
+    IFB_ENG_INTERNAL           void arena_reset                     (arena* const a);
+    IFB_ENG_INTERNAL            u32 arena_save                      (arena* const a);
+    IFB_ENG_INTERNAL           void arena_revert                    (arena* const a, const u32 save);
+    IFB_ENG_INTERNAL          void* arena_push                      (arena* const a, const u32 size, const u32 alignment = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* arena_push_struct               (arena* const a, const u32 count = 1);
 
     // stack allocator
-    IFB_ENG_INTERNAL          void  stack_memory_allocator_init      (stack_allocator* const alctr, reserved_memory* const rmem, const u32 size, const u32 granularity = 0);
-    IFB_ENG_INTERNAL          void  stack_memory_validate            (stack_allocator* const alctr);
-    IFB_ENG_INTERNAL          void  stack_memory_reset               (stack_allocator* const alctr);
-    IFB_ENG_INTERNAL          void* stack_memory_alloc               (stack_allocator* const alctr, const u32 size, const u32 alignment   = 0);
-    IFB_ENG_INTERNAL_TEMPLATE(t) t* stack_memory_alloc_struct        (stack_allocator* const alctr, const u32 count = 1);
-    IFB_ENG_INTERNAL          void  stack_memory_free                (stack_allocator* const alctr, void* memory);
+    IFB_ENG_INTERNAL          void  stack_memory_allocator_init     (stack_allocator* const alctr, reserved_memory* const rmem, const u32 size, const u32 granularity = 0);
+    IFB_ENG_INTERNAL          void  stack_memory_validate           (stack_allocator* const alctr);
+    IFB_ENG_INTERNAL          void  stack_memory_reset              (stack_allocator* const alctr);
+    IFB_ENG_INTERNAL          void* stack_memory_alloc              (stack_allocator* const alctr, const u32 size, const u32 alignment   = 0);
+    IFB_ENG_INTERNAL_TEMPLATE(t) t* stack_memory_alloc_struct       (stack_allocator* const alctr, const u32 count = 1);
+    IFB_ENG_INTERNAL          void  stack_memory_free               (stack_allocator* const alctr, void* memory);
 
     // block allocator
-    IFB_ENG_INTERNAL          void  block_memory_allocator_init      (block_allocator* const alctr, reserved_memory const vmem, const u32 size_total, const u32 block_size);
-    IFB_ENG_INTERNAL          void* block_memory_alloc               (block_allocator* const alctr);
-    IFB_ENG_INTERNAL           void block_memory_free                (block_allocator* const alctr, void* block);
-    IFB_ENG_INTERNAL           void block_memory_reset               (block_allocator* const alctr, void* block);
+    IFB_ENG_INTERNAL          void  block_memory_allocator_init     (block_allocator* const alctr, reserved_memory const vmem, const u32 size_total, const u32 block_size);
+    IFB_ENG_INTERNAL          void* block_memory_alloc              (block_allocator* const alctr);
+    IFB_ENG_INTERNAL           void block_memory_free               (block_allocator* const alctr, void* block);
+    IFB_ENG_INTERNAL           void block_memory_reset              (block_allocator* const alctr, void* block);
 
     //-------------------------------------------------------------------
     // DEFINITIONS
