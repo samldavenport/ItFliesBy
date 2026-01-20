@@ -14,10 +14,9 @@ namespace ifb::eng {
 
     IFB_ENG_API context*
     context_create(
-        void) {
+        const engine_config* config) {
 
         system_refresh_info();
-        memory_map* map = memory_map_create();
 
         _context = singleton_alloc_struct<context>();
         assert(_context);
